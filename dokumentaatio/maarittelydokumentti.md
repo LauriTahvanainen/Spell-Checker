@@ -25,7 +25,7 @@ Ohjelma lataa myös käyttöönsä suomen kielen sanaston, jota se käyttää ki
 
 ## Tavoitteena olevat aika- ja tilavaativuudet
 - Trie-puun haun huonoimman tapauksen aikavaatimus pitäisi olla O(m), missä m on haettavan merkkijonon pituus. Trien rakentamisen pahin aikavaativuus voi olla O(nm), missä m on pisimmän sanan pituus, ja n on sanaston koko, sillä puu luodaan valmiiksi ohjelman käynnistyessä, ja sen voisi jopa mahdollisesti säilöä.
-- Ehdotusalgoritmin aikavaatimus pitäisi olla keskimäärin sellainen, että jokainen haku tapahtuu käyttäjän näkökulmasta siedettävässä ajassa. Tämä tarkoittaa esim sitä, että ehdotusten muodostamisen pitäisi olla enintään O(n), missä n on sanaston koko. Damerau–Levenshtein etäisyyden laskemisen aikavaativuudella ei todennäköisimmin ole niin suurta painoarvoa tehokkuuden kannalta, mutta sen tavoitellaan omaavan keskimäärin aikavaativuuden O(mr), missä m on syötetty merkkijono ja r, se merkkijono johon verrataan. Etäisyyden laskemistakin on mahdollista optimoida.
+- Ehdotusalgoritmin aikavaatimus pitäisi olla keskimäärin sellainen, että jokainen haku tapahtuu käyttäjän näkökulmasta siedettävässä ajassa. Tämä tarkoittaa esim sitä, että ehdotusten muodostamisen pitäisi olla alle O(n), missä n on sanaston koko. Damerau–Levenshtein etäisyyden laskemisen aikavaativuudella ei todennäköisimmin ole niin suurta painoarvoa tehokkuuden kannalta, mutta sen tavoitellaan omaavan keskimäärin aikavaativuuden O(mr), missä m on syötetty merkkijono ja r, se merkkijono johon verrataan. Etäisyyden laskemistakin on mahdollista optimoida.
 
 - Sanaston tilavaativuudeksi tavoitellaan enintäään O(n), missä n on sanojen määrä sanastossa, Trie puulla tämän tosin pitäisi onnistua, vaikkakin trie puu vie myös paljon tilaa. Vaihtoehtona olisi tilan kannalta mahdollisesti myös [Deterministic acyclic finite state automaton](https://en.wikipedia.org/wiki/Deterministic_acyclic_finite_state_automaton). 
 - Damerau–Levenshtein etäisyyden tilavaativuuden on oltava enintään O(mr), missä m on syötetty merkkijono ja r, se merkkijono johon verrataan. Tässäkin on varmasti optimoinnin varaa. 
@@ -35,3 +35,4 @@ Ohjelma lataa myös käyttöönsä suomen kielen sanaston, jota se käyttää ki
 - Stackoverlflow
 - Wikipedia
 - [Peter Norvig](http://norvig.com/spell-correct.html)
+- Erinäiset helkan kirjastosta löytyvät aiheeseen liittyvät tieteelliset tekstit
