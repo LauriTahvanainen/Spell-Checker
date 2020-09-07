@@ -25,3 +25,7 @@
 
 - Luen lisää tarvittavista algoritmeista ja tietorakenteista
 - Ohjelmoin projektille pohjan. Mahd käyttöliittymän jo valmiiksi ja arkkitehtuurisen pohjan.
+
+## Käytetty tuntimäärä
+- 6h taustatyötä
+- 1h projektipohjan luominen
