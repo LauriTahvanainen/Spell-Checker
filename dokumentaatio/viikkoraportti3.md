@@ -19,6 +19,7 @@
 ## Mikä on jäänyt epäselväksi tai tuottanut vaikeuksia?
 
 - Eteneminen on varsin hidasta.
+- BK puun toiminnan intuitio kolmioepäyhtälöön perustuen ei ole vielä oikein iskostunut. Tämän takia BK puun toteutuskin jäi kesken.
 
 ## Mitä teen seuraavaksi
 
@@ -26,4 +27,4 @@
 - BK-puu, ja jos ehtii vaihtoehtoisia toteutuksia sen ympärille.
 
 ## Käytetty tuntimäärä
-- 18 h
+- 20 h
