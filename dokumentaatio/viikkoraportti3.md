@@ -2,7 +2,7 @@
 
 ## Mitä olen tehnyt tällä viikolla?
 
-- Pohtinut sanastonmuodostusongelmaa, sekä lopulta löytänyt laadukkaita sanastoja kielipankista
+- Pohtinut sanastonmuodostusongelmaa, sekä lopulta löytänyt laadukkaita sanastoja kielipankista, ja päättänyt, että laajin sanasto saadaan tässä tapauksessa lataamalla sanoja valmiista sanastosta. Käyttäjälle voi myös antaa mahdollisuuden lisätä uusi sana rakenteeseen, jos rakenteesta jää joku sana pois.
 - Lukenut paljon teoriaa aiheesta, lopulta löydettyäni tieteellisiä lähteitä
 - Toteuttanut levenshtein-etäisyyden laskemisen, ja yrittänyt ymmärtää sen dynaamisen algoritmin toiminnan.
 - Lukenut BK-puusta, jota tulenkin käyttämään korjaamisessa. Suunnitellut puun toteutusta.
@@ -26,4 +26,4 @@
 - BK-puu, ja jos ehtii vaihtoehtoisia toteutuksia sen ympärille.
 
 ## Käytetty tuntimäärä
-- 15 h
+- 18 h
