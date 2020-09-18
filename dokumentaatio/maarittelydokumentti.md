@@ -32,7 +32,7 @@ Ohjelma lataa myös käyttöönsä suomen kielen sanaston, jota se käyttää ki
 
 
 ## Lähteet
-- Stackoverlflow
+- Baeza-Yates, R. & Navarro, G. (1998) ‘Fast approximate string matching in a dictionary’, in [Online]. 1998 IEEE. pp. 14–22.
+- Navarro, GG. A Guided Tour to Approximate String Matching ACM Computing Surveys, Vol. 33, No. 1, March 2001 
 - Wikipedia
 - [Peter Norvig](http://norvig.com/spell-correct.html)
-- Erinäiset helkan kirjastosta löytyvät aiheeseen liittyvät tieteelliset tekstit
