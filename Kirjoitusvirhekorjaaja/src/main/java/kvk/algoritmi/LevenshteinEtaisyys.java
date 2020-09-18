@@ -1,9 +1,12 @@
 package kvk.algoritmi;
 
+/**
+ * Levenshtein etäisyyden toteuttava etäisyydenlaskija.
+ */
+public class LevenshteinEtaisyys implements IMuokkausEtaisyyslaskija{
 
-public class MuokkausEtaisyyslaskija {
 
-    /**
+     /**
      * Laskee kahden merkkijonon välisen (Levenshtein) muokkausetäisyyden käyttämällä dynaamisen ohjelmoinnin algoritmia. 
      * Muokkausetäisyydellä tarkoitetaan pienintä sallittujen operaation määrä merkkijonolle X, joilla X:stä saadaan merkkijono Y. 
      * Tässä tapauksessa sallittuja operaatioita ovat: Yhden merkkin vaihtaminen toiseen, yhden merkkin poistaminen ja yhden merkin lisääminen.
@@ -11,7 +14,8 @@ public class MuokkausEtaisyyslaskija {
      * @param mjonoY
      * @return Merkkijonojen välinen muokkausetäisyys kokonaislukuna.
      */
-    public static int LevenshteinEtaisyys(String mjonoX, String mjonoY) {
+    @Override
+    public int laskeEtaisyys(String mjonoX, String mjonoY) {
         mjonoX = mjonoX.trim().toLowerCase();
         mjonoY = mjonoY.trim().toLowerCase();
         int[][] etaisyysMatriisi = new int[mjonoX.length() + 1][mjonoY.length() + 1];
