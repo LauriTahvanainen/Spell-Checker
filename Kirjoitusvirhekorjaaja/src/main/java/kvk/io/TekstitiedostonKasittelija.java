@@ -12,18 +12,19 @@ import java.util.List;
 /**
  * Hoitaa I/O toimenpiteet.
  */
-public class TekstitiedostonKasittelija implements ITekstitiedostonKasittelija{
-    
+public class TekstitiedostonKasittelija implements ITekstitiedostonKasittelija {
+
     private final String sanastoTiedostonNimi = "/sanalista.txt";
-    
+
     /**
      * Tallentaa String objectissa annetun muuttujan annettuun tiedostoon.
+     *
      * @param teksti
      * @param tiedostoPolku
      * @return true jos tekstin tallentaminen tiedostoon onnistui.
      */
     @Override
-    public boolean tallennaTeksti(String teksti,File tiedostoPolku) {
+    public boolean tallennaTeksti(String teksti, File tiedostoPolku) {
         try (BufferedWriter puskuroituKirjoittaja = Files.newBufferedWriter(tiedostoPolku.toPath());) {
             puskuroituKirjoittaja.write(teksti);
             return true;
@@ -33,7 +34,9 @@ public class TekstitiedostonKasittelija implements ITekstitiedostonKasittelija{
     }
 
     /**
-     * Lataa parametrina annetusta tiedostosta tekstin ja palauttaa sen String objektissa.
+     * Lataa parametrina annetusta tiedostosta tekstin ja palauttaa sen String
+     * objektissa.
+     *
      * @param tiedostoPolku
      * @return tiedostosta ladattu teksti.
      * @throws IOException
@@ -44,7 +47,7 @@ public class TekstitiedostonKasittelija implements ITekstitiedostonKasittelija{
 
             String teksti = "";
             String rivi;
-            
+
             while ((rivi = puskuroituLukija.readLine()) != null) {
                 teksti = teksti + rivi;
             }
@@ -56,6 +59,7 @@ public class TekstitiedostonKasittelija implements ITekstitiedostonKasittelija{
 
     /**
      * Lataa resursseista korjaajan käyttämän sanaston listana String objekteja.
+     *
      * @return Resursseissa sijaitseva sanasto string listana.
      * @throws IOException
      */
@@ -65,7 +69,7 @@ public class TekstitiedostonKasittelija implements ITekstitiedostonKasittelija{
         try (BufferedReader puskuroituLukija = new BufferedReader(new InputStreamReader(TekstitiedostonKasittelija.class.getResourceAsStream(this.sanastoTiedostonNimi)))) {
 
             String rivi;
-            
+
             while ((rivi = puskuroituLukija.readLine()) != null) {
                 sanalista.add(rivi);
             }

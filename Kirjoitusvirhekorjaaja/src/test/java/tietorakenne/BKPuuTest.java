@@ -42,22 +42,22 @@ public class BKPuuTest {
     @Test
     public void lisaaSana_OlemassaOlevallaSanalla_EiLisaaSanaa() {
         this.sut.lisaaSana("ja");
-        assertTrue(this.juuri.solmuLista.isEmpty());           
+        assertTrue(this.juuri.solmuLista.isEmpty());
     }
-    
+
     @Test
     public void lisaaSana_PerusTapaus_LisaaSanan() {
         this.sut.lisaaSana("Kilpikonna");
         assertFalse(this.juuri.solmuLista.isEmpty());
     }
-    
+
     @Test
     public void lisaaSana_SanaSamallaEtaisyydella_LisataanLapsenPeraan() {
         this.sut.lisaaSana("työ");
         this.sut.lisaaSana("vyö");
         assertFalse(this.juuri.lapsiEtaisyydella(3).solmuLista.isEmpty());
     }
-    
+
     @Test
     public void lisaaSana_SanaSamallaEtaisyydella_LisataanLapsenPeraanOikeallaEtaisyydella() {
         this.sut.lisaaSana("työ");

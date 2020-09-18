@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import kvk.algoritmi.IMuokkausEtaisyyslaskija;
 
 /**
- * BK-puu tietorakenne, jonka avulla sanastosta voi etsiä nopeasti merkkijonoja, jotka ovat tietyn muokkausetäisyyden sisällä yksittäisestä merkkijonosta.
+ * BK-puu tietorakenne, jonka avulla sanastosta voi etsiä nopeasti merkkijonoja,
+ * jotka ovat tietyn muokkausetäisyyden sisällä yksittäisestä merkkijonosta.
  */
 public class BKPuu {
 
@@ -35,11 +36,11 @@ public class BKPuu {
             }
         }
     }
-    
+
     public ArrayList<String> haeLahimmatSanat(String sana) {
         ArrayList<String> lahimmatSanat = new ArrayList<>();
-        
+
         return null;
     }
-    
+
 }

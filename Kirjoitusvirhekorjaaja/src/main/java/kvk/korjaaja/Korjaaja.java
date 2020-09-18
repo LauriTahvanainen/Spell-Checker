@@ -7,16 +7,17 @@ import kvk.tietorakenne.Trie;
 import kvk.tietorakenne.TrieSolmu;
 
 /**
- * Perustoteutus korjaajasta, käyttää Trie-puuta virheellisten sanojen tunnistamiseen.
+ * Perustoteutus korjaajasta, käyttää Trie-puuta virheellisten sanojen
+ * tunnistamiseen.
  */
 public class Korjaaja implements IKorjaaja {
 
     private Trie sanasto;
-    
+
     public Korjaaja(ITekstitiedostonKasittelija lukija) throws IOException {
         alustaKorjaaja(lukija);
     }
-    
+
     @Override
     public boolean onkoSanaVirheellinen(String sana) {
         return !this.sanasto.onkoSana(sana);
@@ -30,9 +31,9 @@ public class Korjaaja implements IKorjaaja {
     private void alustaKorjaaja(ITekstitiedostonKasittelija lukija) throws IOException {
         this.sanasto = new Trie(new TrieSolmu(Character.MIN_VALUE));
         List<String> sanalista = lukija.lataaSanastoListana();
-        for (String sana: sanalista) {
+        for (String sana : sanalista) {
             this.sanasto.lisaaSana(sana);
         }
     }
-    
+
 }

@@ -54,8 +54,8 @@ public class TrieTest {
         this.sut.lisaaSana("Kissa");
         assertEquals(this.juuri.haeSolmuListasta('K').haeSolmuListasta('i').haeSolmuListasta('s').haeSolmuListasta('s').haeSolmuListasta('a').onkoSana(), true);
     }
-    
-        @Test
+
+    @Test
     public void Trie_MonillaUusillaSanoilla_LisaaSanatOnnistuneesti() {
         this.sut.lisaaSana("Kissa");
         this.sut.lisaaSana("Kisa");
@@ -85,7 +85,7 @@ public class TrieTest {
         this.sut.lisaaSana("Kirjain");
         assertEquals(sut.onkoSana("kirja"), false);
     }
-    
+
     @Test
     public void OnkoSana_MonellaOlemassaOlevallaSanalla_PalauttaaOikein() {
         this.sut.lisaaSana("Kissa");
