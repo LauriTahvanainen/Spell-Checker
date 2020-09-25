@@ -3,7 +3,7 @@
 ## Mitä olen tehnyt tällä viikolla?
 
 - Toteuttanut BK-puun loppuun. Testannut puuta.
-- Suunnitellut ja hieman toteuttanut omia aputietorakenteita, kuten taulukoita.
+- Suunnitellut ja hieman toteuttanut omia aputietorakenteita, kuten taulukoita. Taulukko jäi vielä raakileeksi.
 - Edistänyt ui:ta ja opetellut RichTextFX kirjastoa.
 - Kirjoitin dokumentaatiota
 
