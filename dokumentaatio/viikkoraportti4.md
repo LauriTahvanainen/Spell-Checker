@@ -12,16 +12,16 @@
 
 ## Mitä opin tällä viikolla?
 
+- BK-puun toiminnan.
 - RichTextFX kirjaston toiminnasta.
 
 ## Mikä on jäänyt epäselväksi tai tuottanut vaikeuksia?
 
-- Eteneminen on varsin hidasta.
-- BK puun toiminnan intuitio kolmioepäyhtälöön perustuen ei ole vielä oikein iskostunut. Tämän takia BK puun toteutuskin jäi kesken.
+-  Kuinka korvaan toteutuksessa optimaalisella tavalla HashSetin. HashSeteissä on pääsiassa avaimina kokonaislukuja, mutta esim. trien tapauksessa myös kirjaimia. Ihan linkitetyllä taulukolla?
 
 ## Mitä teen seuraavaksi
 
-- Korvaan mm. Trien ja BK-puun käyttämiä tietorakenteita omilla toteutuksilla.
+- Korvaan mm. Trien ja BK-puun käyttämiä tietorakenteita omilla toteutuksilla. Esim HashMap korvaaminen.
 - Toteutan itsestään järjestyvän tietorakenteen korjausehdotusten keräämiseen BK-puusta.
 
 ## Käytetty tuntimäärä
