@@ -5,6 +5,7 @@
 - Toteuttanut BK-puun loppuun. Testannut puuta.
 - Suunnitellut ja hieman toteuttanut omia aputietorakenteita, kuten taulukoita.
 - Tarkastellut ui:ta erityisesti TichTextFX kirjastoa.
+- Kirjoitin dokumentaatiota
 
 ## Miten ohjelma on edistynyt?
 
