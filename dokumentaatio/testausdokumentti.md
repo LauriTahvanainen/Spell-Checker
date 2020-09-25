@@ -18,3 +18,22 @@ Tietorakenteiden yhteydessä on testattu myös niiden oikeellista toimintaa Mock
 
 ### Käyttöliittymä
 Käyttöliittymä on testattu manuaalisesti.
+
+# Suorituskykytestaus
+## Suunnitelma
+Suorituskykytestit toteutetaan omaan pakettiinsa, jotta ne voidaan ajaa erikseen yksikkötesteistä.
+
+Suorituskykytestausta voi tehdä projektissa monessa eri palasessa. Tässä vaiheessa kuitenkin kun kaikkia tietorakenteita ei ole vielä toteutettu, ei suorituskykytestaustakaan aloiteta täysillä. Testattavia kohteita:
+
+- Sanaston lataaminen Trie- ja BK-puuhun. 
+  - Testattava oikeasti isolla sanastolla.
+- Sanan sanastoon kuulumisen testaamisen tehokkuus
+  - Testattava täydellä sanastolla
+  - Keskiarvo
+- Virheelliselle sanalle korjausehdotusten generoimisen tehokkuus
+  - Testattava täydellisellä sanastolla
+  - Keskiarvo
+- Oleellisten tietorakenteiden tehokkuuden testaaminen.
+- Etäisyysmittausalgortimien, esim Levenshteinin-etäisyyden tehokkuuden testaaminen.
+  - Jos ja kun lisätään vaihtoehtoisia etäisyysalgoritmeja, verrataan näiden suorituskykyä, sekä yksittäin, että kokonaisuutena korjausehdotusten generoinnin kanssa.
+
