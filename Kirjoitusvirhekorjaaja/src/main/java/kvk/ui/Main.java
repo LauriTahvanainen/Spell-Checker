@@ -1,6 +1,9 @@
 package kvk.ui;
 
+import java.text.BreakIterator;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Locale;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -20,6 +23,7 @@ import kvk.korjaaja.IKorjaaja;
 import kvk.korjaaja.Korjaaja;
 import org.fxmisc.richtext.StyledTextArea;
 import org.fxmisc.richtext.StyleClassedTextArea;
+import org.fxmisc.richtext.model.EditableStyledDocument;
 import org.fxmisc.richtext.model.Paragraph;
 import org.reactfx.collection.LiveList;
 
@@ -36,6 +40,7 @@ public class Main extends Application {
     private String initVirheViesti;
     private ITekstitiedostonKasittelija tiedostonKasittelija;
     private StyleClassedTextArea kirjoitusAlue;
+    private BreakIterator sanaIteroija;
 
     @Override
     public void start(Stage ikkuna) {
@@ -70,6 +75,7 @@ public class Main extends Application {
         this.kirjoitusAlue = new StyleClassedTextArea();
         this.kirjoitusAlue.setPrefHeight(450);
         this.kirjoitusAlue.setWrapText(true);
+        this.sanaIteroija = BreakIterator.getWordInstance(new Locale("fi", "FI"));
 
         Button tallennaTiedostoonNappi = new Button("Tallenna");
         Button lataaTiedostostaNappi = new Button("Lataa teksti tiedostosta");
@@ -78,21 +84,30 @@ public class Main extends Application {
 
             @Override
             public void handle(ActionEvent event) {
-                String teksti = kirjoitusAlue.getText();
-                if (virheenKorjaaja.onkoSanaVirheellinen(teksti)) {
-                    String[] ehdotukset = virheenKorjaaja.ehdotaKorjauksia(teksti);
-                    for (String sana : ehdotukset) {
-                        System.out.println(sana);
+                for (Paragraph lause : kirjoitusAlue.getParagraphs()) {
+                    String kappale = lause.getText();
+                    sanaIteroija.setText(lause.getText());
+                    int alkuIndeksi = sanaIteroija.first();
+                    int loppuIndeksi = sanaIteroija.next();
+                    while (loppuIndeksi != BreakIterator.DONE) {
+                        String sana = kappale.substring(alkuIndeksi, loppuIndeksi);
+                        if (Character.isLetterOrDigit(sana.charAt(0))) {
+                            if (virheenKorjaaja.onkoSanaVirheellinen(sana)) {
+                                System.out.println("sana: " + sana + ", on virheellinen. Tässä 10 korjausehdotusta: " + Arrays.toString(virheenKorjaaja.ehdotaKorjauksia(sana)));
+                            }
+                        }
+                        alkuIndeksi = loppuIndeksi;
+                        loppuIndeksi = sanaIteroija.next();
                     }
                 }
             }
+
         });
         lataaTiedostostaNappi.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
-                LiveList lista = kirjoitusAlue.getParagraphs();
-                kirjoitusAlue.selectWord();
+
             }
         });
 

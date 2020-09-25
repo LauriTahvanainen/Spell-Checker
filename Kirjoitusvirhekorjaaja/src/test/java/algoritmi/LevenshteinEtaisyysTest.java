@@ -39,7 +39,7 @@ public class LevenshteinEtaisyysTest {
     }
 
     @Test
-    public void LevenshteinEtaisyys_TyhjäänSanaan_PalauttaaToisenMerkkijononPituude() {
+    public void LevenshteinEtaisyys_TyhjäänSanaan_PalauttaaToisenMerkkijononPituuden() {
         assertEquals(this.sut.laskeEtaisyys("Kissa", ""), 5);
         assertEquals(this.sut.laskeEtaisyys("", "vainukoira"), 10);
     }

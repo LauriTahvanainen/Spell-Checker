@@ -2,6 +2,9 @@ package kvk.tietorakenne;
 
 import java.util.HashMap;
 
+/**
+ * BK-puun yksittäinen solmu.
+ */
 public class BKSolmu {
 
     public final String sana;
