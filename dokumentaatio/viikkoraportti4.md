@@ -4,17 +4,18 @@
 
 - Toteuttanut BK-puun loppuun. Testannut puuta.
 - Suunnitellut ja hieman toteuttanut omia aputietorakenteita, kuten taulukoita.
-- Tarkastellut ui:ta erityisesti TichTextFX kirjastoa.
+- Edistänyt ui:ta ja opetellut RichTextFX kirjastoa.
 - Kirjoitin dokumentaatiota
 
 ## Miten ohjelma on edistynyt?
 
-- Palaset alkaa loksahdella kohdalleen.
+- Palaset alkaa loksahdella kohdalleen. Ennustuksia voidaan jo tehdä, tosin niiden järjestämistä varten pitää vielä luoda tietorakenne, todennäköisimmin itsejärjestyvä puu.
 
 ## Mitä opin tällä viikolla?
 
 - BK-puun toiminnan.
 - RichTextFX kirjaston toiminnasta.
+- Javassa on hieno BreakIterator utili, millä voi iteroida luonnollista tekstiä sana kerrallaan.
 
 ## Mikä on jäänyt epäselväksi tai tuottanut vaikeuksia?
 
@@ -26,4 +27,4 @@
 - Toteutan itsestään järjestyvän tietorakenteen korjausehdotusten keräämiseen BK-puusta.
 
 ## Käytetty tuntimäärä
-- 20 h
+- 18 h
