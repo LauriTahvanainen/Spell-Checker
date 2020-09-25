@@ -1,5 +1,6 @@
 package kvk.tietorakenne;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import kvk.algoritmi.IMuokkausEtaisyyslaskija;
 
@@ -11,11 +12,9 @@ public class BKPuu {
 
     private BKSolmu juuri;
     private final IMuokkausEtaisyyslaskija etaisyysLaskija;
-    private final int toleranssi;
 
-    public BKPuu(IMuokkausEtaisyyslaskija etaisyysLaskija, int toleranssi, BKSolmu juuriSolmu) {
+    public BKPuu(IMuokkausEtaisyyslaskija etaisyysLaskija, BKSolmu juuriSolmu) {
         this.etaisyysLaskija = etaisyysLaskija;
-        this.toleranssi = toleranssi;
         this.juuri = juuriSolmu;
     }
 
@@ -37,10 +36,29 @@ public class BKPuu {
         }
     }
 
-    public ArrayList<String> haeLahimmatSanat(String sana) {
-        ArrayList<String> lahimmatSanat = new ArrayList<>();
+    public ArrayList<SanaEtaisyysPari> haeLahimmatSanat(String sana, int etaisyysToleranssi) {
+        ArrayList<SanaEtaisyysPari> lahimmatSanat = new ArrayList<>();
+        ArrayDeque<BKSolmu> kandidaatit = new ArrayDeque<>();
 
-        return null;
+        kandidaatit.push(this.juuri);
+
+        while (!kandidaatit.isEmpty()) {
+            BKSolmu verrattavaSolmu = kandidaatit.pop();
+            int etaisyysEtsittavaanSanaan = this.etaisyysLaskija.laskeEtaisyys(sana, verrattavaSolmu.sana);
+            if (etaisyysEtsittavaanSanaan <= etaisyysToleranssi) {
+                lahimmatSanat.add(new SanaEtaisyysPari(verrattavaSolmu.sana, etaisyysEtsittavaanSanaan));
+            }
+            int rajausAlaRaja = etaisyysEtsittavaanSanaan - etaisyysToleranssi;
+            int rajausYlaRaja = etaisyysEtsittavaanSanaan + etaisyysToleranssi;
+            for (int i = rajausAlaRaja; i <= rajausYlaRaja; i++) {
+                BKSolmu uusiKandidaatti = verrattavaSolmu.lapsiEtaisyydella(i);
+                if (uusiKandidaatti != null) {
+                    kandidaatit.push(uusiKandidaatti);
+                }
+            }
+        }
+
+        return lahimmatSanat;
     }
 
 }
