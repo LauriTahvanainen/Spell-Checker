@@ -1,5 +1,5 @@
 # Kirjoitusvirhekorjaaja
-## 2020 Periodi 1 Tietorakenteet ja Algoritmit aineopintojen harjoitustyö. 
+## 2020, Periodi 1, Tietorakenteet ja Algoritmit aineopintojen harjoitustyö. 
 ## Ohjelma joka ehdottaa korjauksia virheellisesti kirjoitettuihin sanoihin.
 
 # Dokumentaatio
