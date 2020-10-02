@@ -1,24 +1,57 @@
 package kvk.tietorakenne;
 
+/**
+ * Taulukkoon pohjautuva rakenne Trie puun solmulistojen toteuttamiseksi.
+ * Yrittää optimoida käytettyä muistia. Määrittää myös sallitut merkit.
+ *
+ * Sallitut merkit muunnetaan sopivalle kokonaislukuvälille, ja näitä
+ * kokonaislukuja käytetään avaimina tallettamaan TrieSolmu-instanssi
+ * rakenteeseen. Jokaista merkkiä vastaa siis yksi alkio.
+ *
+ * Merkki-kokonaisluku muunnokset on tehty niin, että pienimmästä suurimpaan
+ * ensin on aakkoset, sitten erikoismerkit. Tämä yhdistettynä siihen, että
+ * taulukon koko valitaan dynaamisesti vähentää tarvittavaa muistia. Esim jos
+ * Trie-solmu tallentaa solmulistaansa vain merkille 'b' solmun, on tämän
+ * rakenteen taulukon koko 2. Toisaalta jos Trie-Solmuun tallennetaan vain
+ * '-merkki, niin taulukon kooksi tulee 54, ja tallennetaan turhaan 53
+ * null-arvoa. Kuitenkin '-merkkisiä sanoja on todella vähän, joten tällaisia
+ * taulukoita ei tule olemaan kovin montaa. Suurin osa taulukoista on kooltaan
+ * maksimissaan aakkosten lukumäärä, todennäköisesti vielä pienempiä.
+ *
+ */
 public class MerkkiSolmuTaulu {
 
     private TrieSolmu[] lista;
     private int pituus;
-    private static final int MAKSIMI_INDEKSI = 53;
+    private static final int MAKSIMI_PITUUS = 53;
 
     public MerkkiSolmuTaulu() {
         this.pituus = 0;
         this.lista = new TrieSolmu[this.pituus];
     }
 
+    /**
+     * Hakee taulukosta merkkiä vastaavan TrieSolmu-alkion.
+     *
+     * @param merkki
+     * @return Merkkiä vastaava TrieSolmu-instanssi, tai null, jos merkkiä
+     * vastaavaa alkiota ei löydy.
+     * @throws Exception
+     */
     public TrieSolmu hae(char merkki) throws Exception {
         int indeksi = merkkiKokonaisluvuksi(merkki);
-        if (indeksi >= this.pituus && indeksi < MAKSIMI_INDEKSI) {
+        if (indeksi >= this.pituus && indeksi < MAKSIMI_PITUUS) {
             return null;
         }
         return this.lista[indeksi];
     }
 
+    /**
+     * Lisää rakenteeseen TrieSolmu-instanssin avaimena annettu merkki.
+     * @param lapsiMerkki Avain
+     * @param lapsiSolmu TrieSolmu-instanssi
+     * @throws Exception jos yritetään ylikirjoittaa jonkun merkin päälle.
+     */
     public void lisaa(char lapsiMerkki, TrieSolmu lapsiSolmu) throws Exception {
         lapsiMerkki = Character.toLowerCase(lapsiMerkki);
         int indeksi = merkkiKokonaisluvuksi(lapsiMerkki);

@@ -101,13 +101,16 @@ public class ListaTest {
             assertEquals(this.sut.hae(i), null);
         }
     }
-    
-    @Test
-    public void Haku_VirheellisellaIndeksilla_PalauttaaNULL() {
-        assertEquals(this.sut.hae(-1), null);
-        assertEquals(this.sut.hae(20), null);
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void Haku_NegatiivisellaIndeksilla_KaatuuIndexOutOfBoundExceptioniin() {
+        this.sut.hae(20);
     }
-    
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void Haku_LiianSuurellaIndeksilla_KaatuuIndexOutOfBoundExceptioniin() {
+        this.sut.hae(-1);
+    }
 
     private void lisaaAlkioita(int maara) {
         for (int i = 0; i < maara; i++) {

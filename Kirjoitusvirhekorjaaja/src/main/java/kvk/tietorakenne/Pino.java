@@ -1,5 +1,9 @@
 package kvk.tietorakenne;
 
+/**
+ * Pino, jonka alkioden tyyppi on valittavissa. Kaikkien alkioiden pitää tätä valittua tyyppiä.
+ * @param <T>
+ */
 public class Pino<T> {
 
     private T[] lista;
@@ -12,10 +16,18 @@ public class Pino<T> {
         this.osoittaja = -1;
     }
 
+    /**
+     * Onko jono tyhjä.
+     * @return True jos jono on tyhjä, muuten false.
+     */
     public boolean onTyhja() {
         return this.osoittaja == -1;
     }
 
+    /**
+     * Lisää jonoon päällimäiseksi alkion.
+     * @param alkio joka lisätään.
+     */
     public void lisaa(T alkio) {
         if (this.osoittaja == this.varattuKoko - 1) {
             kasvataPinoa();
@@ -24,6 +36,10 @@ public class Pino<T> {
         this.lista[this.osoittaja] = alkio;
     }
 
+    /**
+     * Poistaa ja palauttaa pinon päällimmäisen, eli viimeeksi lisätyn, alkion. 
+     * @return poistettu päällimmäinen alkio.
+     */
     public T poista() {
         if (onTyhja()) {
             return null;
