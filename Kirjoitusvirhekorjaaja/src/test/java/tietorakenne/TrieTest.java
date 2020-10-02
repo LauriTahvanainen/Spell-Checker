@@ -12,10 +12,6 @@ import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-/**
- *
- * @author coronatus
- */
 public class TrieTest {
 
     private Trie sut;
@@ -41,7 +37,7 @@ public class TrieTest {
     }
 
     @Test
-    public void LisaaSana_UusillaSanoillaIsoillaJaPienillaKirjaimilla_EiLisaaUusiaSolmuja() {
+    public void LisaaSana_UusillaSanoillaIsoillaJaPienillaKirjaimilla_EiLisaaUusiaSolmuja() throws Exception {
         this.juuri = mock(TrieSolmu.class);
         this.sut.lisaaSana("Kissa");
         this.sut.lisaaSana("kissa");
@@ -50,13 +46,13 @@ public class TrieTest {
     }
 
     @Test
-    public void LisaaSana_UudellaSanalla_LisaaUudenSananOnnistuneesti() {
+    public void LisaaSana_UudellaSanalla_LisaaUudenSananOnnistuneesti() throws Exception {
         this.sut.lisaaSana("Kissa");
         assertEquals(this.juuri.haeSolmuListasta('K').haeSolmuListasta('i').haeSolmuListasta('s').haeSolmuListasta('s').haeSolmuListasta('a').onkoSana(), true);
     }
 
     @Test
-    public void Trie_MonillaUusillaSanoilla_LisaaSanatOnnistuneesti() {
+    public void Trie_MonillaUusillaSanoilla_LisaaSanatOnnistuneesti() throws Exception {
         this.sut.lisaaSana("Kissa");
         this.sut.lisaaSana("Kisa");
         this.sut.lisaaSana("Katti");
@@ -74,20 +70,20 @@ public class TrieTest {
     }
 
     @Test
-    public void OnkoSana_OlemattomallaSanalla_PalauttaaFalse() {
+    public void OnkoSana_OlemattomallaSanalla_PalauttaaFalse() throws Exception {
         this.sut.lisaaSana("Kissa");
         assertEquals(sut.onkoSana("kisa"), false);
 
     }
 
     @Test
-    public void OnkoSana_OlemassaOlevanSananOsalla_PalauttaaFalse() {
+    public void OnkoSana_OlemassaOlevanSananOsalla_PalauttaaFalse() throws Exception {
         this.sut.lisaaSana("Kirjain");
         assertEquals(sut.onkoSana("kirja"), false);
     }
 
     @Test
-    public void OnkoSana_MonellaOlemassaOlevallaSanalla_PalauttaaOikein() {
+    public void OnkoSana_MonellaOlemassaOlevallaSanalla_PalauttaaOikein() throws Exception {
         this.sut.lisaaSana("Kissa");
         this.sut.lisaaSana("Kisa");
         this.sut.lisaaSana("Katti");

@@ -11,8 +11,9 @@ public interface IKorjaaja {
      *
      * @param sana
      * @return true jos sana on virheellinen
+     * @throws java.lang.Exception
      */
-    boolean onkoSanaVirheellinen(String sana);
+    boolean onkoSanaVirheellinen(String sana) throws Exception;
 
     /**
      * Palauttaa korvaavia ehdotuksia parametrina annettuun sanaan.

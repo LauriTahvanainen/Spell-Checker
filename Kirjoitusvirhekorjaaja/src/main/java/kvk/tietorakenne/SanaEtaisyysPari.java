@@ -1,8 +1,6 @@
 package kvk.tietorakenne;
 
-import java.util.Objects;
-
-public class SanaEtaisyysPari implements Comparable {
+public class SanaEtaisyysPari implements Comparable<SanaEtaisyysPari> {
 
     public String sana;
     public int etaisyys;
@@ -27,16 +25,22 @@ public class SanaEtaisyysPari implements Comparable {
         if (this.etaisyys != other.etaisyys) {
             return false;
         }
-        if (!Objects.equals(this.sana, other.sana)) {
-            return false;
-        }
-        return true;
+        return this.sana.equals(other.sana);
     }
 
     @Override
-    public int compareTo(Object o) {
-        SanaEtaisyysPari other = SanaEtaisyysPari.class.cast(o);
-        return this.etaisyys - other.etaisyys;
+    public String toString() {
+        return sana;
+    }
+    
+
+    @Override
+    public int compareTo(SanaEtaisyysPari o) {
+        int muokkausEtaisyys = this.etaisyys - o.etaisyys;
+        if (muokkausEtaisyys != 0) {
+            return muokkausEtaisyys;
+        }
+        return this.sana.compareTo(o.sana);
     }
 
 }

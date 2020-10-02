@@ -1,14 +1,11 @@
 package kvk.korjaaja;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import kvk.algoritmi.IMuokkausEtaisyyslaskija;
-import kvk.algoritmi.LevenshteinEtaisyys;
 import kvk.io.ITekstitiedostonKasittelija;
 import kvk.tietorakenne.BKPuu;
 import kvk.tietorakenne.BKSolmu;
-import kvk.tietorakenne.SanaEtaisyysPari;
 import kvk.tietorakenne.Trie;
 import kvk.tietorakenne.TrieSolmu;
 
@@ -23,7 +20,7 @@ public class Korjaaja implements IKorjaaja {
     private Trie trieSanasto;
     private BKPuu BKSanasto;
 
-    public Korjaaja(ITekstitiedostonKasittelija lukija, IMuokkausEtaisyyslaskija etaisyysLaskija, int etaisyysToleranssi) throws IOException {
+    public Korjaaja(ITekstitiedostonKasittelija lukija, IMuokkausEtaisyyslaskija etaisyysLaskija, int etaisyysToleranssi) throws IOException, Exception {
         this.etaisyysLaskija = etaisyysLaskija;
         this.etaisyysToleranssi = etaisyysToleranssi;
         alustaKorjaaja(lukija);
@@ -34,26 +31,16 @@ public class Korjaaja implements IKorjaaja {
     }
 
     @Override
-    public boolean onkoSanaVirheellinen(String sana) {
+    public boolean onkoSanaVirheellinen(String sana) throws Exception {
         return !this.trieSanasto.onkoSana(sana);
     }
 
     @Override
     public String[] ehdotaKorjauksia(String sana) {
-        ArrayList<SanaEtaisyysPari> ehdotukset = this.BKSanasto.haeLahimmatSanat(sana, this.etaisyysToleranssi);
-        String[] ehdotuksetListana = new String[10];
-        int i = 0;
-        for (SanaEtaisyysPari ehdotus : ehdotukset) {
-            if (i == 10) {
-                break;
-            }
-            ehdotuksetListana[i] = ehdotus.sana;
-            i += 1;
-        }
-        return ehdotuksetListana;
+        return this.BKSanasto.haeLahimmatSanat(sana, this.etaisyysToleranssi, 10);
     }
 
-    private void alustaKorjaaja(ITekstitiedostonKasittelija lukija) throws IOException {
+    private void alustaKorjaaja(ITekstitiedostonKasittelija lukija) throws IOException, Exception {
         this.trieSanasto = new Trie(new TrieSolmu(Character.MIN_VALUE));
         this.BKSanasto = new BKPuu(this.etaisyysLaskija, new BKSolmu("ja", null, 0));
         List<String> sanalista = lukija.lataaSanastoListana();

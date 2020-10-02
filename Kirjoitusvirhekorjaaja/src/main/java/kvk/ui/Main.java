@@ -2,15 +2,15 @@ package kvk.ui;
 
 import java.text.BreakIterator;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -71,7 +71,8 @@ public class Main extends Application {
     public void init() throws Exception {
         this.tiedostonKasittelija = new TekstitiedostonKasittelija();
         this.virheenKorjaaja = new Korjaaja(this.tiedostonKasittelija, new LevenshteinEtaisyys(), 2);
-
+        System.out.println((int) 'z' -97);
+        System.out.println((int) '9' -22);
         this.kirjoitusAlue = new StyleClassedTextArea();
         this.kirjoitusAlue.setPrefHeight(450);
         this.kirjoitusAlue.setWrapText(true);
@@ -92,8 +93,12 @@ public class Main extends Application {
                     while (loppuIndeksi != BreakIterator.DONE) {
                         String sana = kappale.substring(alkuIndeksi, loppuIndeksi);
                         if (Character.isLetterOrDigit(sana.charAt(0))) {
-                            if (virheenKorjaaja.onkoSanaVirheellinen(sana)) {
-                                System.out.println("sana: " + sana + ", on virheellinen. Tässä 10 korjausehdotusta: " + Arrays.toString(virheenKorjaaja.ehdotaKorjauksia(sana)));
+                            try {
+                                if (virheenKorjaaja.onkoSanaVirheellinen(sana)) {
+                                    System.out.println("sana: " + sana + ", on virheellinen. Tässä 10 korjausehdotusta: " + Arrays.toString(virheenKorjaaja.ehdotaKorjauksia(sana.trim().toLowerCase())));
+                                }
+                            } catch (Exception ex) {
+                                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
                         alkuIndeksi = loppuIndeksi;

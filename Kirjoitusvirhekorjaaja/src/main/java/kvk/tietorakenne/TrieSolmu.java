@@ -1,7 +1,5 @@
 package kvk.tietorakenne;
 
-import java.util.HashMap;
-
 /**
  * Trie tietorakenteen yksi solmu. Solmussa solmua kuvaava merkki, hajautuslista
  * toisista solmuista joihin solmusta pääsee, sekä boolean arvo sille, onko
@@ -9,12 +7,12 @@ import java.util.HashMap;
  */
 public class TrieSolmu {
 
-    private final HashMap<Character, TrieSolmu> solmuLista;
+    private final MerkkiSolmuTaulu solmuLista;
     private final char solmunMerkki;
     private boolean onSana;
 
     public TrieSolmu(char merkki) {
-        this.solmuLista = new HashMap<>();
+        this.solmuLista = new MerkkiSolmuTaulu();
         this.solmunMerkki = merkki;
         this.onSana = false;
     }
@@ -25,9 +23,10 @@ public class TrieSolmu {
      *
      * @param merkki
      * @return lapsisolmu, jos se on haetulla merkillä olemassa. Muuten null.
+     * @throws java.lang.Exception
      */
-    public TrieSolmu haeSolmuListasta(char merkki) {
-        return this.solmuLista.get(Character.toLowerCase(merkki));
+    public TrieSolmu haeSolmuListasta(char merkki) throws Exception {
+        return this.solmuLista.hae(Character.toLowerCase(merkki));
     }
 
     /**
@@ -36,15 +35,34 @@ public class TrieSolmu {
     public void onSana() {
         this.onSana = true;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TrieSolmu other = (TrieSolmu) obj;
+        if (this.solmunMerkki != other.solmunMerkki) {
+            return false;
+        }
+        return this.onSana == other.onSana;
+    }
 
     /**
      * Lisää solmulle uuden lapsisolmun.
      *
      * @param lapsiMerkki
      * @param lapsiSolmu
+     * @throws java.lang.Exception
      */
-    public void lisaaLapsi(Character lapsiMerkki, TrieSolmu lapsiSolmu) {
-        this.solmuLista.put(lapsiMerkki, lapsiSolmu);
+    public void lisaaLapsi(Character lapsiMerkki, TrieSolmu lapsiSolmu) throws Exception {
+        this.solmuLista.lisaa(Character.toLowerCase(lapsiMerkki), lapsiSolmu);
     }
 
     /**

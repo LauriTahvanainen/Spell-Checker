@@ -1,7 +1,5 @@
 package kvk.tietorakenne;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
 import kvk.algoritmi.IMuokkausEtaisyyslaskija;
 
 /**
@@ -61,31 +59,33 @@ public class BKPuu {
      * @param sana jota lähimpänä olevat sanat haetaan.
      * @param etaisyysToleranssi verrattavan sanan maksimietäisyys haettavasta
      * sanasta.
+     * @param montaHaetaan
+     * @return
      */
-    public ArrayList<SanaEtaisyysPari> haeLahimmatSanat(String sana, int etaisyysToleranssi) {
+    public String[] haeLahimmatSanat(String sana, int etaisyysToleranssi, int montaHaetaan) {
         sana = sana.toLowerCase();
-        ArrayList<SanaEtaisyysPari> lahimmatSanat = new ArrayList<>();
-        ArrayDeque<BKSolmu> kandidaatit = new ArrayDeque<>();
+        PunaMustaPuu lahimmatSanat = new PunaMustaPuu(new PunaMustaSolmu());
+        Pino<BKSolmu> kandidaatit = new Pino<>();
 
-        kandidaatit.push(this.juuri);
+        kandidaatit.lisaa(this.juuri);
 
-        while (!kandidaatit.isEmpty()) {
-            BKSolmu verrattavaSolmu = kandidaatit.pop();
+        while (!kandidaatit.onTyhja()) {
+            BKSolmu verrattavaSolmu = kandidaatit.poista();
             int etaisyysEtsittavaanSanaan = this.etaisyysLaskija.laskeEtaisyys(sana, verrattavaSolmu.sana);
             if (etaisyysEtsittavaanSanaan <= etaisyysToleranssi) {
-                lahimmatSanat.add(new SanaEtaisyysPari(verrattavaSolmu.sana, etaisyysEtsittavaanSanaan));
+                lahimmatSanat.lisaa(new SanaEtaisyysPari(verrattavaSolmu.sana, etaisyysEtsittavaanSanaan));
             }
             int rajausAlaRaja = etaisyysEtsittavaanSanaan - etaisyysToleranssi;
             int rajausYlaRaja = etaisyysEtsittavaanSanaan + etaisyysToleranssi;
             for (int i = rajausAlaRaja; i <= rajausYlaRaja; i++) {
                 BKSolmu uusiKandidaatti = verrattavaSolmu.lapsiEtaisyydella(i);
                 if (uusiKandidaatti != null) {
-                    kandidaatit.push(uusiKandidaatti);
+                    kandidaatit.lisaa(uusiKandidaatti);
                 }
             }
         }
 
-        return lahimmatSanat;
+        return lahimmatSanat.haeXPieninta(montaHaetaan);
     }
 
 }

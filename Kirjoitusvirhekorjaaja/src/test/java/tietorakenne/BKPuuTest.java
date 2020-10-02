@@ -19,32 +19,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- *
- * @author coronatus
- */
 public class BKPuuTest {
 
     private BKPuu sut;
     private BKSolmu juuri;
 
-    @BeforeClass
-    public static void setUpClass() {
-
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
     @Before
     public void setUp() {
         this.juuri = new BKSolmu("ja", null, 0);
         this.sut = new BKPuu(new LevenshteinEtaisyys(), this.juuri);
-    }
-
-    @After
-    public void tearDown() {
     }
 
     private void taytaPuuKasin() {
@@ -89,20 +72,26 @@ public class BKPuuTest {
     @Test
     public void lisaaSana_OlemassaOlevallaSanalla_EiLisaaSanaa() {
         this.sut.lisaaSana("ja");
-        assertTrue(this.juuri.solmuLista.isEmpty());
+        assertTrue(this.juuri.solmuLista.onTyhja());
     }
 
     @Test
     public void lisaaSana_PerusTapaus_LisaaSanan() {
         this.sut.lisaaSana("Kilpikonna");
-        assertFalse(this.juuri.solmuLista.isEmpty());
+        assertFalse(this.juuri.solmuLista.onTyhja());
+    }
+    
+    @Test
+    public void lisaaSana_PerusTapaus_LisaaSananOikein() {
+        this.sut.lisaaSana("Kilpikonna");
+        assertTrue(this.juuri.solmuLista.hae(9).equals(new BKSolmu("kilpikonna", this.juuri, 9)));
     }
 
     @Test
     public void lisaaSana_SanaSamallaEtaisyydella_LisataanLapsenPeraan() {
         this.sut.lisaaSana("työ");
         this.sut.lisaaSana("vyö");
-        assertFalse(this.juuri.lapsiEtaisyydella(3).solmuLista.isEmpty());
+        assertFalse(this.juuri.lapsiEtaisyydella(3).solmuLista.onTyhja());
     }
 
     @Test
@@ -119,22 +108,54 @@ public class BKPuuTest {
     public void haeLahimmatSanat_VirheellisellaSanalla_HakeeOikeatLahimmatSanatOikeillaEtaisyyksilla() {
         taytaPuuKasin();
 
-        ArrayList<SanaEtaisyysPari> lahimmatSanat = this.sut.haeLahimmatSanat("kyötävä", 2);
-        assertTrue(lahimmatSanat.size() == 3);
-        assertTrue(lahimmatSanat.contains(new SanaEtaisyysPari("syötävä", 1)));
-        assertTrue(lahimmatSanat.contains(new SanaEtaisyysPari("lyötävä", 1)));
-        assertTrue(lahimmatSanat.contains(new SanaEtaisyysPari("työntävä", 2)));
+        String[] lahimmatSanat = this.sut.haeLahimmatSanat("kyötävä", 2, 10);
+        int alkioita = 0;
+        for (String sana: lahimmatSanat) {
+            if (sana != null) {
+                alkioita += 1;
+            }
+        }
+        
+        assertTrue(alkioita == 3);
+        assertTrue(lahimmatSanat[0].equals("lyötävä"));
+        assertTrue(lahimmatSanat[1].equals("syötävä"));
+        assertTrue(lahimmatSanat[2].equals("työntävä"));
+    }
+    
+    @Test
+    public void haeLahimmatSanat_PerusTapaus10Lahinta_Palauttaa10AlkioisenTaulukon() {
+        taytaPuuKasin();
+
+        String[] lahimmatSanat = this.sut.haeLahimmatSanat("kyötävä", 2, 10);
+        
+        assertTrue(lahimmatSanat.length == 10);
+    }
+    
+    @Test
+    public void haeLahimmatSanat_SanallaEiLoydyTuloksia10Lahinta_Palauttaa10AlkioisenTaulukon() {
+        taytaPuuKasin();
+
+        String[] lahimmatSanat = this.sut.haeLahimmatSanat("sdlkajglaewiungikavlkjnaiurew", 2, 10);
+        
+        assertTrue(lahimmatSanat.length == 10);
     }
 
     @Test
     public void haeLahimmatSanat_OlemassaOlemassaOevallaSanalla_HakeeKaikkiToleranssinSisallaOlevatSanatJaHaetunSanan() {
         taytaPuuKasin();
 
-        ArrayList<SanaEtaisyysPari> lahimmatSanat = this.sut.haeLahimmatSanat("lyötävä", 2);
-        assertTrue(lahimmatSanat.size() == 3);
-        assertTrue(lahimmatSanat.contains(new SanaEtaisyysPari("lyötävä", 0)));
-        assertTrue(lahimmatSanat.contains(new SanaEtaisyysPari("syötävä", 1)));
-        assertTrue(lahimmatSanat.contains(new SanaEtaisyysPari("työntävä", 2)));
+        String[] lahimmatSanat = this.sut.haeLahimmatSanat("lyötävä", 2, 10);
+        int alkioita = 0;
+        for (String sana: lahimmatSanat) {
+            if (sana != null) {
+                alkioita += 1;
+            }
+        }
+        
+        assertTrue(alkioita == 3);
+        assertTrue(lahimmatSanat[0].equals("lyötävä"));
+        assertTrue(lahimmatSanat[1].equals("syötävä"));
+        assertTrue(lahimmatSanat[2].equals("työntävä"));
     }
 
     @Test
@@ -151,7 +172,7 @@ public class BKPuuTest {
         this.sut = new BKPuu(etaisyydenLaskija, this.juuri);
         taytaPuuKasin();
 
-        ArrayList<SanaEtaisyysPari> lahimmatSanat = this.sut.haeLahimmatSanat("pyötävä", 2);
+        String[] lahimmatSanat = this.sut.haeLahimmatSanat("pyötävä", 2, 10);
         verify(etaisyydenLaskija, times(7)).laskeEtaisyys(anyString(), anyString());
     }
 

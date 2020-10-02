@@ -29,8 +29,9 @@ public class Trie {
      * muutu. Aikavaatimus O(m), missä m on lisättävän sanan pituus.
      *
      * @param sana
+     * @throws java.lang.Exception
      */
-    public void lisaaSana(String sana) {
+    public void lisaaSana(String sana) throws Exception {
         TrieSolmu nykyinen = juuri;
         for (char kirjain : sana.toLowerCase().toCharArray()) {
             TrieSolmu lapsi = nykyinen.haeSolmuListasta(kirjain);
@@ -49,8 +50,9 @@ public class Trie {
      *
      * @param sana
      * @return true jos merkkijono löytyy Trie-puusta, muuten false
+     * @throws java.lang.Exception
      */
-    public Boolean onkoSana(String sana) {
+    public Boolean onkoSana(String sana) throws Exception {
         TrieSolmu nykyinen = juuri;
         for (char kirjain : sana.toLowerCase().toCharArray()) {
             TrieSolmu lapsi = nykyinen.haeSolmuListasta(kirjain);
