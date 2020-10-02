@@ -8,7 +8,7 @@
 
 
 ## Miten ohjelma on edistynyt?
-- Vielä PunaMusta-puun oma toteutus ja niin täysin itse toteutettu ennustaja on valmis. Suorituskykytestejäkin sai hieman aloitettua ja mietittyä. Ui:ta oli tarkoitus katsoa, mutta ei ehtinyt.
+- Vielä PunaMusta-puun oma toteutus ja niin täysin itse toteutettu korjaaja on valmis. Itse korjaaja kyllä jo toimii. Suorituskykytestejäkin sai hieman aloitettua ja mietittyä. Ui:ta oli tarkoitus katsoa, mutta ei ehtinyt.
 
 ## Mitä opin tällä viikolla?
 - Reservoir Sampling:stä
