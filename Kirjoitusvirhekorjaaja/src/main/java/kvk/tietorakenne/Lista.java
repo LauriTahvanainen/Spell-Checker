@@ -65,12 +65,12 @@ public class Lista<T> {
      * Hakee parametrina annetusta indeksistä sen osoittaman alkion.
      *
      * @param indeksi
-     * @return indeksin osoittama alkio
-     * @throws IndexOutOfBoundsException jos indeksi on virheellinen.
+     * @return indeksin osoittama alkio, null jos indeksiin ei ole liitetty
+     * alkiota tai jos indeksi on suurempi kuin taulukon pituus;
      */
-    public T hae(int indeksi) throws IndexOutOfBoundsException {
-        if (indeksi >= this.pituus) {
-            throw new IndexOutOfBoundsException();
+    public T hae(int indeksi) {
+        if (indeksi >= this.maksimiPituus) {
+            return null;
         }
         return this.lista[indeksi];
     }
@@ -85,7 +85,7 @@ public class Lista<T> {
 
     /**
      *
-     * @return tämän hetkinen sisäisen listan koko
+     * @return tämän hetkinen sisäisen listan koko.
      */
     public int varattuListanKoko() {
         return this.lista.length;

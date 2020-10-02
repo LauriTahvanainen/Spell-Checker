@@ -5,9 +5,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.Before;
 
-/**
- *
- */
 public class LevenshteinEtaisyysTest {
 
     private LevenshteinEtaisyys sut;
@@ -37,7 +34,7 @@ public class LevenshteinEtaisyysTest {
         assertEquals(8, this.sut.laskeEtaisyys("Kissa", "VainuKoira"));
         assertEquals(8, this.sut.laskeEtaisyys("SisäKissa", "Tie"));
     }
-    
+
     @Test
     public void LevenshteinEtaisyys_EriSanoilla_PalauttaaOikeanEtaisyydenRiippumattaParametrienJarjestyksesta() {
         assertEquals(this.sut.laskeEtaisyys("Kissa", "VainuKoira"), this.sut.laskeEtaisyys("VainuKoira", "Kissa"));

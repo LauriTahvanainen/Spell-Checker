@@ -3,6 +3,7 @@ package kvk.ui;
 import java.text.BreakIterator;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -21,6 +22,7 @@ import kvk.io.ITekstitiedostonKasittelija;
 import kvk.io.TekstitiedostonKasittelija;
 import kvk.korjaaja.IKorjaaja;
 import kvk.korjaaja.Korjaaja;
+import kvk.suorituskykytestit.SuorituskykyTestaaja;
 import org.fxmisc.richtext.StyledTextArea;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.fxmisc.richtext.model.EditableStyledDocument;
@@ -71,8 +73,10 @@ public class Main extends Application {
     public void init() throws Exception {
         this.tiedostonKasittelija = new TekstitiedostonKasittelija();
         this.virheenKorjaaja = new Korjaaja(this.tiedostonKasittelija, new LevenshteinEtaisyys(), 2);
-        System.out.println((int) 'z' -97);
-        System.out.println((int) '9' -22);
+
+//        double[] korjausProsentit = SuorituskykyTestaaja.KorjausOnnistumisProsentti(virheenKorjaaja, 2);
+//        Arrays.sort(korjausProsentit);
+//        System.out.println(korjausProsentit[korjausProsentit.length / 2]);
         this.kirjoitusAlue = new StyleClassedTextArea();
         this.kirjoitusAlue.setPrefHeight(450);
         this.kirjoitusAlue.setWrapText(true);

@@ -12,7 +12,7 @@ import kvk.algoritmi.IMuokkausEtaisyyslaskija;
 public class BKPuu {
 
     private BKSolmu juuri;
-    private final IMuokkausEtaisyyslaskija etaisyysLaskija;
+    private IMuokkausEtaisyyslaskija etaisyysLaskija;
 
     /**
      * @param etaisyysLaskija Määrittää millä tavalla sanojen välinen metrinen
@@ -22,6 +22,10 @@ public class BKPuu {
     public BKPuu(IMuokkausEtaisyyslaskija etaisyysLaskija, BKSolmu juuriSolmu) {
         this.etaisyysLaskija = etaisyysLaskija;
         this.juuri = juuriSolmu;
+    }
+
+    public void asetaEtaisyysLaskija(IMuokkausEtaisyyslaskija laskija) {
+        this.etaisyysLaskija = laskija;
     }
 
     /**
@@ -78,6 +82,9 @@ public class BKPuu {
             int rajausAlaRaja = etaisyysEtsittavaanSanaan - etaisyysToleranssi;
             int rajausYlaRaja = etaisyysEtsittavaanSanaan + etaisyysToleranssi;
             for (int i = rajausAlaRaja; i <= rajausYlaRaja; i++) {
+                if (i < 0) {
+                    continue;
+                }
                 BKSolmu uusiKandidaatti = verrattavaSolmu.lapsiEtaisyydella(i);
                 if (uusiKandidaatti != null) {
                     kandidaatit.lisaa(uusiKandidaatti);

@@ -4,10 +4,7 @@ import kvk.korjaaja.Korjaaja;
 import kvk.tietorakenne.BKSolmu;
 import kvk.tietorakenne.Lista;
 import kvk.tietorakenne.TrieSolmu;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -18,10 +15,6 @@ public class ListaTest {
     @Before
     public void setUp() {
         this.sut = new Lista<>(20);
-    }
-
-    @After
-    public void tearDown() {
     }
 
     @Test
@@ -104,12 +97,12 @@ public class ListaTest {
 
     @Test(expected = IndexOutOfBoundsException.class)
     public void Haku_NegatiivisellaIndeksilla_KaatuuIndexOutOfBoundExceptioniin() {
-        this.sut.hae(20);
+        this.sut.hae(-1);
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
-    public void Haku_LiianSuurellaIndeksilla_KaatuuIndexOutOfBoundExceptioniin() {
-        this.sut.hae(-1);
+    @Test
+    public void Haku_LiianSuurellaIndeksilla_PalauttaaNULL() {
+        assertEquals(null, this.sut.hae(30));
     }
 
     private void lisaaAlkioita(int maara) {

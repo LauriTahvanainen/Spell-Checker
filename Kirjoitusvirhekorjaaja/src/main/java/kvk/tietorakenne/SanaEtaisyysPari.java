@@ -1,7 +1,8 @@
 package kvk.tietorakenne;
 
 /**
- * Pari-rakenne BK-puuta varten tallentamaan Sana ja sen etäisyys toiseen sanaan.
+ * Pari-rakenne BK-puuta varten tallentamaan Sana ja sen etäisyys toiseen
+ * sanaan.
  */
 public class SanaEtaisyysPari implements Comparable<SanaEtaisyysPari> {
 
@@ -35,7 +36,6 @@ public class SanaEtaisyysPari implements Comparable<SanaEtaisyysPari> {
     public String toString() {
         return sana;
     }
-    
 
     @Override
     public int compareTo(SanaEtaisyysPari o) {

@@ -11,7 +11,7 @@ import kvk.tietorakenne.TrieSolmu;
 
 /**
  * Perustoteutus korjaajasta, käyttää Trie-puuta virheellisten sanojen
- * tunnistamiseen.
+ * tunnistamiseen ja BK-puuta ehdotusten generoimiseen. Muokkausetaisyystoleranssi, sekä tapa jolla muokkausetäisyys lasketaan muokattavissa.
  */
 public class Korjaaja implements IKorjaaja {
 
@@ -28,6 +28,11 @@ public class Korjaaja implements IKorjaaja {
 
     public void setEtaisyysToleranssi(int etaisyysToleranssi) {
         this.etaisyysToleranssi = etaisyysToleranssi;
+    }
+    
+    public void setEtaisyysLaskija(IMuokkausEtaisyyslaskija laskija) {
+        this.etaisyysLaskija = laskija;
+        this.BKSanasto.asetaEtaisyysLaskija(laskija);
     }
 
     @Override

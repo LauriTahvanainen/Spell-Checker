@@ -48,6 +48,7 @@ public class MerkkiSolmuTaulu {
 
     /**
      * Lisää rakenteeseen TrieSolmu-instanssin avaimena annettu merkki.
+     *
      * @param lapsiMerkki Avain
      * @param lapsiSolmu TrieSolmu-instanssi
      * @throws Exception jos yritetään ylikirjoittaa jonkun merkin päälle.

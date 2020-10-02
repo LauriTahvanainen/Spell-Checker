@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Hoitaa I/O toimenpiteet.
@@ -77,6 +78,39 @@ public class TekstitiedostonKasittelija implements ITekstitiedostonKasittelija {
         } catch (IOException e) {
             throw e;
         }
+    }
+    
+    /**
+     * Satunnaisotanta kaikista sanaston sanoista käyttäen reservoir sampling algoritmia.
+     * @param otosKoko
+     * @return otos listana sanoja
+     * @throws IOException
+     */
+    public String[] lataaSatunnainenOtosSanoja(int otosKoko) throws IOException {
+        String[] otos = new String[otosKoko];
+        
+        try (BufferedReader puskuroituLukija = new BufferedReader(new InputStreamReader(TekstitiedostonKasittelija.class.getResourceAsStream(this.sanastoTiedostonNimi)))) {
+
+            String rivi;
+            int indeksi = 0;
+            Random satunnaisGeneraattori = new Random(System.nanoTime());
+
+            while ((rivi = puskuroituLukija.readLine()) != null) {
+                if (indeksi < otosKoko) {
+                    otos[indeksi] = rivi;
+                } else {
+                    int randomIndex = satunnaisGeneraattori.nextInt(indeksi);
+                    if (randomIndex < otosKoko) {
+                        otos[randomIndex] = rivi;
+                    }
+                }
+                indeksi += 1;
+            }
+            
+        } catch (IOException e) {
+            throw e;
+        }
+        return otos;
     }
 
 }

@@ -20,7 +20,7 @@ public class MerkkiSolmuTauluTest {
         this.sut.lisaa('a', new TrieSolmu('a'));
         assertEquals(new TrieSolmu('a'), this.sut.hae('a'));
     }
-    
+
     @Test
     public void LisaaHae_MontaLisatty_LisattuHaettavissaOikein() throws Exception {
         this.sut.lisaa('a', new TrieSolmu('a'));
@@ -68,7 +68,7 @@ public class MerkkiSolmuTauluTest {
         this.sut.lisaa("'".charAt(0), new TrieSolmu("'".charAt(0)));
         assertTrue(this.sut.listanPituus() > 26 && this.sut.listanPituus() < 54);
     }
-    
+
     @Test
     public void Hae_HyvaksyttyaMerkkiaJotaEiOllaLisattyEikaTilaaVarattu_PalauttaaNULL() throws Exception {
         assertNull(this.sut.hae('b'));
@@ -76,7 +76,6 @@ public class MerkkiSolmuTauluTest {
         assertNull(this.sut.hae('9'));
         assertNull(this.sut.hae('-'));
     }
-    
 
     private void lisaaASCIIAakkoset() throws Exception {
         for (char kirjain = 'a'; kirjain <= 'z'; kirjain++) {

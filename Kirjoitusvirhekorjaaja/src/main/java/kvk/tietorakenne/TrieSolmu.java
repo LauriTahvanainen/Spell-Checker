@@ -35,7 +35,7 @@ public class TrieSolmu {
     public void onSana() {
         this.onSana = true;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
