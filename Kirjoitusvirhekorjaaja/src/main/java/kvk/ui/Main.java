@@ -23,6 +23,9 @@ import kvk.io.TekstitiedostonKasittelija;
 import kvk.korjaaja.IKorjaaja;
 import kvk.korjaaja.Korjaaja;
 import kvk.suorituskykytestit.SuorituskykyTestaaja;
+import kvk.tietorakenne.Jarjestys;
+import kvk.tietorakenne.RajattuJarjestettyLista;
+import kvk.tietorakenne.SanaEtaisyysPari;
 import org.fxmisc.richtext.StyledTextArea;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.fxmisc.richtext.model.EditableStyledDocument;
@@ -73,8 +76,7 @@ public class Main extends Application {
     public void init() throws Exception {
         this.tiedostonKasittelija = new TekstitiedostonKasittelija();
         this.virheenKorjaaja = new Korjaaja(this.tiedostonKasittelija, new LevenshteinEtaisyys(), 2);
-
-//        double[] korjausProsentit = SuorituskykyTestaaja.KorjausOnnistumisProsentti(virheenKorjaaja, 2);
+//        double[] korjausProsentit = SuorituskykyTestaaja.korjausOnnistumisProsentti(virheenKorjaaja, 2);
 //        Arrays.sort(korjausProsentit);
 //        System.out.println(korjausProsentit[korjausProsentit.length / 2]);
         this.kirjoitusAlue = new StyleClassedTextArea();

@@ -9,7 +9,7 @@ import kvk.korjaaja.IKorjaaja;
 
 public class SuorituskykyTestaaja {
 
-    private static Random RANDOM = new Random();
+    private static final Random RANDOM = new Random();
     private static final String ALPHABET = " -.,<'+0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÅäö";
 
     public static double[] korjausOnnistumisProsentti(IKorjaaja korjaaja, int maksVirheitaSanassa) throws IOException {
@@ -23,11 +23,11 @@ public class SuorituskykyTestaaja {
             for (String sana : otos) {
                 String muokattuSana = muokkaaSanaa(sana, maksVirheitaSanassa);
                 ArrayList<String> ehdotukset = new ArrayList<>(Arrays.asList(korjaaja.ehdotaKorjauksia(muokattuSana)));
-                if (ehdotukset.contains(sana)) {
+                if (ehdotukset.contains(sana.toLowerCase())) {
                     oikeellisia += 1;
                 }
             }
-            tulokset[i] = oikeellisia / 10000;
+            tulokset[i] = oikeellisia / 500;
             System.out.println(oikeellisia / 10000);
             System.out.println(i + "/" + iteraatioita);
         }
@@ -36,7 +36,7 @@ public class SuorituskykyTestaaja {
 
     private static String muokkaaSanaa(String sana, int maksVirheitaSanassa) {
         for (int i = 0; i < maksVirheitaSanassa; i++) {
-            int operaatio = RANDOM.nextInt(maksVirheitaSanassa);
+            int operaatio = RANDOM.nextInt(4);
             switch (operaatio) {
                 case 0:
                     sana = poisto(sana);
@@ -54,7 +54,7 @@ public class SuorituskykyTestaaja {
                     break;
             }
         }
-        return sana;
+        return sana.toLowerCase();
     }
 
     private static String poisto(String sana) {

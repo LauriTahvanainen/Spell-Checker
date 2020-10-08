@@ -39,9 +39,10 @@ public class SanaEtaisyysPari implements Comparable<SanaEtaisyysPari> {
 
     @Override
     public int compareTo(SanaEtaisyysPari o) {
-        int muokkausEtaisyys = this.etaisyys - o.etaisyys;
-        if (muokkausEtaisyys != 0) {
-            return muokkausEtaisyys;
+        if (this.etaisyys > o.etaisyys) {
+            return 1;
+        } else if (this.etaisyys < o.etaisyys) {
+            return -1;
         }
         return this.sana.compareTo(o.sana);
     }
