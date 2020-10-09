@@ -63,6 +63,7 @@
                     <excludes>
                         <exclude>kvk/ui/*</exclude>
                         <exclude>kvk/io/*</exclude>
+                        <exclude>kvk/suorituskykytestit/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
