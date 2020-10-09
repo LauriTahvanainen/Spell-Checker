@@ -24,6 +24,10 @@ Tietorakenteiden yhteydessä on testattu myös niiden oikeellista toimintaa Mock
 Käyttöliittymä on testattu manuaalisesti.
 
 # Suorituskykytestaus
+
+## TestiAineistosta
+Korjaajan suorituskyvyn testaaminen, erityisesti sopivan testiaineiston hankkiminen koitui vaikeaksi. Optimaalisin tapa testata olisi ihan oikeilla käyttäjillä, tai oikeilta käyttäjiltä kerätyllä testiaineistolla. Projektin tapauksessa päädyttiin kuitenkin testaamaan niin, että sanastosta haetaan satunnainen otos ja sitten jokaiselle otoksen sanalle tehdään satunnainen, mutta testistä riippuen ylhäältä rajattu, määrä yksittäisen merkin muokkausoperaatiota. Operaatiot ovat yhden merkin lisäys, poisto, vaihtuminen tai kahden sanan vierekkäisen merkin vaihtuminen keskenään (transpositio). Lisäyksen ja vaihdon yhteydessä käytettiin myös näppäimistön vierekkäisten merkkien heuristiikkaa. Esimerkiksi vaihdon yhteydessä muokattavasta sanasta valitaan ensin satunnainen merkki. Jos tämä merkki on esimerkiksi 'a', niin sen tilalle arvotaan jokin merkeistä 'q', 'w', 's', 'z' tai '<'.
+
 ## Suunnitelma
 Suorituskykytestit toteutetaan omaan pakettiinsa, jotta ne voidaan ajaa erikseen yksikkötesteistä.
 
