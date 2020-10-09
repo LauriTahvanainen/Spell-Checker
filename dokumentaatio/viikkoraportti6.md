@@ -19,6 +19,7 @@
 - Ui loppuun.
 - Valmistelen lopullisen sanaston.
 - Aloittelin ja pohdin jo hieman erikoismerkkien siistimistä sanastosta, teen sen seuraavaksi.
+- Hion dokumentaatiot.
 - Viimeistelen työn.
 
 ## Käytetty tuntimäärä
