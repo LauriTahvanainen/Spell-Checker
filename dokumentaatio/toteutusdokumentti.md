@@ -13,3 +13,13 @@ Yksittäisen sanan tarkistaminen, ja korjaaminen etenee seuraavalla tavalla:
   
 - Kun BK-puulta on haettu ennustukset, näytetää käyttäjälle sanan kohdalla virhe, ja käyttäjän painaessa virhemerkistä näytetään käyttäjälle korjausehdotusten lista, niin että "Paras" korjaus-ehdotus on ensimmäisenä.
 - Sillä Trie- ja BK-puuhun lisääminen on nopeaa, käyttäjälle annetaan myös mahdollisuus lisätä virheellisesti kirjoitettu sana sanastoon. 
+
+## Algoritmit
+### Levenshtein-etäisyyden laskeminen
+Levenshteinetäisyys lasketaan dynaamiseen ohjelmointiin perustuvalla algoritmilla.
+
+## Tietorakenteet
+### Trie
+
+### BK-puu
+BK-puu toimii tietorakenteena, joka mahdollistaa nopeiden korjausehdotusten tuottamisen. Ohjelman käynnistyessä BK-puuhun ladataan koko sanasto, ottaen juureksi satunnainen sanaston sana. Puun solmujen tulee toteuttaa metriikka, jotta puu lopulta toimii tehokkaasti.
