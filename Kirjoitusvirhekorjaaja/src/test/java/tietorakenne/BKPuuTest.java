@@ -8,6 +8,7 @@ import kvk.tietorakenne.BKSolmu;
 import kvk.tietorakenne.SanaEtaisyysPari;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -80,7 +81,7 @@ public class BKPuuTest {
         this.sut.lisaaSana("Kilpikonna");
         assertFalse(this.juuri.solmuLista.onTyhja());
     }
-    
+
     @Test
     public void lisaaSana_PerusTapaus_LisaaSananOikein() {
         this.sut.lisaaSana("Kilpikonna");
@@ -105,38 +106,39 @@ public class BKPuuTest {
     }
 
     @Test
-    public void haeLahimmatSanat_VirheellisellaSanalla_HakeeOikeatLahimmatSanatOikeillaEtaisyyksilla() {
+    public void haeLahimmatSanat_VirheellisellaSanallaLahimpiaSamoillaEtaisyyksilla_HakeeOikeatLahimmatSanatJarjestaaSamanEtaisyydenNousevaanAakkosJarjestykseen() {
         taytaPuuKasin();
 
         String[] lahimmatSanat = this.sut.haeLahimmatSanat("kyötävä", 2, 10);
         int alkioita = 0;
-        for (String sana: lahimmatSanat) {
+        for (String sana : lahimmatSanat) {
             if (sana != null) {
                 alkioita += 1;
             }
         }
-        
+
         assertTrue(alkioita == 3);
-        assertTrue(lahimmatSanat[0].equals("lyötävä"));
-        assertTrue(lahimmatSanat[1].equals("syötävä"));
-        assertTrue(lahimmatSanat[2].equals("työntävä"));
+        assertEquals("syötävä", lahimmatSanat[0]);
+        assertEquals("lyötävä", lahimmatSanat[1]);
+        assertEquals("työntävä", lahimmatSanat[2]);
     }
     
+
     @Test
     public void haeLahimmatSanat_PerusTapaus10Lahinta_Palauttaa10AlkioisenTaulukon() {
         taytaPuuKasin();
 
         String[] lahimmatSanat = this.sut.haeLahimmatSanat("kyötävä", 2, 10);
-        
+
         assertTrue(lahimmatSanat.length == 10);
     }
-    
+
     @Test
     public void haeLahimmatSanat_SanallaEiLoydyTuloksia10Lahinta_Palauttaa10AlkioisenTaulukon() {
         taytaPuuKasin();
 
         String[] lahimmatSanat = this.sut.haeLahimmatSanat("sdlkajglaewiungikavlkjnaiurew", 2, 10);
-        
+
         assertTrue(lahimmatSanat.length == 10);
     }
 
@@ -146,12 +148,12 @@ public class BKPuuTest {
 
         String[] lahimmatSanat = this.sut.haeLahimmatSanat("lyötävä", 2, 10);
         int alkioita = 0;
-        for (String sana: lahimmatSanat) {
+        for (String sana : lahimmatSanat) {
             if (sana != null) {
                 alkioita += 1;
             }
         }
-        
+
         assertTrue(alkioita == 3);
         assertTrue(lahimmatSanat[0].equals("lyötävä"));
         assertTrue(lahimmatSanat[1].equals("syötävä"));

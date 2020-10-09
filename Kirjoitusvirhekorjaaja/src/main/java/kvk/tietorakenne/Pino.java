@@ -1,8 +1,8 @@
 package kvk.tietorakenne;
 
 /**
- * Pino, jonka alkioden tyyppi on valittavissa. Kaikkien alkioiden pitää tätä
- * valittua tyyppiä.
+ * Pino, jonka alkioden tyyppi on valittavissa. Kaikkien alkioiden pitää olla
+ * tätä valittua tyyppiä.
  *
  * @param <T>
  */

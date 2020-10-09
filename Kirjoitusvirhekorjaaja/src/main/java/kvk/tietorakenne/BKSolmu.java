@@ -44,8 +44,6 @@ public class BKSolmu {
         return this.vanhempi == other.vanhempi;
     }
 
-
-
     public BKSolmu lapsiEtaisyydella(int etaisyys) {
         return this.solmuLista.hae(etaisyys);
     }

@@ -1,49 +1,49 @@
 package tietorakenne;
 
 import kvk.tietorakenne.Jarjestys;
-import kvk.tietorakenne.RajattuJarjestettyLista;
+import kvk.tietorakenne.JarjestyvaTaulukko;
 import kvk.tietorakenne.SanaEtaisyysPari;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class RajattuJarjestettyListaTest {
+public class JarjestyvaTaulukkoTest {
 
-    private RajattuJarjestettyLista sut;
+    private JarjestyvaTaulukko sut;
 
     @Before
     public void setUp() {
-        this.sut = new RajattuJarjestettyLista(10, Jarjestys.NOUSEVA);
+        this.sut = new JarjestyvaTaulukko(10, Jarjestys.NOUSEVA);
     }
 
     @Test
     public void UusiLista_ListanKoolla_LuoOikeanKokoisenListan() {
-        RajattuJarjestettyLista lista10 = new RajattuJarjestettyLista(10, Jarjestys.LASKEVA);
-        RajattuJarjestettyLista lista5 = new RajattuJarjestettyLista(5, Jarjestys.NOUSEVA);
-        RajattuJarjestettyLista lista15 = new RajattuJarjestettyLista(15, Jarjestys.NOUSEVA);
-        assertEquals(10, lista10.haeMerkkijonoTaulukkona().length);
-        assertEquals(5, lista5.haeMerkkijonoTaulukkona().length);
-        assertEquals(15, lista15.haeMerkkijonoTaulukkona().length);
+        JarjestyvaTaulukko taulukko10 = new JarjestyvaTaulukko(10, Jarjestys.LASKEVA);
+        JarjestyvaTaulukko taulukko5 = new JarjestyvaTaulukko(5, Jarjestys.NOUSEVA);
+        JarjestyvaTaulukko taulukko15 = new JarjestyvaTaulukko(15, Jarjestys.NOUSEVA);
+        assertEquals(10, taulukko10.haeMerkkijonoTaulukkona().length);
+        assertEquals(5, taulukko5.haeMerkkijonoTaulukkona().length);
+        assertEquals(15, taulukko15.haeMerkkijonoTaulukkona().length);
     }
 
     @Test
     public void UusiLista_Jarjestyksella_LuoListanJokaTayttyyOikeallaJarjestyksella() {
-        RajattuJarjestettyLista listaNouseva = new RajattuJarjestettyLista(10, Jarjestys.NOUSEVA);
-        RajattuJarjestettyLista listaLaskeva = new RajattuJarjestettyLista(5, Jarjestys.LASKEVA);
-        listaNouseva.lisaa(new SanaEtaisyysPari("koira", 1));
-        listaNouseva.lisaa(new SanaEtaisyysPari("kissa", 2));
-        listaNouseva.lisaa(new SanaEtaisyysPari("Norsu", 5));
+        JarjestyvaTaulukko taulukkoNouseva = new JarjestyvaTaulukko(10, Jarjestys.NOUSEVA);
+        JarjestyvaTaulukko taulukkoLaskeva = new JarjestyvaTaulukko(5, Jarjestys.LASKEVA);
+        taulukkoNouseva.lisaa(new SanaEtaisyysPari("koira", 1));
+        taulukkoNouseva.lisaa(new SanaEtaisyysPari("kissa", 2));
+        taulukkoNouseva.lisaa(new SanaEtaisyysPari("Norsu", 5));
 
-        listaLaskeva.lisaa(new SanaEtaisyysPari("koira", 1));
-        listaLaskeva.lisaa(new SanaEtaisyysPari("kissa", 2));
-        listaLaskeva.lisaa(new SanaEtaisyysPari("Norsu", 5));
+        taulukkoLaskeva.lisaa(new SanaEtaisyysPari("koira", 1));
+        taulukkoLaskeva.lisaa(new SanaEtaisyysPari("kissa", 2));
+        taulukkoLaskeva.lisaa(new SanaEtaisyysPari("Norsu", 5));
 
-        String[] mJonoListaNouseva = listaNouseva.haeMerkkijonoTaulukkona();
+        String[] mJonoListaNouseva = taulukkoNouseva.haeMerkkijonoTaulukkona();
         assertEquals("koira", mJonoListaNouseva[0]);
         assertEquals("kissa", mJonoListaNouseva[1]);
         assertEquals("Norsu", mJonoListaNouseva[2]);
 
-        String[] mJonoListaLaskeva = listaLaskeva.haeMerkkijonoTaulukkona();
+        String[] mJonoListaLaskeva = taulukkoLaskeva.haeMerkkijonoTaulukkona();
         assertEquals("koira", mJonoListaLaskeva[2]);
         assertEquals("kissa", mJonoListaLaskeva[1]);
         assertEquals("Norsu", mJonoListaLaskeva[0]);
@@ -74,6 +74,14 @@ public class RajattuJarjestettyListaTest {
         this.sut.lisaa(new SanaEtaisyysPari("kaira", 3));
         tarkistaLista(new String[]{"koira", "koir", "kaira", "kissa", null, null, null, null, null, null});
     }
+    
+    @Test
+    public void Lisaaminen_UudetAlkiotSamallaEtaisyydella_LyhyempiEnsinSittenNousevaAakkosJarjestys() {
+        this.sut.lisaa(new SanaEtaisyysPari("koira", 2));
+        this.sut.lisaa(new SanaEtaisyysPari("coira", 2));      
+        this.sut.lisaa(new SanaEtaisyysPari("zira", 2));
+        tarkistaLista(new String[]{"zira", "koira", "coira", null, null, null, null, null, null, null});
+    }
 
     @Test
     public void Lisaaminen_UusiaPienempiaAlkioitaNousevaanListaan_LisaaOikeinTyontaaVanhojaPois() {
@@ -83,7 +91,7 @@ public class RajattuJarjestettyListaTest {
 
     @Test
     public void Lisaaminen_UusiaSuurempiaAlkiotaLaskevaanListaan_LisaaOikeinTyontaaVanhojaPois() {
-        this.sut = new RajattuJarjestettyLista(10, Jarjestys.LASKEVA);
+        this.sut = new JarjestyvaTaulukko(10, Jarjestys.LASKEVA);
         lisaaSanojaPienemmastaSuurimpaan(this.sut);
         tarkistaLista(new String[]{"sana99", "sana98", "sana97", "sana96", "sana95", "sana94", "sana93", "sana92", "sana91", "sana90"});
     }
@@ -92,15 +100,15 @@ public class RajattuJarjestettyListaTest {
         assertArrayEquals(oikeatSanat, this.sut.haeMerkkijonoTaulukkona());
     }
 
-    private void lisaaSanojaSuuremmastaPienimpaan(RajattuJarjestettyLista lista) {
+    private void lisaaSanojaSuuremmastaPienimpaan(JarjestyvaTaulukko taulukko) {
         for (int i = 100; i > 0; i--) {
-            lista.lisaa(new SanaEtaisyysPari("sana" + i, i));
+            taulukko.lisaa(new SanaEtaisyysPari("sana" + i, i));
         }
     }
 
-    private void lisaaSanojaPienemmastaSuurimpaan(RajattuJarjestettyLista lista) {
+    private void lisaaSanojaPienemmastaSuurimpaan(JarjestyvaTaulukko taulukko) {
         for (int i = 0; i < 100; i++) {
-            lista.lisaa(new SanaEtaisyysPari("sana" + i, i));
+            taulukko.lisaa(new SanaEtaisyysPari("sana" + i, i));
         }
     }
 }

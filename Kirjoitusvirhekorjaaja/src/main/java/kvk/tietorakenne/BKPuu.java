@@ -1,7 +1,6 @@
 package kvk.tietorakenne;
 
 import kvk.algoritmi.IMuokkausEtaisyyslaskija;
-import kvk.tietorakenne.Jarjestys;
 
 /**
  * BK-puu tietorakenne, jonka avulla sanastosta voi etsiä nopeasti merkkijonoja,
@@ -69,7 +68,7 @@ public class BKPuu {
      */
     public String[] haeLahimmatSanat(String sana, int etaisyysToleranssi, int montaHaetaan) {
         sana = sana.toLowerCase();
-        RajattuJarjestettyLista lahimmatSanat = new RajattuJarjestettyLista(montaHaetaan, Jarjestys.NOUSEVA);
+        JarjestyvaTaulukko lahimmatSanat = new JarjestyvaTaulukko(montaHaetaan, Jarjestys.NOUSEVA);
         Pino<BKSolmu> kandidaatit = new Pino<>();
 
         kandidaatit.lisaa(this.juuri);

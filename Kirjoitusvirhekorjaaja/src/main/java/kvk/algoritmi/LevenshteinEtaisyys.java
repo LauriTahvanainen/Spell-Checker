@@ -46,4 +46,9 @@ public class LevenshteinEtaisyys implements IMuokkausEtaisyyslaskija {
 
         return etaisyysMatriisi[mjonoX.length()][mjonoY.length()];
     }
+    
+    @Override
+    public String toString() {
+        return "Levenshtein-etäisyys";
+    }
 }

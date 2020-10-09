@@ -44,7 +44,13 @@ public class SanaEtaisyysPari implements Comparable<SanaEtaisyysPari> {
         } else if (this.etaisyys < o.etaisyys) {
             return -1;
         }
-        return this.sana.compareTo(o.sana);
+        int pituusEro = this.sana.length() - o.sana.length();
+        if (pituusEro > 0) {
+            return 1;
+        } else if (pituusEro < 0) {
+            return -1;
+        }
+        return o.sana.compareTo(this.sana);
     }
 
 }

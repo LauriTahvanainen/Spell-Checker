@@ -1,5 +1,8 @@
 package kvk.tietorakenne;
 
+/**
+ * Enum Jarjestyvan taulukon järjestyksen asettamista varten.
+ */
 public enum Jarjestys {
     LASKEVA(1), NOUSEVA(-1);
 
