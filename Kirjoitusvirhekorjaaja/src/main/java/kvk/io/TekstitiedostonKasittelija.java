@@ -6,9 +6,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import kvk.korjaaja.IKorjaaja;
 
 /**
  * Hoitaa I/O toimenpiteet.
@@ -16,6 +17,24 @@ import java.util.Random;
 public class TekstitiedostonKasittelija implements ITekstitiedostonKasittelija {
 
     private final String sanastoTiedostonNimi = "/sanalista.txt";
+
+    private final FileChooser tiedostonValitsija;
+
+    public TekstitiedostonKasittelija() {
+        this.tiedostonValitsija = new FileChooser();
+    }
+
+    @Override
+    public File valitseTekstiTiedosto(Stage ikkuna) throws IOException {
+        this.tiedostonValitsija.setTitle("Valitse tekstitiedosto");
+        return this.tiedostonValitsija.showOpenDialog(ikkuna);
+    }
+
+    @Override
+    public File valitseTallennusTiedosto(Stage ikkuna) {
+        this.tiedostonValitsija.setTitle("Tallenna teksti tiedostoon");
+        return this.tiedostonValitsija.showSaveDialog(ikkuna);
+    }
 
     /**
      * Tallentaa String objectissa annetun muuttujan annettuun tiedostoon.
@@ -30,6 +49,7 @@ public class TekstitiedostonKasittelija implements ITekstitiedostonKasittelija {
             puskuroituKirjoittaja.write(teksti);
             return true;
         } catch (IOException e) {
+            System.out.println(e.getMessage());
             return false;
         }
     }
@@ -50,10 +70,11 @@ public class TekstitiedostonKasittelija implements ITekstitiedostonKasittelija {
             String rivi;
 
             while ((rivi = puskuroituLukija.readLine()) != null) {
-                teksti = teksti + rivi;
+                teksti = teksti + rivi + "\n";
             }
             return teksti;
         } catch (IOException e) {
+            System.out.println(e.getMessage());
             throw e;
         }
     }
@@ -65,30 +86,32 @@ public class TekstitiedostonKasittelija implements ITekstitiedostonKasittelija {
      * @throws IOException
      */
     @Override
-    public List<String> lataaSanastoListana() throws IOException {
-        List<String> sanalista = new ArrayList<>();
+    public boolean taytaSanastoTiedostosta(IKorjaaja korjaaja) throws IOException {
         try (BufferedReader puskuroituLukija = new BufferedReader(new InputStreamReader(TekstitiedostonKasittelija.class.getResourceAsStream(this.sanastoTiedostonNimi)))) {
 
             String rivi;
 
             while ((rivi = puskuroituLukija.readLine()) != null) {
-                sanalista.add(rivi);
+                korjaaja.lisaaSanastoonSana(rivi);
             }
-            return sanalista;
+            return true;
         } catch (IOException e) {
+            System.out.println("VIRHE LADATESSA SANASTOA");
             throw e;
         }
     }
-    
+
     /**
-     * Satunnaisotanta kaikista sanaston sanoista käyttäen reservoir sampling algoritmia.
+     * Satunnaisotanta kaikista sanaston sanoista käyttäen reservoir sampling
+     * algoritmia.
+     *
      * @param otosKoko
      * @return otos listana sanoja
      * @throws IOException
      */
     public String[] lataaSatunnainenOtosSanoja(int otosKoko) throws IOException {
         String[] otos = new String[otosKoko];
-        
+
         try (BufferedReader puskuroituLukija = new BufferedReader(new InputStreamReader(TekstitiedostonKasittelija.class.getResourceAsStream(this.sanastoTiedostonNimi)))) {
 
             String rivi;
@@ -106,7 +129,7 @@ public class TekstitiedostonKasittelija implements ITekstitiedostonKasittelija {
                 }
                 indeksi += 1;
             }
-            
+
         } catch (IOException e) {
             throw e;
         }

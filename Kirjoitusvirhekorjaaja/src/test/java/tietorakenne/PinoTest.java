@@ -17,15 +17,6 @@ public class PinoTest {
     }
 
     @Test
-    public void Pino_KonstruktointiEriTyyppeilla_Onnistuu() {
-        Pino<String> pino1 = new Pino<>();
-        Pino<BKSolmu> pino2 = new Pino<>();
-        Pino<Object> pino3 = new Pino<>();
-        Pino<Integer> pino4 = new Pino<>();
-        Pino<TrieSolmu> pino5 = new Pino<>();
-    }
-
-    @Test
     public void LisaaPoista_HelppoTapaus_Onnistuu() {
         this.sut.lisaa("Testi");
         assertEquals("Testi", this.sut.poista());
@@ -35,6 +26,17 @@ public class PinoTest {
     public void LisaaPoista_MontaAlkiota_HakeeViimeisenaLisatyn() {
         lisaaAlkioita(5);
         assertEquals("Alkio5", this.sut.poista());
+    }
+    
+    @Test
+    public void LisaaPoista_MontaAlkiota_PoistaaOikeassaJarjestyksessa() {
+        lisaaAlkioita(5);
+        assertEquals("Alkio5", this.sut.poista());
+        assertEquals("Alkio4", this.sut.poista());
+        assertEquals("Alkio3", this.sut.poista());
+        assertEquals("Alkio2", this.sut.poista());
+        assertEquals("Alkio1", this.sut.poista());
+        assertEquals("Alkio0", this.sut.poista());
     }
 
     @Test
@@ -51,7 +53,7 @@ public class PinoTest {
     }
 
     @Test
-    public void Lisaa_EnemmanAlkkioitaKuinMuistiaVarattu_LaajentaaMuistiaLisaysToimii() {
+    public void Lisaa_EnemmanAlkioitaKuinMuistiaVarattu_LaajentaaMuistiaLisaysToimii() {
         lisaaAlkioita(5000);
     }
 

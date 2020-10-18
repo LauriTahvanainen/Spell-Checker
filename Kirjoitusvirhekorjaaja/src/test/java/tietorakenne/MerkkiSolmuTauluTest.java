@@ -24,7 +24,11 @@ public class MerkkiSolmuTauluTest {
     @Test
     public void LisaaHae_MontaLisatty_LisattuHaettavissaOikein() throws Exception {
         this.sut.lisaa('a', new TrieSolmu('a'));
+        this.sut.lisaa('b', new TrieSolmu('b'));
+        this.sut.lisaa('c', new TrieSolmu('c'));
         assertEquals(new TrieSolmu('a'), this.sut.hae('a'));
+        assertEquals(new TrieSolmu('b'), this.sut.hae('b'));
+        assertEquals(new TrieSolmu('c'), this.sut.hae('c'));
     }
 
     @Test(expected = Exception.class)
@@ -67,6 +71,11 @@ public class MerkkiSolmuTauluTest {
         this.sut.lisaa('è', new TrieSolmu('è'));
         this.sut.lisaa("'".charAt(0), new TrieSolmu("'".charAt(0)));
         assertTrue(this.sut.listanPituus() > 26 && this.sut.listanPituus() < 54);
+    }
+
+    @Test
+    public void Hae_EiLisattyja_HakuPalauttaaNull() throws Exception {
+        assertEquals(null, this.sut.hae('a'));
     }
 
     @Test

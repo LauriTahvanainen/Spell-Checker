@@ -74,11 +74,11 @@ public class JarjestyvaTaulukkoTest {
         this.sut.lisaa(new SanaEtaisyysPari("kaira", 3));
         tarkistaLista(new String[]{"koira", "koir", "kaira", "kissa", null, null, null, null, null, null});
     }
-    
+
     @Test
     public void Lisaaminen_UudetAlkiotSamallaEtaisyydella_LyhyempiEnsinSittenNousevaAakkosJarjestys() {
         this.sut.lisaa(new SanaEtaisyysPari("koira", 2));
-        this.sut.lisaa(new SanaEtaisyysPari("coira", 2));      
+        this.sut.lisaa(new SanaEtaisyysPari("coira", 2));
         this.sut.lisaa(new SanaEtaisyysPari("zira", 2));
         tarkistaLista(new String[]{"zira", "koira", "coira", null, null, null, null, null, null, null});
     }

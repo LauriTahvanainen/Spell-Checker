@@ -1,19 +1,31 @@
 package kvk.ui;
 
+import java.io.File;
 import java.text.BreakIterator;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableSet;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.IndexRange;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
@@ -21,6 +33,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import kvk.algoritmi.LevenshteinEtaisyys;
 import kvk.io.ITekstitiedostonKasittelija;
 import kvk.io.TekstitiedostonKasittelija;
@@ -45,6 +58,13 @@ public class Main extends Application {
     private LiveList kappaleLista;
     private BreakIterator sanaIteroija;
     private int viimeisinTarkistettuKappale;
+    private KorjausEhdotusPonnahdus nykyinenPonnahdus;
+    private ObservableSet<KeyCode> painetutNappaimet;
+    private TilePane nappiPaneeli;
+    private VBox juuriKomponentti;
+    private File nykyinenTiedosto;
+    private boolean muutoksiaTekstissa;
+    private boolean tekstiJuuriLadattuTiedostosta;
 
     @Override
     public void start(Stage paaIkkuna) {
@@ -54,6 +74,8 @@ public class Main extends Application {
         ikkuna.initStyle(StageStyle.UNIFIED);
         ikkuna.setTitle("Kirjoitusvirhekorjaaja");
         ikkuna.setScene(this.tausta);
+        alustaKuuntelijat();
+
         if (initVirheViesti != null) {
             Text virhe = new Text(initVirheViesti);
             VBox pane = new VBox();
@@ -74,7 +96,10 @@ public class Main extends Application {
 
     @Override
     public void init() throws Exception {
+        this.painetutNappaimet = FXCollections.observableSet(new HashSet<KeyCode>());
         this.viimeisinTarkistettuKappale = 0;
+        this.muutoksiaTekstissa = false;
+        this.tekstiJuuriLadattuTiedostosta = false;
         this.tiedostonKasittelija = new TekstitiedostonKasittelija();
         this.virheenKorjaaja = new Korjaaja(this.tiedostonKasittelija, new LevenshteinEtaisyys(), 2);
 
@@ -91,40 +116,114 @@ public class Main extends Application {
 
         Button tallennaTiedostoonNappi = new Button("Tallenna");
         Button lataaTiedostostaNappi = new Button("Lataa teksti tiedostosta");
-        Button tarkistaVirhe = new Button("Tarkista kirjoitusvirhe");
-        tarkistaVirhe.setOnAction(new EventHandler<ActionEvent>() {
 
-            @Override
-            public void handle(ActionEvent event) {
-            }
-
-        });
         lataaTiedostostaNappi.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
-
+                try {
+                    nykyinenTiedosto = tiedostonKasittelija.valitseTekstiTiedosto(ikkuna);
+                    if (nykyinenTiedosto != null) {
+                        muutaIkkunaTeksti(nykyinenTiedosto.getName());
+                        kirjoitusAlue.replaceText(tiedostonKasittelija.lataaTeksti(nykyinenTiedosto));
+                        tekstiJuuriLadattuTiedostosta = true;
+                    }
+                } catch (Exception ex) {
+                    muutaIkkunaTeksti("");
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
+
         });
 
-        TilePane nappiPaneeli = new TilePane();
-        nappiPaneeli.getChildren().addAll(tallennaTiedostoonNappi, lataaTiedostostaNappi, tarkistaVirhe);
+        tallennaTiedostoonNappi.setOnAction(new EventHandler<ActionEvent>() {
 
-        VBox juuri = new VBox();
-        juuri.getChildren().addAll(nappiPaneeli, kirjoitusAlue);
+            @Override
+            public void handle(ActionEvent event) {
+                valitseTallennettavaTiedosto();
+                tallennaValittuunTiedostoon();
+            }
 
-        this.tausta = new Scene(juuri, windowWidth, windowHeight);
+        });
+
+        this.nappiPaneeli = new TilePane();
+        nappiPaneeli.getChildren().addAll(tallennaTiedostoonNappi, lataaTiedostostaNappi);
+
+        this.juuriKomponentti = new VBox();
+        this.juuriKomponentti.getChildren().addAll(nappiPaneeli, kirjoitusAlue);
+
+        this.tausta = new Scene(this.juuriKomponentti, this.windowWidth, this.windowHeight);
         tausta.getStylesheets().add(getClass().getResource("/tekstityylit.css").toExternalForm());
+    }
+
+    private void valitseTallennettavaTiedosto() {
+        this.nykyinenTiedosto = this.tiedostonKasittelija.valitseTallennusTiedosto(this.ikkuna);
+    }
+
+    private void tallennaValittuunTiedostoon() {
+        boolean tallennusOnnistui = this.tiedostonKasittelija.tallennaTeksti(this.kirjoitusAlue.getText(), this.nykyinenTiedosto);
+        if (tallennusOnnistui) {
+            muutaIkkunaTeksti(nykyinenTiedosto.getName() + " (Tallennettu)");
+            this.muutoksiaTekstissa = false;
+        } else {
+            muutaIkkunaTeksti(nykyinenTiedosto.getName() + " (Tallennus epäonnistui)");
+        }
+    }
+
+    private void alustaKuuntelijat() {
 
         Subscription tekstiKuuntelija = this.kirjoitusAlue.multiPlainChanges()
                 .successionEnds(Duration.ofMillis(600))
                 .subscribe(change -> {
                     tarkistaVirheetViimeisimmistaKappaleista(this.kirjoitusAlue.getCurrentParagraph());
+                    if (!this.muutoksiaTekstissa && this.nykyinenTiedosto != null && !this.tekstiJuuriLadattuTiedostosta) {
+                        this.muutoksiaTekstissa = true;
+                        muutaIkkunaTeksti(nykyinenTiedosto.getName() + " (Tallentamattomia muutoksia)");
+                    }
+                    this.tekstiJuuriLadattuTiedostosta = false;
                 });
 
         Subscription klikkausKuuntelija = EventStreams.eventsOf(this.kirjoitusAlue, MouseEvent.MOUSE_CLICKED)
                 .subscribe(click -> {
-                    kasitteleKlikkaus();
+                    kasitteleTapahtuma();
+                });
+
+        Subscription painetutNappaimetKuuntelija = EventStreams.changesOf(this.painetutNappaimet)
+                .subscribe(change -> {
+                    kasittelePainallukset();
+                });
+
+        lisaaNappainKuuntelijatKomponenttiin(this.juuriKomponentti);
+
+        this.ikkuna.setOnCloseRequest(new EventHandler<WindowEvent>() {
+
+            @Override
+            public void handle(WindowEvent event) {
+                if (nykyinenTiedosto != null && muutoksiaTekstissa) {
+                    Alert varmistusIlmoitus = new Alert(AlertType.CONFIRMATION, "Tallentamattomat muutokset menetetään!");
+                    varmistusIlmoitus.setHeaderText("Tallentamattomia muutoksia! Oletko varma, että haluat sulkea sovelluksen?");
+                    varmistusIlmoitus.setTitle("");
+                    Optional<ButtonType> vastaus = varmistusIlmoitus.showAndWait();
+                    if (!ButtonType.OK.equals(vastaus.get())) {
+                        event.consume();
+                    }
+                }
+            }
+
+        });
+
+    }
+
+    private void lisaaNappainKuuntelijatKomponenttiin(Node osa) {
+
+        Subscription nappainPainallusKuuntelija = EventStreams.eventsOf(osa, KeyEvent.KEY_PRESSED)
+                .subscribe(keyEvent -> {
+                    this.painetutNappaimet.add(keyEvent.getCode());
+                });
+
+        Subscription nappainNostoKuuntelija = EventStreams.eventsOf(osa, KeyEvent.KEY_RELEASED)
+                .subscribe(keyEvent -> {
+                    this.painetutNappaimet.remove(keyEvent.getCode());
                 });
     }
 
@@ -175,28 +274,92 @@ public class Main extends Application {
         this.viimeisinTarkistettuKappale = kappaleNumero;
     }
 
-    private void kasitteleKlikkaus() {
+    private void muutaIkkunaTeksti(String muutettava) {
+        this.ikkuna.setTitle("Kirjoitusvirhekorjaaja: " + muutettava);
+    }
+
+    private void kasitteleTapahtuma() {
+        if (nykyinenPonnahdus != null) {
+            this.nykyinenPonnahdus.hide();
+        }
         int kappaleNumero = kirjoitusAlue.getCurrentParagraph();
         int kursoriKappaleessa = kirjoitusAlue.getCaretColumn();
         Paragraph kappale = (Paragraph) this.kappaleLista.get(kappaleNumero);
         Collection tyyliKursorinKohdalla = (Collection) kappale.getStyleAtPosition(kursoriKappaleessa);
-        if (tyyliKursorinKohdalla.contains("underlined")) {
+        if (tyyliKursorinKohdalla.contains("underlined") && !kappale.getText().isEmpty()) {
             IndexRange sananIndeksit = kappale.getStyleRangeAtPosition(kursoriKappaleessa);
             String[] korjausEhdotukset = this.virheenKorjaaja.ehdotaKorjauksia(kappale.substring(sananIndeksit.getStart(), sananIndeksit.getEnd()));
-            KorjausEhdotusPonnahdus ponnahdus = new KorjausEhdotusPonnahdus(korjausEhdotukset);
-            ponnahdus.show(ikkuna);
+            this.nykyinenPonnahdus = new KorjausEhdotusPonnahdus(korjausEhdotukset, kappaleNumero, sananIndeksit);
+            this.nykyinenPonnahdus.addEventHandler(ActionEvent.ANY, new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent event) {
+                    nykyinenPonnahdus.hide();
+                }
+
+            });
+            Bounds hiirenKoordinaatit = this.kirjoitusAlue.caretBoundsProperty().getValue().get();
+            this.nykyinenPonnahdus.show(this.kirjoitusAlue, hiirenKoordinaatit.getMaxX(), hiirenKoordinaatit.getMaxY());
+            this.nappiPaneeli.requestFocus();
+            lisaaNappainKuuntelijatKomponenttiin(this.nykyinenPonnahdus.tausta);
+        }
+    }
+
+    private void korvaaSana(String korvaava, int kappaleNumero, IndexRange korjattavanIndeksitKappaleessa) {
+        this.kirjoitusAlue.replace(kappaleNumero, korjattavanIndeksitKappaleessa.getStart(), kappaleNumero, korjattavanIndeksitKappaleessa.getEnd(), korvaava, Collections.EMPTY_LIST);
+        this.kirjoitusAlue.requestFocus();
+    }
+
+    private void kasittelePainallukset() {
+        if (this.nykyinenPonnahdus != null && this.nykyinenPonnahdus.isShowing() && this.painetutNappaimet.contains(KeyCode.ESCAPE)) {
+            this.kirjoitusAlue.requestFocus();
+        }
+        if (this.painetutNappaimet.contains(KeyCode.CONTROL)) {
+            if (this.painetutNappaimet.contains(KeyCode.ENTER)) {
+                kasitteleTapahtuma();
+            } else if (this.painetutNappaimet.contains(KeyCode.S)) {
+                if (this.nykyinenTiedosto != null) {
+                    if (this.muutoksiaTekstissa) {
+                        tallennaValittuunTiedostoon();
+                    }
+                } else {
+                    valitseTallennettavaTiedosto();
+                    tallennaValittuunTiedostoon();
+                }
+            }
         }
     }
 
     private class KorjausEhdotusPonnahdus extends Popup {
-        
+
         private final VBox tausta;
-        
-        KorjausEhdotusPonnahdus(String[] korjausEhdotukset) {
+
+        KorjausEhdotusPonnahdus(String[] korjausEhdotukset, int kappaleNumero, IndexRange korjattavanIndeksit) {
             super();
             this.tausta = new VBox();
-            for (String ehdotus: korjausEhdotukset) {
-                this.tausta.getChildren().add(new Button(ehdotus));
+            int ehdotuksia = 0;
+            for (String ehdotus : korjausEhdotukset) {
+                if (ehdotus != null) {
+                    ehdotuksia += 1;
+                    Button nappi = new Button(ehdotus);
+                    nappi.setDefaultButton(true);
+                    this.tausta.getChildren().add(nappi);
+                    nappi.getStyleClass().add("ehdotusnappi");
+                    nappi.setOnAction(new EventHandler<ActionEvent>() {
+
+                        @Override
+                        public void handle(ActionEvent event) {
+                            korvaaSana(ehdotus, kappaleNumero, korjattavanIndeksit);
+                        }
+
+                    });
+                }
+            }
+            this.tausta.setAlignment(Pos.CENTER);
+            if (ehdotuksia == 0) {
+                Text eiEhdotuksiaTeksti = new Text();
+                eiEhdotuksiaTeksti.getStyleClass().add("eiehdotuksia");
+                this.tausta.getChildren().add(new Text("Ei ehdotuksia!"));
             }
             getContent().add(this.tausta);
         }

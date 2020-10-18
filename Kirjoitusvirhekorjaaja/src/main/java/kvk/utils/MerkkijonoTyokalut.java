@@ -26,6 +26,5 @@ public class MerkkijonoTyokalut {
         }
         return String.valueOf(merkkijonoTaulukkona);
     }
-;
 
 }

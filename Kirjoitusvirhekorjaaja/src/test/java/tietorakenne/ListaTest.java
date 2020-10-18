@@ -112,7 +112,7 @@ public class ListaTest {
     }
 
     private void tarkistaPutkeenLisatytAlkiot(int maara) {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < maara; i++) {
             assertEquals(this.sut.hae(i), "Testi" + i);
         }
     }

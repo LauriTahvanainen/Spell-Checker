@@ -8,3 +8,19 @@
     -rtfx-underline-width: 1;
     -rtfx-underline-cap: butt;
 }
+
+.ehdotusnappi {
+    -fx-background-color: bisque;
+    -fx-alignment: center;
+    -fx-border-radius: 5;
+    -fx-font-size: 11;
+}
+
+.ehdotusnappi:focused {
+    -fx-background-color: burlywood;
+}
+
+.eiehdotuksia {
+    -fx-font-size: 11;
+    -fx-background-color: bisque;
+}

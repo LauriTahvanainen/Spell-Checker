@@ -1,7 +1,8 @@
 package kvk.korjaaja;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import kvk.algoritmi.IMuokkausEtaisyyslaskija;
 import kvk.io.ITekstitiedostonKasittelija;
 import kvk.tietorakenne.BKPuu;
@@ -11,7 +12,9 @@ import kvk.tietorakenne.TrieSolmu;
 
 /**
  * Perustoteutus korjaajasta, käyttää Trie-puuta virheellisten sanojen
- * tunnistamiseen ja BK-puuta ehdotusten generoimiseen. Muokkausetaisyystoleranssi, sekä tapa jolla muokkausetäisyys lasketaan muokattavissa.
+ * tunnistamiseen ja BK-puuta ehdotusten generoimiseen.
+ * Muokkausetaisyystoleranssi, sekä tapa jolla muokkausetäisyys lasketaan
+ * muokattavissa.
  */
 public class Korjaaja implements IKorjaaja {
 
@@ -29,7 +32,7 @@ public class Korjaaja implements IKorjaaja {
     public void setEtaisyysToleranssi(int etaisyysToleranssi) {
         this.etaisyysToleranssi = etaisyysToleranssi;
     }
-    
+
     public void setEtaisyysLaskija(IMuokkausEtaisyyslaskija laskija) {
         this.etaisyysLaskija = laskija;
         this.BKSanasto.asetaEtaisyysLaskija(laskija);
@@ -45,14 +48,22 @@ public class Korjaaja implements IKorjaaja {
         return this.BKSanasto.haeLahimmatSanat(sana, this.etaisyysToleranssi, 10);
     }
 
+    @Override
+    public boolean lisaaSanastoonSana(String lisattava) {
+        try {
+            this.BKSanasto.lisaaSana(lisattava);
+            this.trieSanasto.lisaaSana(lisattava);
+            return true;
+        } catch (Exception ex) {
+            Logger.getLogger(Korjaaja.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
     private void alustaKorjaaja(ITekstitiedostonKasittelija lukija) throws IOException, Exception {
         this.trieSanasto = new Trie(new TrieSolmu(Character.MIN_VALUE));
         this.BKSanasto = new BKPuu(this.etaisyysLaskija, new BKSolmu("ja", null, 0));
-        List<String> sanalista = lukija.lataaSanastoListana();
-        for (String sana : sanalista) {
-            this.trieSanasto.lisaaSana(sana);
-            this.BKSanasto.lisaaSana(sana);
-        }
+        lukija.taytaSanastoTiedostosta(this);
     }
 
 }

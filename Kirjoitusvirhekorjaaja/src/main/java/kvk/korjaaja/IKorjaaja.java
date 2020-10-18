@@ -22,4 +22,6 @@ public interface IKorjaaja {
      * @return listan sanoista ehdotuksena parametrina annetun sanan tilalle.
      */
     String[] ehdotaKorjauksia(String sana);
+    
+    boolean lisaaSanastoonSana(String lisattava);
 }
