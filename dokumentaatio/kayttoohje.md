@@ -1,6 +1,10 @@
+## Asentaminen ja avaaminen
+
 ## Käyttö
 
 ### Tekstinkäsittely
+Ohjelmaa käytetään suomenkielisen tekstin käsittelyyn, pääasiassa kirjoittamiseen. Ohjelma korjaa yksittäisten sanojen kirjoitusvirheitä.
+
 Käynnistyessään ohjelma avaa tyhjän tekstieditorin, johon voi kirjoittaa.
 
 Käyttäjä voi halutessaan avata jo tallennetun tiedoston *Avaa tiedosto*-napista.
@@ -19,12 +23,12 @@ Toinen tapa nähdä korjausehdotuksia virheelliseen sanaan on viedä kursori vir
 
 *Korjaa kaikki virheelliset*-napista jokainen virheellinen sana korvataan automaattisesti ensimmäisellä korjausehdotuksella.
 
-## Pikanäppäimet tiivistetysti
+### Pikanäppäimet tiivistetysti
 
 Näppäinyhdisstelmä | Seuraus
 -------------------| -------
 CTRL+S | Tallentaa avattuun tiedostoon tehdyt muokkaukset.
 CTRL+ENTER | Avaa korjausehdotukset kursorin ollessa virheellisen sanan päällä.
 
-## Suorituskykytestit
+### Suorituskykytestit
 Suorituskykytestejä pääsee tarkastelemaan ja ajamaan *Suorituskykytesti*-napista. 
