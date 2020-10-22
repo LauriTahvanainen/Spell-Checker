@@ -5,10 +5,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
+import javafx.util.Pair;
+import kvk.algoritmi.EtaisyyslaskijaTehdas;
 import kvk.algoritmi.IMuokkausEtaisyyslaskija;
-import kvk.algoritmi.LevenshteinEtaisyys;
-import kvk.io.TekstitiedostonKasittelija;
+import kvk.enums.EtaisyysFunktio;
+import kvk.enums.Korjaaja;
+import kvk.enums.Sanasto;
+import kvk.io.TiedostonKasittelija;
 import kvk.korjaaja.IKorjaaja;
+import kvk.korjaaja.KorjaajaTehdas;
 
 /**
  * Suorituskykytestaamiseen. Virheellisten sanojen otos generoidaan ottamalla
@@ -22,7 +27,7 @@ public class SuorituskykyTestaaja {
 
     private static final Random RANDOM = new Random();
     private static final String ALPHABET = " -.,<'+0123456789abcdefghijklmnopqrstuvwxyzåäö";
-    private static final TekstitiedostonKasittelija IO = new TekstitiedostonKasittelija();
+    private static final TiedostonKasittelija IO = new TiedostonKasittelija();
     private static final HashMap<Character, char[]> MERKIN_VIEREISET_MERKIT = new HashMap<Character, char[]>() {
         {
             put('q', new char[]{'1', '2', 'w', 's', 'a'});
@@ -79,15 +84,16 @@ public class SuorituskykyTestaaja {
      * @param korjaaja jonka suoritusta testataan.
      * @param maksVirheitaSanassa maksimimäärä virheitä, joita aineston sanoihin
      * generoidaan.
+     * @param iteraatioita
+     * @param otoskoko
      * @return taulukko jossa jokaista iteraatiota kohti yksi
      * onnistumisprosentti.
      * @throws IOException
      */
-    public static double[] korjausOnnistumisProsentti(IKorjaaja korjaaja, int maksVirheitaSanassa, int iteraatioita) throws IOException {
-        double[] tulokset = new double[10];
-        int otosKoko = 500;
+    public static double korjausOnnistumisProsenttiTesti(IKorjaaja korjaaja, int maksVirheitaSanassa, int iteraatioita, int otoskoko) throws IOException {
+        double tulokset = 0;
         for (int i = 0; i < iteraatioita; i++) {
-            String[] otos = IO.lataaSatunnainenOtosSanoja(otosKoko);
+            String[] otos = IO.lataaSatunnainenOtosSanoja(otoskoko, korjaaja.sanasto().tiedostoNimi);
             double oikeellisia = 0;
             for (String sana : otos) {
                 String muokattuSana = muokkaaSanaa(sana, maksVirheitaSanassa);
@@ -96,10 +102,9 @@ public class SuorituskykyTestaaja {
                     oikeellisia += 1;
                 }
             }
-            tulokset[i] = oikeellisia / 500;
-            System.out.println((i + 1) + "/" + iteraatioita);
+            tulokset += oikeellisia / otoskoko;
         }
-        return tulokset;
+        return (tulokset / iteraatioita) * 100;
     }
 
     /**
@@ -112,58 +117,84 @@ public class SuorituskykyTestaaja {
      * @param iteraatioita monta iteraatiota suoritetaan. Määrittää
      * palautettavan taulukon pituuden.
      * @param otosKoko yhden testin korjattavien sanojen määrä.
-     * @return Yaulukon joka sisältää keskimääräisen yhden sanan korjausajan
-     * jokaista iteraatiota kohti.
+     * @return Korjaajan keskimäärisen korjausajan millisekunteina.
      * @throws IOException
      */
-    public static long[] keskimaarainenKorjausAika(IKorjaaja korjaaja, int maksVirheitaSanassa, int iteraatioita, int otosKoko) throws IOException {
-        long[] tulokset = new long[iteraatioita];
+    public static double keskimaarainenKorjausAikaTesti(IKorjaaja korjaaja, int maksVirheitaSanassa, int iteraatioita, int otosKoko) throws IOException {
+        long kumuloituvaTulos = 0;
         double kulunutAika;
         long aika;
         long kumuloituvaAika;
 
         for (int i = 0; i < iteraatioita; i++) {
             kumuloituvaAika = 0;
-            String[] otos = IO.lataaSatunnainenOtosSanoja(otosKoko);
+            String[] otos = IO.lataaSatunnainenOtosSanoja(otosKoko, korjaaja.sanasto().tiedostoNimi);
             for (String sana : otos) {
                 String muokattuSana = muokkaaSanaa(sana, maksVirheitaSanassa);
                 aika = System.nanoTime();
                 korjaaja.ehdotaKorjauksia(muokattuSana);
                 kumuloituvaAika += System.nanoTime() - aika;
             }
-            tulokset[i] = kumuloituvaAika / otosKoko;
-            System.out.println("Keskimääräinen korjausaika: " + (tulokset[i] / 1000000.0) + "ms");
-            System.out.println((i + 1) + "/" + iteraatioita);
+            kumuloituvaTulos += kumuloituvaAika / otosKoko;
         }
-        return tulokset;
+        return (kumuloituvaTulos / iteraatioita) / 1000000.0;
     }
 
     /**
-     * Testaa kaikkien etäisyyslaskijoiden suoritusaikaa syötteen kasvaessa.
-     * Verrattavien merkkijonojen pituus kymmenkertaistuu joka testillä aina
-     * 100000 merkin pituisiin merkkijonoihin asti.
+     * Alustaa korjaajan annetulla sanastolla ja palauttaa alustamiseen kuluneen
+     * ajan sekunteina. Käyttää korjaajaa, (korjaaja:levenshtein:2:10). 5
+     * alustusiteraatiota.
      *
-     * @return taulukko, jossa tulokset merkkijonona.
+     * @param sanasto
+     * @return korjaajan keskimääräinen alustusaika
+     * @throws java.lang.Exception
      */
-    public static String[] etaisyysLaskijoidenSuoritusAjat() {
-        IMuokkausEtaisyyslaskija[] laskijat = new IMuokkausEtaisyyslaskija[]{new LevenshteinEtaisyys()};
-        String[] tulokset = new String[laskijat.length];
-        long t;
+    public static Pair<Integer, Double> sanastonLatausAikaTesti(Sanasto sanasto) throws Exception {
+        int iteraatioita = 3;
+        long aika;
+        long kumuloituvaAika = 0;
+        int sanastonKoko = 0;
+        for (int i = 0; i < iteraatioita; i++) {
+            aika = System.nanoTime();
+            IKorjaaja korjaaja = KorjaajaTehdas.luoKorjaaja(IO, Korjaaja.TRIE_BK, EtaisyysFunktio.LEVENSHTEIN, 2, 10, sanasto);
+            kumuloituvaAika += System.nanoTime() - aika;
+            sanastonKoko = korjaaja.sanastonKoko();
+        }
+        return new Pair(sanastonKoko,(kumuloituvaAika / iteraatioita) / 1000000000.0);
+    }
 
-        for (int indeksi = 0; indeksi < laskijat.length; indeksi++) {
-            IMuokkausEtaisyyslaskija laskija = laskijat[indeksi];
-            String tulos = laskija.toString() + ": \n";
-            for (int i = 1; i < 100000; i *= 10) {
-                String verrattava1 = satunnainenMerkkijono(i);
-                String verrattava2 = satunnainenMerkkijono(i);
-                t = System.nanoTime();
-                laskija.laskeEtaisyys(verrattava1, verrattava2);
-                t = System.nanoTime() - t;
-                tulos = tulos + "Merkkijonojen pituus: " + i + " Aika: " + (t / 1000000.0) + "ms\n";
-            }
-            tulokset[indeksi] = tulos;
+    /**
+     * Testaa annetun etäisyyslaskijan suoritusaikaa syötteen kasvaessa.
+     *
+     * @return lista pareja, joissa sanojen pituus, ja etäisyyden laskemisen suoritusaika tämän pituisilla sanoilla.
+     */
+    public static ArrayList<Pair> etaisyysLaskijanSuoritusAika(EtaisyysFunktio etaisyysFunktio, int maksSanojenPituus) throws Exception {
+        IMuokkausEtaisyyslaskija laskija = EtaisyyslaskijaTehdas.luoLaskija(etaisyysFunktio);
+        ArrayList<Pair> tulokset = new ArrayList<>();
+        long t;
+        int i = 1;
+        while (i <= 100) {
+            tulokset.add(new Pair(i, laskeEtaisyyslaskuKeskimSuoritusAika(laskija, i)));
+            i++;
+        }
+        while (i <= maksSanojenPituus) {
+            tulokset.add(new Pair(i, laskeEtaisyyslaskuKeskimSuoritusAika(laskija, i)));
+            i += 200;
         }
         return tulokset;
+    }
+    
+    private static double laskeEtaisyyslaskuKeskimSuoritusAika(IMuokkausEtaisyyslaskija laskija, int merkkiJonojenPituus) {
+        int iteraatioita = 5;
+        long kumuloituvaArvo = 0;
+        for (int i = 0; i < iteraatioita; i++) {
+            String verrattava1 = satunnainenMerkkijono(merkkiJonojenPituus);
+            String verrattava2 = satunnainenMerkkijono(merkkiJonojenPituus);
+            long t = System.nanoTime();
+            laskija.laskeEtaisyys(verrattava1, verrattava2);
+            kumuloituvaArvo += System.nanoTime() - t;
+        }
+        return (kumuloituvaArvo / iteraatioita) / 1000000.0;
     }
 
     private static String satunnainenMerkkijono(int pituus) {

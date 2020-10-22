@@ -1,6 +1,8 @@
 package kvk.algoritmi;
 
-public interface IMuokkausEtaisyyslaskija {
+import java.io.Serializable;
+
+public interface IMuokkausEtaisyyslaskija extends Serializable {
 
     int laskeEtaisyys(String sana1, String sana2);
     

@@ -39,29 +39,29 @@ public class MerkkiSolmuTauluTest {
 
     @Test
     public void Lisaa_ASCIIAakkosia_KasvattaaListaa() throws Exception {
-        assertEquals(0, this.sut.listanPituus());
+        assertEquals(0, this.sut.listalleVarattuPituus());
         lisaaASCIIAakkoset();
-        assertEquals(26, this.sut.listanPituus());
+        assertEquals(26, this.sut.listalleVarattuPituus());
     }
 
     @Test
     public void Lisaa_numeroita_KasvattaaListaa() throws Exception {
         this.sut.lisaa('0', new TrieSolmu('0'));
-        assertEquals(30, this.sut.listanPituus());
+        assertEquals(30, this.sut.listalleVarattuPituus());
         this.sut.lisaa('3', new TrieSolmu('3'));
-        assertEquals(33, this.sut.listanPituus());
+        assertEquals(33, this.sut.listalleVarattuPituus());
         this.sut.lisaa('9', new TrieSolmu('9'));
-        assertEquals(39, this.sut.listanPituus());
+        assertEquals(39, this.sut.listalleVarattuPituus());
     }
 
     @Test
     public void Lisaa_aeaekkosia_KasvattaaListaa() throws Exception {
         this.sut.lisaa('å', new TrieSolmu('å'));
-        assertEquals(27, this.sut.listanPituus());
+        assertEquals(27, this.sut.listalleVarattuPituus());
         this.sut.lisaa('ä', new TrieSolmu('ä'));
-        assertEquals(28, this.sut.listanPituus());
+        assertEquals(28, this.sut.listalleVarattuPituus());
         this.sut.lisaa('ö', new TrieSolmu('ö'));
-        assertEquals(29, this.sut.listanPituus());
+        assertEquals(29, this.sut.listalleVarattuPituus());
     }
 
     @Test
@@ -70,7 +70,7 @@ public class MerkkiSolmuTauluTest {
         this.sut.lisaa(' ', new TrieSolmu(' '));
         this.sut.lisaa('è', new TrieSolmu('è'));
         this.sut.lisaa("'".charAt(0), new TrieSolmu("'".charAt(0)));
-        assertTrue(this.sut.listanPituus() > 26 && this.sut.listanPituus() < 54);
+        assertTrue(this.sut.listalleVarattuPituus() > 26 && this.sut.listalleVarattuPituus() < 54);
     }
 
     @Test

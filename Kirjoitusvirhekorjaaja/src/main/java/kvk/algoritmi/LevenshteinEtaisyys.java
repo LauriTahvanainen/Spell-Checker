@@ -49,6 +49,6 @@ public class LevenshteinEtaisyys implements IMuokkausEtaisyyslaskija {
     
     @Override
     public String toString() {
-        return "Levenshtein-etäisyys";
+        return "Levenshtein";
     }
 }

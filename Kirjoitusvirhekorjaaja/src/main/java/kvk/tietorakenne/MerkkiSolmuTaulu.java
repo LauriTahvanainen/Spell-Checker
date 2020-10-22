@@ -22,12 +22,14 @@ package kvk.tietorakenne;
 public class MerkkiSolmuTaulu {
 
     private TrieSolmu[] lista;
-    private int pituus;
+    private int varattuPituus;
+    private int alkioita;
     private static final int MAKSIMI_PITUUS = 53;
 
     public MerkkiSolmuTaulu() {
-        this.pituus = 0;
-        this.lista = new TrieSolmu[this.pituus];
+        this.varattuPituus = 0;
+        this.alkioita = 0;
+        this.lista = new TrieSolmu[this.varattuPituus];
     }
 
     /**
@@ -40,7 +42,7 @@ public class MerkkiSolmuTaulu {
      */
     public TrieSolmu hae(char merkki) throws Exception {
         int indeksi = merkkiKokonaisluvuksi(merkki);
-        if (indeksi >= this.pituus && indeksi < MAKSIMI_PITUUS) {
+        if (indeksi >= this.varattuPituus && indeksi < MAKSIMI_PITUUS) {
             return null;
         }
         return this.lista[indeksi];
@@ -56,22 +58,37 @@ public class MerkkiSolmuTaulu {
     public void lisaa(char lapsiMerkki, TrieSolmu lapsiSolmu) throws Exception {
         lapsiMerkki = Character.toLowerCase(lapsiMerkki);
         int indeksi = merkkiKokonaisluvuksi(lapsiMerkki);
-        if (indeksi >= this.pituus) {
+        if (indeksi >= this.varattuPituus) {
             kasvataListaaIndeksinPituiseksi(indeksi);
         }
         if (this.lista[indeksi] != null) {
             throw new Exception("Trien solmulistassa yhtä merkkiä voi vastata vain yksi lapsi!");
         }
         this.lista[indeksi] = lapsiSolmu;
+        this.alkioita++;
+    }
+    
+    public void asetaTyhjaksi(char lapsiMerkki) throws Exception {
+        lapsiMerkki = Character.toLowerCase(lapsiMerkki);
+        int indeksi = merkkiKokonaisluvuksi(lapsiMerkki);
+        if (indeksi >= this.varattuPituus) {
+            kasvataListaaIndeksinPituiseksi(indeksi);
+        }
+        this.lista[indeksi] = null;
+        this.alkioita--;
     }
 
-    public int listanPituus() {
+    public int listalleVarattuPituus() {
         return this.lista.length;
+    }
+    
+    public int alkioitaListassa() {
+        return this.alkioita;
     }
 
     private void kasvataListaaIndeksinPituiseksi(int uusiPituus) {
-        this.pituus = uusiPituus + 1;
-        TrieSolmu[] uusiLista = new TrieSolmu[this.pituus];
+        this.varattuPituus = uusiPituus + 1;
+        TrieSolmu[] uusiLista = new TrieSolmu[this.varattuPituus];
         int i = 0;
         for (TrieSolmu arvo : this.lista) {
             uusiLista[i] = arvo;

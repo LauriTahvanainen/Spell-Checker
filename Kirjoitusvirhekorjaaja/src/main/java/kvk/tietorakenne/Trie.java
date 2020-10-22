@@ -41,7 +41,35 @@ public class Trie {
             }
             nykyinen = lapsi;
         }
-        nykyinen.onSana();
+        nykyinen.asetaOnSana(true);
+    }
+
+    public void poistaSana(String sana) throws Exception {
+        TrieSolmu nykyinen = juuri;
+        TrieSolmu[] kirjaimiaVastaavatSolmut = new TrieSolmu[sana.length()];
+        int i = 0;
+        for (char kirjain : sana.toLowerCase().toCharArray()) {
+            TrieSolmu lapsi = nykyinen.haeSolmuListasta(kirjain);
+            if (lapsi == null) {
+                return;
+            }
+            kirjaimiaVastaavatSolmut[i] = lapsi;
+            nykyinen = lapsi;
+            i++;
+        }
+        nykyinen.asetaOnSana(false);
+        i = sana.length() - 1;
+        while (nykyinen.solmuListaOnTyhja() && !nykyinen.onSana()) {
+            char lapsenMerkki = nykyinen.solmunMerkki;
+            if (i != 0) {
+                nykyinen = kirjaimiaVastaavatSolmut[i - 1];
+            } else {
+                nykyinen = this.juuri;
+            }
+            nykyinen.asetaLapsiTyhjaksi(lapsenMerkki);
+            i--;
+        }
+
     }
 
     /**
@@ -61,6 +89,6 @@ public class Trie {
             }
             nykyinen = lapsi;
         }
-        return nykyinen.onkoSana();
+        return nykyinen.onSana();
     }
 }

@@ -1,11 +1,13 @@
 package kvk.tietorakenne;
 
+import java.io.Serializable;
+
 /**
  * Dynaamisesti kasvava lista.
  *
  * @param <T> listan alkioiden tyyppi.
  */
-public class Lista<T> {
+public class Lista<T>  implements Serializable{
 
     private T[] lista;
     private int maksimiPituus;
@@ -90,16 +92,32 @@ public class Lista<T> {
     public int varattuListanKoko() {
         return this.lista.length;
     }
+    
+    public String[] haeListaMerkkijonoTaulukkona() {
+        String[] palautettava = new String[this.pituus];
+        int i = 0;
+        for (T arvo : this.lista) {
+            if (i == this.pituus) {
+                break;
+            }
+            palautettava[i] = arvo.toString();
+            i += 1;
+        }
+        return palautettava;
+    }
 
     private void kasvataListaa() {
         this.maksimiPituus = this.maksimiPituus * 2;
-        this.lista = kopioiLista();
+        this.lista = kopioiLista(this.maksimiPituus);
     }
 
-    private T[] kopioiLista() {
-        T[] uusiLista = (T[]) new Object[this.maksimiPituus];
+    private T[] kopioiLista(int uusiPituus) {
+        T[] uusiLista = (T[]) new Object[uusiPituus];
         int i = 0;
         for (T arvo : this.lista) {
+            if (i == uusiPituus) {
+                break;
+            }
             uusiLista[i] = arvo;
             i += 1;
         }

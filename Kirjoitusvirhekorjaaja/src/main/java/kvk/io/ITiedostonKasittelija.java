@@ -2,15 +2,15 @@ package kvk.io;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.util.Properties;
 import javafx.stage.Stage;
 import kvk.korjaaja.IKorjaaja;
-import kvk.tietorakenne.Lista;
+import kvk.korjaaja.TrieBK;
 
 /**
  * Määrittelee tiedostonkäsittelijän.
  */
-public interface ITekstitiedostonKasittelija {
+public interface ITiedostonKasittelija {
 
     File valitseTallennusTiedosto(Stage ikkuna);
 
@@ -20,6 +20,12 @@ public interface ITekstitiedostonKasittelija {
 
     String lataaTeksti(File tiedostoPolku) throws IOException;
 
-    boolean taytaSanastoTiedostosta(IKorjaaja korjaaja) throws IOException;
+    boolean taytaSanastoTiedostosta(IKorjaaja korjaaja, String tiedostoNimi) throws IOException;
+
+    Properties lataaAsetukset();
+
+    void tallennaAsetukset(Properties asetukset);
+    
+    boolean lisaaSanatTiedostoon(String[] sanat, String tiedostoNimi);
 
 }

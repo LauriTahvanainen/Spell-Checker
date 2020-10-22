@@ -9,18 +9,12 @@ public class BKSolmu {
 
     public final String sana;
     public final Lista<BKSolmu> solmuLista;
-    public final BKSolmu vanhempi;
-    public final int etaisyysVanhempaan;
+    public boolean onPoistettu;
 
-    public BKSolmu(String sana, BKSolmu vanhempi, int etaisyysVanhempaan) {
+    public BKSolmu(String sana) {
         this.sana = sana;
-        this.vanhempi = vanhempi;
         this.solmuLista = new Lista<>(2);
-        this.etaisyysVanhempaan = etaisyysVanhempaan;
-    }
-
-    public void lisaaLapsi(BKSolmu lapsi, int etaisyys) {
-        this.solmuLista.asetaIndeksiin(lapsi, etaisyys);
+        this.onPoistettu = false;
     }
 
     @Override
@@ -35,13 +29,17 @@ public class BKSolmu {
             return false;
         }
         final BKSolmu other = (BKSolmu) obj;
-        if (this.etaisyysVanhempaan != other.etaisyysVanhempaan) {
+        if (this.onPoistettu != other.onPoistettu) {
             return false;
         }
         if (!Objects.equals(this.sana, other.sana)) {
             return false;
         }
-        return this.vanhempi == other.vanhempi;
+        return true;
+    }
+
+    public void lisaaLapsi(BKSolmu lapsi, int etaisyys) {
+        this.solmuLista.asetaIndeksiin(lapsi, etaisyys);
     }
 
     public BKSolmu lapsiEtaisyydella(int etaisyys) {

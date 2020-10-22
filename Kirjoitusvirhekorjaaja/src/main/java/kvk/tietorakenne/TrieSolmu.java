@@ -8,13 +8,19 @@ package kvk.tietorakenne;
 public class TrieSolmu {
 
     private final MerkkiSolmuTaulu solmuLista;
-    private final char solmunMerkki;
+    public final char solmunMerkki;
     private boolean onSana;
 
     public TrieSolmu(char merkki) {
         this.solmuLista = new MerkkiSolmuTaulu();
         this.solmunMerkki = merkki;
         this.onSana = false;
+    }
+
+    public TrieSolmu(char merkki, boolean onSana) {
+        this.solmuLista = new MerkkiSolmuTaulu();
+        this.solmunMerkki = merkki;
+        this.onSana = onSana;
     }
 
     /**
@@ -32,8 +38,12 @@ public class TrieSolmu {
     /**
      * Asettaa, että solmuun päättyvä merkkijono on sana.
      */
-    public void onSana() {
-        this.onSana = true;
+    public void asetaOnSana(boolean onkoSana) {
+        this.onSana = onkoSana;
+    }
+
+    public boolean solmuListaOnTyhja() {
+        return this.solmuLista.alkioitaListassa() == 0;
     }
 
     @Override
@@ -64,13 +74,17 @@ public class TrieSolmu {
     public void lisaaLapsi(Character lapsiMerkki, TrieSolmu lapsiSolmu) throws Exception {
         this.solmuLista.lisaa(Character.toLowerCase(lapsiMerkki), lapsiSolmu);
     }
+    
+    public void asetaLapsiTyhjaksi(Character lapsiMerkki) throws Exception {
+        this.solmuLista.asetaTyhjaksi(lapsiMerkki);
+    }
 
     /**
      * Kertoo onko solmuun päättyvä merkkijono sana.
      *
      * @return true jos solmuun päättyvä merkkijono on sana. Muuten false.
      */
-    public boolean onkoSana() {
+    public boolean onSana() {
         return this.onSana;
     }
 }

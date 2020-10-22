@@ -1,6 +1,6 @@
 package tietorakenne;
 
-import kvk.korjaaja.Korjaaja;
+import kvk.korjaaja.TrieBK;
 import kvk.tietorakenne.BKSolmu;
 import kvk.tietorakenne.Lista;
 import kvk.tietorakenne.TrieSolmu;
@@ -23,7 +23,7 @@ public class ListaTest {
         Lista<TrieSolmu> lista2 = new Lista<>(20);
         Lista<Object> lista3 = new Lista<>(20);
         Lista<Integer> lista4 = new Lista<>(20);
-        Lista<Korjaaja> lista5 = new Lista<>(20);
+        Lista<TrieBK> lista5 = new Lista<>(20);
     }
 
     @Test
