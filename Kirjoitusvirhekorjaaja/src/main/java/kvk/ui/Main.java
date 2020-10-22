@@ -380,7 +380,7 @@ public class Main extends Application {
 
         while (loppuIndeksi != BreakIterator.DONE) {
             String sana = kappaleMerkkijonona.substring(alkuIndeksi, loppuIndeksi);
-            if (!sana.matches("(^[a-zA-Z-öäå]*$)") || sana.matches("[0-9]+")) {
+            if (!sana.matches("(^[a-zA-Z-öäå]*$)") || sana.matches("[0-9]+") || sana.equalsIgnoreCase("-")) {
                 kirjoitusAlue.setStyle(kappaleNumero, alkuIndeksi, loppuIndeksi, Collections.EMPTY_LIST);
             } else {
                 try {
