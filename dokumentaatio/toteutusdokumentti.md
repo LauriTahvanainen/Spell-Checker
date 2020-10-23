@@ -22,7 +22,11 @@ Yksittäisen sanan tarkistaminen, ja korjaaminen etenee seuraavalla tavalla:
   
 - Kun käyttäjä haluaa korjausehdotuksia alleviivatulle sanalle näytetään käyttäjälle korjausehdotusten lista, niin että "Paras", eli lähin, korjaus-ehdotus on ensimmäisenä.
 
+Korjaajan asetuksia voi muuttaa käyttöliittymästä. Jos sanasto, etäisyysfunktio tai itse korjaaja muuttuu, alustetaan korjaaja uudellee.
+
 Ohjelmaan on lisätty myös tekstinkäsittelyä helpottava ominaisuus tallentaa käsitelty teksti tiedostoon, sekä avata teksti tiedostosta.
+
+Suorituskykytestit on toteutettu niin, että niitä voidaan suorittaa vaihtamalla korjaajan parametreja, ja sittenverrata näitä saatuja tuloksia yhteen. Kaikki testitulokset esitetään graafisesti viivakaaviossa. Näistä testeistä tarkemmin [testausdokumentissa](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/blob/master/dokumentaatio/testausdokumentti.md). Testituloksia kuitenkin käytetään myös edellä olevassa tietorakenteiden ja algoritmien tarkemmassa tarkastelussa.
 
 # Algoritmit
 ## Levenshtein-etäisyyden laskeminen
