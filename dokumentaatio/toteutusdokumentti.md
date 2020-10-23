@@ -169,6 +169,8 @@ Lähimpien sanojen hakualgoritmi käyttää hyväksi BK-puun metrisyyttä ja tä
 Se, miten monta sanaa haetaan, vaikuttaa myös suorituksen kestoon, sillä aina kun löydetään toleranssin sisällä oleva sana, pitää se lisätä järjestykseen johonkin tietorakenteeseen. Tässä työssä on toteutettu tämä ehdotusten tallentaminen itsestään järjestyvällä listalla, joka "tiputtaa" aina suurimpia arvoja pois. Tällöin aina kun löydetään uusi toleranssin sisällä oleva sana, ei sen lisäämiseksi palautettaviin tarvitse tehdä kuin niin monta vertailua kuin on määritelty, että ehdotuksia haetaan. Seuraavaa on tarkasteltu myös suorituskykytestillä:
 
 ![](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/blob/master/dokumentaatio/montaHaetaanVaikutus.png)
+Huomataan, että kyseisillä sanastoilla sillä monta korjausta haetaan, ei ole juuri vaikutusta.
+
 
 Muita havaintoja mitä korjausten hakemisesta BK puun avulla voi suorituskykytestien perusteella tehdä on:
 
