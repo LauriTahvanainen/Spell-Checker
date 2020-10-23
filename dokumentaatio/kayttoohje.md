@@ -1,5 +1,13 @@
 ## Asentaminen ja avaaminen
-SanastoTiedostojen pitää oikeassa kansiossa vakionimillään toimiakseen.
+Kehitettäessä käytössä on ollut **java version "1.8.0_212"**
+
+[Lataa viimeisin julkaisu](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/releases/tag/v1.0)
+
+Pura sanastot.zip samaan kansioon kuin jar tiedosto. sanastot kansion pitää olla siinä kansiossa mistä jar suoritetaan.
+
+Suorita ohjelma komennolla **java -jar Kirjoitusvirhekorjaaja-1.0.jar**
+
+Sanastotiedostojen pitää oikeassa kansiossa (sanastot) vakionimillään jotta ohjelma toimii. Itse sanastoja voi kyllä muokata.
 
 ## Käyttö
 HUOM. Ohjelma tukee vain suomenkielen aakkostoa. Muulla aakkostolla ohjelma ei toimi oikeellisesti!
