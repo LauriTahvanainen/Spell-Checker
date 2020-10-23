@@ -1,6 +1,8 @@
 ## Asentaminen ja avaaminen
+SanastoTiedostojen pitää oikeassa kansiossa vakionimillään toimiakseen.
 
 ## Käyttö
+HUOM. Ohjelma tukee vain suomenkielen aakkostoa. Muulla aakkostolla ohjelma ei toimi oikeellisesti!
 
 ### Tekstinkäsittely
 Ohjelmaa käytetään suomenkielisen tekstin käsittelyyn, pääasiassa kirjoittamiseen. Ohjelma korjaa yksittäisten sanojen kirjoitusvirheitä.
@@ -23,12 +25,23 @@ Toinen tapa nähdä korjausehdotuksia virheelliseen sanaan on viedä kursori vir
 
 *Korjaa kaikki virheelliset*-napista jokainen virheellinen sana korvataan automaattisesti ensimmäisellä korjausehdotuksella.
 
+### Korjaajan valitseminen
+*Muuta korjaajan asetuksia*-napista avautuu valikko, josta voi muuttaa korjaajan asetuksia. Muutokset tallentuvat *Tallenna*- napista. Valitut muutokset tallentuvat myös ohjelman sulkeutuessa, ja siis ohjelma säilyttää käyttäjän korjaaja-asetukset.
+
+### Sanastojen hallinta
+Virheelliseksi merkatun sanan voi lisätä sanastoon siirtämällä kursorin sanan päälle, ja painamalla *CTRL+L*-näppäinyhdistelmää. Tämä lisäys säilyy valittuna olevassa sanastossa myös ohjelman suljettua.
+
+Oikeelliseksi merkityn sanan taas voi poistaa sanastosa siirtämällä kursorin sanan päälle, ja painamalla *CTRL+P*-näppäinyhdistelmää. HUOM. Tällä hetkellä poistetut sanat eivät rekisteröidy valittuun sanastoon pysyvästi, vaan lataamalla sanaston uudestaan, ovat poistetut sanat taas sanastossa.
+
 ### Pikanäppäimet tiivistetysti
 
 Näppäinyhdisstelmä | Seuraus
 -------------------| -------
 CTRL+S | Tallentaa avattuun tiedostoon tehdyt muokkaukset.
 CTRL+ENTER | Avaa korjausehdotukset kursorin ollessa virheellisen sanan päällä.
+CTRL+L | Lisää valittuna olevaan sanastoon kursorin alla olevan virheellisen sanan.
+CTRL+P | Poistaa kursorin alla olevan oikeellisen sanan sanastosta.
+
 
 ### Suorituskykytestit
-Suorituskykytestejä pääsee tarkastelemaan ja ajamaan *Suorituskykytesti*-napista. 
+Suorituskykytestejä pääsee tarkastelemaan ja ajamaan *Suorituskykytestit*-napista. Testivalikosta voi siirtyä eri testeihin ja eri testien valikossa voi asettaa testin parametreja, ja ajaa testejä. Isoilla parametreilla joidenkin testien suorittamisessa saattaa kestää äärimmäisen kauan.

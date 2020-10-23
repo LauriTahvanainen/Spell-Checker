@@ -27,20 +27,24 @@ Käyttöliittymä on testattu manuaalisesti.
 ## TestiAineistosta
 Korjaajan suorituskyvyn testaaminen, erityisesti sopivan testiaineiston hankkiminen koitui vaikeaksi. Optimaalisin tapa testata olisi ihan oikeilla käyttäjillä, tai oikeilta käyttäjiltä kerätyllä testiaineistolla. Projektin tapauksessa päädyttiin kuitenkin testaamaan niin, että sanastosta haetaan satunnainen otos ja sitten jokaiselle otoksen sanalle tehdään satunnainen, mutta testistä riippuen ylhäältä rajattu, määrä yksittäisen merkin muokkausoperaatiota. Operaatiot ovat yhden merkin lisäys, poisto, vaihtuminen tai kahden sanan vierekkäisen merkin vaihtuminen keskenään (transpositio). Lisäyksen ja vaihdon yhteydessä käytettiin myös näppäimistön vierekkäisten merkkien heuristiikkaa. Esimerkiksi vaihdon yhteydessä muokattavasta sanasta valitaan ensin satunnainen merkki. Jos tämä merkki on esimerkiksi 'a', niin sen tilalle arvotaan jokin merkeistä 'q', 'w', 's', 'z' tai '<'.
 
-## Suunnitelma
-Suorituskykytestit toteutetaan omaan pakettiinsa, jotta ne voidaan ajaa erikseen yksikkötesteistä.
+## Testaus
+Toteutusdokumentissa on käsitelty joitain suorituskykytestien tuloksia
+Suorituskykytestit on toteutettu omaan luokkaansa, josta niitä voi käyttää
 
-Suorituskykytestausta voi tehdä projektissa monessa eri palasessa. Tässä vaiheessa kuitenkin kun kaikkia tietorakenteita ei ole vielä toteutettu, ei suorituskykytestaustakaan aloiteta täysillä. Testattavia kohteita:
+Suorituskykytestit voi suorittaa käyttöliittymästä, ja niiden tulokset näytetään käyttäjälle viivakaaviona. Testien parametreja voi myös vaihtaa helposti käyttöliittymästä.
 
-- Sanaston lataaminen Trie- ja BK-puuhun. 
-  - Testattava oikeasti isolla sanastolla.
-- Sanan sanastoon kuulumisen testaamisen tehokkuus
-  - Testattava täydellä sanastolla
-  - Keskiarvo
-- Virheelliselle sanalle korjausehdotusten generoimisen tehokkuus
-  - Testattava täydellisellä sanastolla
-  - Keskiarvo
-- Oleellisten tietorakenteiden tehokkuuden testaaminen.
-- Etäisyysmittausalgortimien, esim Levenshteinin-etäisyyden tehokkuuden testaaminen.
-  - Jos ja kun lisätään vaihtoehtoisia etäisyysalgoritmeja, verrataan näiden suorituskykyä, sekä yksittäin, että kokonaisuutena korjausehdotusten generoinnin kanssa.
+### Korjaajan suorituskykytestit
+Erilaisten korjaajien suorituskykyä voi testata kahdella tavalla. Testaamalla korjaajan keskimääräistä korjausaikaa, sekä korjausonnistumisprosenttia.
 
+Kaikki korjaajan parametrit: etäisyysfunktio, monta haetaan, toleranssi, sanasto, ovat valittavissa testejä varten. Testit voidaan ajaa peräkkäin, ja näin viivakaavioon voi piirtää saman testin tulokset eri korjaajilla.
+
+Viivakaaviossa x akseli on sanaston koon suhteen. Sillä kombinaatioita eri testeihin on lukemattomasti, esitetään tässä vain muutaman testin tulokset:
+
+### Korjaajan alustusaika ja tilavaativuus
+Samankaltaiseen viivakaavioon piirretään korjaajan alustusaikaa valituilla sanastoilla kuvaavan testin tulokset. Samassa testinäkymässä voi myös tarkastella korjaajan muistivarausta, mutta tämän mittaaminen ei ole kovin tarkkaa javan muistihallinnan vuoksi.
+
+### Etäisyysfunktioiden aikavaativuus
+Tämä testi havainnollistaa valitun etäisyysfunktion aikavaativuutta.
+
+### Puutteita
+Havainnollistamisen takia olisi ehkä ollut hyvä, että BK puun haulle eri toleransseilla olisi tehnyt testin. Tämä testi kuitenkin osaltaan sisältyy korjaajan suorituskykytesteihin.
