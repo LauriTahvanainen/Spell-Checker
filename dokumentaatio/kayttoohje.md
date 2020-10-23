@@ -1,4 +1,4 @@
-## Asentaminen ja avaaminen
+## Asentaminen ja komennot
 Kehitettäessä käytössä on ollut java version **1.8.0_212** ja javafx.runtime.version **8.0.212**
 
 [Lataa viimeisin julkaisu](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/releases/tag/v1.0)
