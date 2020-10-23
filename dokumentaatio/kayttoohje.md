@@ -12,6 +12,12 @@ java -jar Kirjoitusvirhekorjaaja-1.0.jar
 
 Sanastotiedostojen pitää oikeassa kansiossa (sanastot) vakionimillään jotta ohjelma toimii. Itse sanastoja voi kyllä muokata.
 
+Checkstyle raportin saa generoitua komennolla 
+
+```
+mvn checkstyle:checkstyle
+```
+
 ## Käyttö
 HUOM. Ohjelma tukee vain suomenkielen aakkostoa. Muulla aakkostolla ohjelma ei toimi oikeellisesti!
 
