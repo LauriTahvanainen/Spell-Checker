@@ -186,7 +186,7 @@ public class SuoritusKykyIkkuna {
                 int montaHaetaan = korjaajaValitsin.montaHaetaan();
                 int montaIteraatiota = (int) valitseMontaIteraatiota.getValue();
                 int otosKoko = (int) valitseOtosKoko.getValue();
-                int maksVirheitaSanasssa = (int) valitseMaksVirheitaSanassa.getValue();
+                int maksVirheitaSanassa = (int) valitseMaksVirheitaSanassa.getValue();
                 ObservableList<Sanasto> sanastoValinnat = korjaajaValitsin.sanasto();
                 if (sanastoValinnat.isEmpty()) {
                     naytaVirheIlmoitus("Yhtään sanaston kokoa ei valittu!\nTestiä ei voida suorittaa!");
@@ -201,7 +201,7 @@ public class SuoritusKykyIkkuna {
                 }
 
                 XYChart.Series arvoSarja = new XYChart.Series();
-                arvoSarja.setName("(" + korjaaja.toString() + ":" + etaisyysFunktio.toString() + ":" + toleranssi + ":" + montaHaetaan + ")" + "Iter: " + montaIteraatiota + ", Otoskoko: " + otosKoko);
+                arvoSarja.setName("(" + korjaaja.toString() + ":" + etaisyysFunktio.toString() + ":" + toleranssi + ":" + montaHaetaan + ")" + "Iter: " + montaIteraatiota + ", Otoskoko: " + otosKoko + ", maks. virheitä: " + maksVirheitaSanassa);
 
                 Alert testiKaynnissaIlmoitus = luoProsessiKeskenIlmoitus("Testi", "Testaus käynnissä!", "Tässä voi kestää hetki!", true);
                 Task testiTehtava = new Task<ArrayList<Pair>>() {
@@ -216,9 +216,9 @@ public class SuoritusKykyIkkuna {
                             }
                             testattava = KorjaajaTehdas.luoKorjaaja(IO, korjaaja, etaisyysFunktio, toleranssi, montaIteraatiota, sanasto);
                             if (prosenttiTesti) {
-                                tulokset.add(new Pair(testattava.sanastonKoko(), SuorituskykyTestaaja.korjausOnnistumisProsenttiTesti(testattava, maksVirheitaSanasssa, montaIteraatiota, otosKoko, this)));
+                                tulokset.add(new Pair(testattava.sanastonKoko(), SuorituskykyTestaaja.korjausOnnistumisProsenttiTesti(testattava, maksVirheitaSanassa, montaIteraatiota, otosKoko, this)));
                             } else {
-                                tulokset.add(new Pair(testattava.sanastonKoko(), SuorituskykyTestaaja.keskimaarainenKorjausAikaTesti(testattava, maksVirheitaSanasssa, montaIteraatiota, otosKoko, this)));
+                                tulokset.add(new Pair(testattava.sanastonKoko(), SuorituskykyTestaaja.keskimaarainenKorjausAikaTesti(testattava, maksVirheitaSanassa, montaIteraatiota, otosKoko, this)));
                             }
                         }
                         return tulokset;
