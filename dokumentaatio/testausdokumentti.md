@@ -22,6 +22,8 @@ Testaamiseen on käytetty JUnit:ia, ja testit on ajettavissa automaattisesti kom
 
 Projektissa on yksikkötestattu käytetyt tietorakenteet sekä algoritmit. Pääasiallisena testausmetodina on toiminut testitapausten määrittely käsin. Apuna on käytetty myös Mockito-kirjastoa testaamaan mm. sitä kuinka monta kertaa tietorakenne suorittaa tiettyä operaatiota. 
 
+Itse korjaajaluokkaa ei ole testattu juuri lainkaan. Tämä siksi, että luokka on pääasiassa vain runko korjaajalle. Itse korjaajan komponentit, eli tietorakenteet ja algoritmit on testattu tarkemmin.
+
 ### Algoritmit
 Algoritmien testaaminen on toteuttu antamalla algoritmille syötteitä, ja tarkistamalla, että algoritmi tuottaa oikean tuloksen annetulla syötteellä.
 
