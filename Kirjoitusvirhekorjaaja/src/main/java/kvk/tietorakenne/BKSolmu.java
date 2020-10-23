@@ -32,10 +32,7 @@ public class BKSolmu {
         if (this.onPoistettu != other.onPoistettu) {
             return false;
         }
-        if (!Objects.equals(this.sana, other.sana)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.sana, other.sana);
     }
 
     public void lisaaLapsi(BKSolmu lapsi, int etaisyys) {

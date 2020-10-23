@@ -1,6 +1,7 @@
 package kvk.tietorakenne;
 
 import kvk.algoritmi.IMuokkausEtaisyyslaskija;
+import kvk.enums.Jarjestys;
 
 /**
  * BK-puu tietorakenne, jonka avulla sanastosta voi etsiä nopeasti merkkijonoja,
@@ -11,7 +12,7 @@ import kvk.algoritmi.IMuokkausEtaisyyslaskija;
  */
 public class BKPuu {
 
-    private BKSolmu juuri;
+    private final BKSolmu juuri;
     private IMuokkausEtaisyyslaskija etaisyysLaskija;
 
     /**
@@ -35,6 +36,8 @@ public class BKPuu {
      * lisätä sana tämän lapseksi avaimena etäisyys tästä uuden kontekstin
      * solmusta. Tätä valintaa jatketaan kunnes on mahdollista lisätä sana
      * uudeksi lapseksi tietyllä etäisyydellä.
+     *
+     * @param sana
      */
     public void lisaaSana(String sana) {
         sana = sana.trim().toLowerCase();
@@ -60,7 +63,7 @@ public class BKPuu {
      * poisteta puusta, vaan se merkitään poistetuksi. Poistettavaan solmuun
      * päästään käyttämällä hakua 0 muokkausoperaation toleranssilla.
      *
-     * @param sana, joka poistetaan
+     * @param sana
      */
     public void poistaSana(String sana) {
         sana = sana.toLowerCase();

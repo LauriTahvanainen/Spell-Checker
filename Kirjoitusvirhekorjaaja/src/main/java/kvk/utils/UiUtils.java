@@ -2,9 +2,8 @@ package kvk.utils;
 
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
@@ -15,6 +14,9 @@ import kvk.enums.EtaisyysFunktio;
 import kvk.enums.Korjaaja;
 import kvk.enums.Sanasto;
 
+/**
+ * Staattisia metodeja erilaisten UI-komponenttien luomiseen.
+ */
 public class UiUtils {
 
     public static ListView<Sanasto> luoSanastoValitsin(ObservableList<Sanasto> sanastoLista, SelectionMode sanastoValinta) {
@@ -45,7 +47,6 @@ public class UiUtils {
      *
      * @param min minimi
      * @param maks maksimi
-     * @param vali arvojen vali
      * @param prefWidth leveys
      * @param kasvu kasvu liikuttaessa
      * @param oletus oletusarvo
@@ -64,13 +65,34 @@ public class UiUtils {
         return slider;
     }
 
-    public static Alert luoProsessiKeskenIlmoitus(String title, String headerText, String contextText) {
-        Alert ilmoitus = new Alert(Alert.AlertType.INFORMATION);
+    public static Alert luoProsessiKeskenIlmoitus(String title, String headerText, String contextText, boolean keskeytaNapilla) {
+        Alert ilmoitus = new Alert(Alert.AlertType.CONFIRMATION);
         ilmoitus.setTitle(title);
         ilmoitus.setHeaderText(headerText);
         ilmoitus.setContentText(contextText);
         ilmoitus.initStyle(StageStyle.UNDECORATED);
         ilmoitus.getDialogPane().lookupButton(ButtonType.OK).setVisible(false);
+        if (keskeytaNapilla) {
+            ((Button) ilmoitus.getDialogPane().lookupButton(ButtonType.CANCEL)).setText("Keskeytä");
+        } else {
+            ilmoitus.getDialogPane().lookupButton(ButtonType.CANCEL).setVisible(false);
+        }
         return ilmoitus;
+    }
+
+    public static void naytaVirheIlmoitus(String viesti) {
+        Alert ilmoitus = new Alert(Alert.AlertType.ERROR);
+        ilmoitus.setTitle("Virhe");
+        ilmoitus.setContentText(viesti);
+        ilmoitus.setHeaderText("Virhe!");
+        ilmoitus.showAndWait();
+    }
+
+    public static void naytaInformaatioIlmoitus(String viesti) {
+        Alert ilmoitus = new Alert(Alert.AlertType.WARNING);
+        ilmoitus.setTitle("Huomio!");
+        ilmoitus.setContentText(viesti);
+        ilmoitus.setHeaderText("Huomio!");
+        ilmoitus.showAndWait();
     }
 }

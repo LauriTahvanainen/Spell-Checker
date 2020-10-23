@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * @param <T> listan alkioiden tyyppi.
  */
-public class Lista<T>  implements Serializable{
+public class Lista<T> implements Serializable {
 
     private T[] lista;
     private int maksimiPituus;
@@ -92,7 +92,7 @@ public class Lista<T>  implements Serializable{
     public int varattuListanKoko() {
         return this.lista.length;
     }
-    
+
     public String[] haeListaMerkkijonoTaulukkona() {
         String[] palautettava = new String[this.pituus];
         int i = 0;

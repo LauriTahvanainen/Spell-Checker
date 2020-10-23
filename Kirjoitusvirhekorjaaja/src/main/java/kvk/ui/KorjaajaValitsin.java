@@ -15,11 +15,14 @@ import javafx.scene.text.TextAlignment;
 import kvk.enums.EtaisyysFunktio;
 import kvk.enums.Korjaaja;
 import kvk.enums.Sanasto;
-import kvk.io.ITiedostonKasittelija;
-import kvk.korjaaja.IKorjaaja;
-import kvk.korjaaja.KorjaajaTehdas;
-import static kvk.utils.UiUtils.*;
+import static kvk.utils.UiUtils.luoEtaisyysFunktionValintaLaatikko;
+import static kvk.utils.UiUtils.luoKorjaajanValintaLaatikko;
+import static kvk.utils.UiUtils.luoSanastoValitsin;
+import static kvk.utils.UiUtils.luoSlideri;
 
+/**
+ * UI komponentti korjaajan asetusten valitsemiseen.
+ */
 public class KorjaajaValitsin {
 
     private final GridPane juuri;
@@ -29,6 +32,12 @@ public class KorjaajaValitsin {
     private final Slider montaHaetaanValitsin;
     private final ListView<Sanasto> sanastoValitsin;
 
+    /**
+     * Alustaa valitsijakomponentin.
+     *
+     * @param windowWidth
+     * @param sanastoValinta, voiko valita vain yhden vai monta sanastoa.
+     */
     public KorjaajaValitsin(int windowWidth, SelectionMode sanastoValinta) {
 
         this.juuri = new GridPane();
@@ -53,7 +62,7 @@ public class KorjaajaValitsin {
 
         Label valitseSanastonKokoTeksti = new Label("Sanasto");
         valitseSanastonKokoTeksti.setTextAlignment(TextAlignment.RIGHT);
-        
+
         ObservableList<Sanasto> sanastoLista = FXCollections.observableArrayList();
         sanastoLista.addAll(Sanasto.values());
         this.sanastoValitsin = luoSanastoValitsin(sanastoLista, sanastoValinta);
@@ -65,7 +74,7 @@ public class KorjaajaValitsin {
         this.juuri.add(this.sanastoValitsin, 1, 2, 3, 1);
 
     }
-    
+
     public void asetaArvot(Korjaaja korjaaja, EtaisyysFunktio etaisyysFunktio, int toleranssi, int montaHaetaan, Sanasto sanasto) {
         this.korjaajaValitsin.setValue(korjaaja);
         this.etaisyysFunktioValitsin.setValue(etaisyysFunktio);
@@ -73,17 +82,17 @@ public class KorjaajaValitsin {
         this.montaHaetaanValitsin.setValue(montaHaetaan);
         this.sanastoValitsin.getSelectionModel().select(sanasto);
     }
-    
+
     public GridPane haeJuuri() {
         return this.juuri;
     }
-    
+
     /**
      * Asettaa uuden noden valintapaneeliin halutulle paikalle.
+     *
      * @param node
      * @param sarake
      * @param rivi
-     * @return
      */
     public void asetaLapsi(Node node, int sarake, int rivi) {
         this.juuri.add(node, sarake, rivi);

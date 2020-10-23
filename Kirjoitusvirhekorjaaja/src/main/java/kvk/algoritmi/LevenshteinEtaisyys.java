@@ -1,8 +1,8 @@
 package kvk.algoritmi;
 
-/**
- * Levenshtein etäisyyden toteuttava etäisyydenlaskija.
- */
+import kvk.enums.EtaisyysFunktio;
+import static kvk.utils.YleisetTyokalut.minimi;
+
 public class LevenshteinEtaisyys implements IMuokkausEtaisyyslaskija {
 
     /**
@@ -36,7 +36,7 @@ public class LevenshteinEtaisyys implements IMuokkausEtaisyyslaskija {
                 if (mjonoX.charAt(x - 1) == mjonoY.charAt(y - 1)) {
                     etaisyysMatriisi[x][y] = etaisyysMatriisi[x - 1][y - 1];
                 } else {
-                    etaisyysMatriisi[x][y] = Math.min(Math.min(etaisyysMatriisi[x - 1][y],
+                    etaisyysMatriisi[x][y] = minimi(minimi(etaisyysMatriisi[x - 1][y],
                             etaisyysMatriisi[x][y - 1]),
                             etaisyysMatriisi[x - 1][y - 1]) + operaationHinta;
                 }
@@ -46,9 +46,9 @@ public class LevenshteinEtaisyys implements IMuokkausEtaisyyslaskija {
 
         return etaisyysMatriisi[mjonoX.length()][mjonoY.length()];
     }
-    
+
     @Override
     public String toString() {
-        return "Levenshtein";
+        return EtaisyysFunktio.LEVENSHTEIN.toString();
     }
 }

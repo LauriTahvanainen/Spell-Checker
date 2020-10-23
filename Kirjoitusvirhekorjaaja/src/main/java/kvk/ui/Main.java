@@ -1,6 +1,7 @@
 package kvk.ui;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.BreakIterator;
 import java.time.Duration;
 import java.util.Collection;
@@ -44,15 +45,19 @@ import kvk.enums.EtaisyysFunktio;
 import kvk.enums.Korjaaja;
 import kvk.enums.Sanasto;
 import kvk.io.TiedostonKasittelija;
+import kvk.io.ITiedostonKasittelija;
 import kvk.korjaaja.IKorjaaja;
+import kvk.korjaaja.KorjaajaTehdas;
+import kvk.poikkeukset.VirheellinenKirjainPoikkeus;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.fxmisc.richtext.model.Paragraph;
 import org.reactfx.EventStreams;
 import org.reactfx.Subscription;
 import org.reactfx.collection.LiveList;
-import kvk.io.ITiedostonKasittelija;
-import kvk.korjaaja.KorjaajaTehdas;
+
 import static kvk.utils.UiUtils.luoProsessiKeskenIlmoitus;
+import static kvk.utils.UiUtils.naytaInformaatioIlmoitus;
+import static kvk.utils.UiUtils.naytaVirheIlmoitus;
 
 public class Main extends Application {
 
@@ -76,17 +81,30 @@ public class Main extends Application {
     private boolean tekstiJuuriLadattuTiedostosta;
     private Properties asetukset;
     private KorjaajaValitsin korjaajaValitsin;
+    private boolean sanastoPuuttuu;
+    private boolean virheAlustuksessa;
+    private boolean virheAsetuksissa;
 
     @Override
     public void start(Stage paaIkkuna) {
+        if (this.virheAlustuksessa) {
+            naytaVirheIlmoitus("Odottamaton virhe alustettaessa sovellusta!\nKatso lokitiedot");
+            System.exit(0);
+        } else if (this.virheAsetuksissa) {
+            naytaVirheIlmoitus("Virheellinen arvo asetuksissa!\n Ei voida alustaa sovellusta!\nKorjaa asetustiedosto!");
+            System.exit(0);
+        } else if (this.sanastoPuuttuu) {
+            naytaVirheIlmoitus("Sanastotiedosto puuttuu!\nEi voida alustaa sovellusta!\nLisää oikeat sanastotiedostot 'sanastot'-kansioon");
+            System.exit(0);
+        }
         ikkuna = paaIkkuna;
         ikkuna.setResizable(false);
         ikkuna.centerOnScreen();
         ikkuna.initStyle(StageStyle.UNIFIED);
         ikkuna.setTitle("Kirjoitusvirhekorjaaja");
+
         ikkuna.setScene(this.tausta);
         alustaKuuntelijat();
-
         if (initVirheViesti != null) {
             Text virhe = new Text(initVirheViesti);
             VBox pane = new VBox();
@@ -96,6 +114,9 @@ public class Main extends Application {
         }
 
         ikkuna.show();
+        if (this.virheenKorjaaja.yritettiinLisataSanaVirheellisellaMerkilla()) {
+            naytaInformaatioIlmoitus("Sanastoon yritettiin lisätä sana ei-tuetulla merkillä\nTällaisia sanoja ei lisätä korjaajaan!\nKorjaaja toimii vain suomenkielen aakkostolla!");
+        }
     }
 
     /**
@@ -107,32 +128,50 @@ public class Main extends Application {
 
     @Override
     public void stop() {
-        virheenKorjaaja.tallennaSanastoMuutokset();
-        tiedostonKasittelija.tallennaAsetukset(asetukset);
+        try {
+            virheenKorjaaja.tallennaSanastoMuutokset();
+        } catch (Exception ex) {
+            naytaVirheIlmoitus("Tapahtui odottamaton virhe!\nSanastomuutosten tallentaminen epäonnistui!");
+        }
+        try {
+            tiedostonKasittelija.tallennaAsetukset(asetukset);
+        } catch (Exception ex) {
+            naytaVirheIlmoitus("Tapahtui odottamaton virhe!\nAsetusten tallentaminen epäonnistui!");
+        }
     }
 
     @Override
-    public void init() throws Exception {
-        this.tiedostonKasittelija = new TiedostonKasittelija();
-        this.asetukset = this.tiedostonKasittelija.lataaAsetukset();
-        alustaKorjaaja();
-        this.painetutNappaimet = FXCollections.observableSet(new HashSet<KeyCode>());
-        this.viimeisinTarkistettuKappale = 0;
-        this.muutoksiaTekstissa = false;
-        this.tekstiJuuriLadattuTiedostosta = false;
-        this.kirjoitusAlue = new StyleClassedTextArea();
-        this.kirjoitusAlue.setPrefHeight(this.windowHeight);
-        this.kirjoitusAlue.setWrapText(true);
-        this.kappaleLista = this.kirjoitusAlue.getParagraphs();
-        this.sanaIteroija = BreakIterator.getWordInstance(new Locale("fi", "FI"));
+    public void init() {
+        try {
+            this.virheAlustuksessa = false;
+            this.virheAsetuksissa = false;
+            this.sanastoPuuttuu = false;
+            this.tiedostonKasittelija = new TiedostonKasittelija();
+            this.asetukset = this.tiedostonKasittelija.lataaAsetukset();
+            if (!alustaKorjaaja()) {
+                return;
+            }
+            this.painetutNappaimet = FXCollections.observableSet(new HashSet<KeyCode>());
+            this.viimeisinTarkistettuKappale = 0;
+            this.muutoksiaTekstissa = false;
+            this.tekstiJuuriLadattuTiedostosta = false;
+            this.kirjoitusAlue = new StyleClassedTextArea();
+            this.kirjoitusAlue.setPrefHeight(this.windowHeight);
+            this.kirjoitusAlue.setWrapText(true);
+            this.kappaleLista = this.kirjoitusAlue.getParagraphs();
+            this.sanaIteroija = BreakIterator.getWordInstance(new Locale("fi", "FI"));
 
-        alustaNapit();
+            alustaNapit();
 
-        this.juuriKomponentti = new VBox();
-        this.juuriKomponentti.getChildren().addAll(nappiPaneeli, kirjoitusAlue);
+            this.juuriKomponentti = new VBox();
+            this.juuriKomponentti.getChildren().addAll(nappiPaneeli, kirjoitusAlue);
 
-        this.tausta = new Scene(this.juuriKomponentti, this.windowWidth, this.windowHeight);
-        tausta.getStylesheets().add(getClass().getResource("/tekstityylit.css").toExternalForm());
+            this.tausta = new Scene(this.juuriKomponentti, this.windowWidth, this.windowHeight);
+            tausta.getStylesheets().add(getClass().getResource("/tekstityylit.css").toExternalForm());
+        } catch (Exception e) {
+            this.virheAlustuksessa = true;
+            Logger.getLogger(TiedostonKasittelija.class.getName()).log(Level.SEVERE, null, e);
+        }
     }
 
     private void alustaNapit() {
@@ -160,6 +199,7 @@ public class Main extends Application {
                     nykyinenTiedosto = tiedostonKasittelija.valitseTekstiTiedosto(ikkuna);
                     if (nykyinenTiedosto != null) {
                         muutaIkkunaTeksti(nykyinenTiedosto.getName());
+                        viimeisinTarkistettuKappale = 0;
                         kirjoitusAlue.replaceText(tiedostonKasittelija.lataaTeksti(nykyinenTiedosto));
                         tekstiJuuriLadattuTiedostosta = true;
                     }
@@ -271,18 +311,29 @@ public class Main extends Application {
         nappiPaneeli.getChildren().remove(korjaajaValitsin.haeJuuri());
     }
 
-    private void alustaKorjaaja() throws Exception {
-        this.korjaajaValitsin = new KorjaajaValitsin(this.windowWidth, SelectionMode.SINGLE);
+    private boolean alustaKorjaaja() {
+        try {
+            this.korjaajaValitsin = new KorjaajaValitsin(this.windowWidth, SelectionMode.SINGLE);
 
-        Sanasto sanasto = Sanasto.valueOf(this.asetukset.getProperty("sanasto").toUpperCase());
-        Korjaaja korjaaja = Korjaaja.valueOf(this.asetukset.getProperty("korjaaja"));
-        EtaisyysFunktio etaisyysFunktio = EtaisyysFunktio.valueOf(this.asetukset.getProperty("etaisyysFunktio"));
-        int etaisyys = Integer.valueOf(this.asetukset.getProperty("etaisyys"));
-        int montaHaetaan = Integer.valueOf(this.asetukset.getProperty("montaHaetaan"));
+            Sanasto sanasto = Sanasto.valueOf(this.asetukset.getProperty("sanasto").toUpperCase());
+            Korjaaja korjaaja = Korjaaja.valueOf(this.asetukset.getProperty("korjaaja"));
+            EtaisyysFunktio etaisyysFunktio = EtaisyysFunktio.valueOf(this.asetukset.getProperty("etaisyysFunktio"));
+            int etaisyys = Integer.valueOf(this.asetukset.getProperty("etaisyys"));
+            int montaHaetaan = Integer.valueOf(this.asetukset.getProperty("montaHaetaan"));
+            this.korjaajaValitsin.asetaArvot(korjaaja, etaisyysFunktio, etaisyys, montaHaetaan, sanasto);
 
-        this.korjaajaValitsin.asetaArvot(korjaaja, etaisyysFunktio, etaisyys, montaHaetaan, sanasto);
-
-        this.virheenKorjaaja = KorjaajaTehdas.luoKorjaaja(tiedostonKasittelija, korjaaja, etaisyysFunktio, etaisyys, montaHaetaan, sanasto);
+            this.virheenKorjaaja = KorjaajaTehdas.luoKorjaaja(tiedostonKasittelija, korjaaja, etaisyysFunktio, etaisyys, montaHaetaan, sanasto);
+        } catch (IllegalArgumentException e) {
+            this.virheAsetuksissa = true;
+            return false;
+        } catch (IOException e) {
+            this.sanastoPuuttuu = true;
+            return false;
+        } catch (Exception e) {
+            this.virheAlustuksessa = true;
+            return false;
+        }
+        return true;
     }
 
     private void alustaKuuntelijat() {
@@ -347,20 +398,14 @@ public class Main extends Application {
     }
 
     private void tallennaValittuunTiedostoon() {
-        boolean tallennusOnnistui = this.tiedostonKasittelija.tallennaTeksti(this.kirjoitusAlue.getText(), this.nykyinenTiedosto);
-        if (tallennusOnnistui) {
+        try {
+            this.tiedostonKasittelija.tallennaTeksti(this.kirjoitusAlue.getText(), this.nykyinenTiedosto);
             muutaIkkunaTeksti(nykyinenTiedosto.getName() + " (Tallennettu!)");
             this.muutoksiaTekstissa = false;
-        } else {
-            muutaIkkunaTeksti(nykyinenTiedosto.getName() + " (Tallentaminen epäonnistui!)");
+        } catch (IOException e) {
+            naytaVirheIlmoitus("Tapahtui odottamaton virhe!\nTallentaminen epäonnistui!");
         }
     }
-//
-//    private void tarkistaVirheetKaikistaKappaleista() {
-//        for (int kappaleNumero = 0; kappaleNumero < kappaleLista.size(); kappaleNumero++) {
-//            tarkistaVirheetKappaleesta(kappaleNumero);
-//        }
-//    }
 
     private void tarkistaVirheetViimeisimmistaKappaleista(int kappaleNumero) {
         if (this.viimeisinTarkistettuKappale > kappaleNumero) {
@@ -380,7 +425,7 @@ public class Main extends Application {
 
         while (loppuIndeksi != BreakIterator.DONE) {
             String sana = kappaleMerkkijonona.substring(alkuIndeksi, loppuIndeksi);
-            if (!sana.matches("(^[a-zA-Z-öäå]*$)") || sana.matches("[0-9]+") || sana.equalsIgnoreCase("-")) {
+            if (!sana.matches("(^[a-zA-Z-'öäå]*$)") || sana.matches("[0-9]+") || sana.equalsIgnoreCase("-")) {
                 kirjoitusAlue.setStyle(kappaleNumero, alkuIndeksi, loppuIndeksi, Collections.EMPTY_LIST);
             } else {
                 try {
@@ -389,8 +434,11 @@ public class Main extends Application {
                     } else {
                         kirjoitusAlue.setStyle(kappaleNumero, alkuIndeksi, loppuIndeksi, Collections.singleton("sanastonsana"));
                     }
+                } catch (VirheellinenKirjainPoikkeus ex) {
+                    naytaInformaatioIlmoitus("Ei tuettuja merkkeja havaittu!\nHuomaa, että korjaukset eivät toimi\nsyötetyillä merkeillä.");
                 } catch (Exception ex) {
                     Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                    naytaVirheIlmoitus("Ohjelmassa tapahtui odottamaton virhe!");
                 }
             }
             alkuIndeksi = loppuIndeksi;
@@ -412,6 +460,7 @@ public class Main extends Application {
         Paragraph kappale = (Paragraph) this.kappaleLista.get(kappaleNumero);
         Collection tyyliKursorinKohdalla = (Collection) kappale.getStyleAtPosition(kursoriKappaleessa);
         if (tyyliKursorinKohdalla.contains("alleviivattu") && !kappale.getText().isEmpty()) {
+            this.kirjoitusAlue.setEditable(false);
             IndexRange sananIndeksit = kappale.getStyleRangeAtPosition(kursoriKappaleessa);
             String korvattavaSana = kappale.substring(sananIndeksit.getStart(), sananIndeksit.getEnd());
             String[] korjausEhdotukset = this.virheenKorjaaja.ehdotaKorjauksia(korvattavaSana);
@@ -421,6 +470,7 @@ public class Main extends Application {
                 @Override
                 public void handle(ActionEvent event) {
                     nykyinenPonnahdus.hide();
+                    kirjoitusAlue.setEditable(true);
                 }
 
             });
@@ -436,13 +486,18 @@ public class Main extends Application {
         if (Character.isUpperCase(korvattava.charAt(0))) {
             korvaava = Character.toUpperCase(korvaava.charAt(0)) + korvaava.substring(1);
         }
-        this.kirjoitusAlue.replace(kappaleNumero, korjattavanIndeksitKappaleessa.getStart(), kappaleNumero, korjattavanIndeksitKappaleessa.getEnd(), korvaava, Collections.singleton("sanastonsana"));
+        this.kirjoitusAlue.replace(kappaleNumero,
+                                   korjattavanIndeksitKappaleessa.getStart(),
+                                   kappaleNumero, korjattavanIndeksitKappaleessa.getEnd(),
+                                   korvaava, Collections.singleton("sanastonsana"));
         this.kirjoitusAlue.requestFocus();
     }
 
     private void kasittelePainallukset() {
         if (this.nykyinenPonnahdus != null && this.nykyinenPonnahdus.isShowing() && this.painetutNappaimet.contains(KeyCode.ESCAPE)) {
+            this.nykyinenPonnahdus.hide();
             this.kirjoitusAlue.requestFocus();
+            this.kirjoitusAlue.setEditable(true);
         }
         if (this.painetutNappaimet.contains(KeyCode.CONTROL)) {
             if (this.painetutNappaimet.contains(KeyCode.ENTER)) {
@@ -473,10 +528,17 @@ public class Main extends Application {
         Paragraph kappale = (Paragraph) this.kappaleLista.get(kappaleNumero);
         Collection tyyliKursorinKohdalla = (Collection) kappale.getStyleAtPosition(kursoriKappaleessa);
         if (tyyliKursorinKohdalla.contains("alleviivattu") && !kappale.getText().isEmpty()) {
-            IndexRange sananIndeksit = kappale.getStyleRangeAtPosition(kursoriKappaleessa);
-            String lisattavaSana = kappale.substring(sananIndeksit.getStart(), sananIndeksit.getEnd());
-            this.virheenKorjaaja.lisaaSanastoonSana(lisattavaSana);
-            kirjoitusAlue.setStyle(kappaleNumero, sananIndeksit.getStart(), sananIndeksit.getEnd(), Collections.singleton("sanastonsana"));
+            try {
+                IndexRange sananIndeksit = kappale.getStyleRangeAtPosition(kursoriKappaleessa);
+                String lisattavaSana = kappale.substring(sananIndeksit.getStart(), sananIndeksit.getEnd());
+                this.virheenKorjaaja.lisaaSanastoonSana(lisattavaSana);
+                kirjoitusAlue.setStyle(kappaleNumero, sananIndeksit.getStart(), sananIndeksit.getEnd(), Collections.singleton("sanastonsana"));
+            } catch (VirheellinenKirjainPoikkeus ex) {
+                naytaInformaatioIlmoitus("Lisättävässä sanassa ei-tuettuja merkkejä!\nOhjelma tunnistaa vain\nsuomenkielen aakkoston!");
+            } catch (Exception ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                naytaVirheIlmoitus("Ohjelmassa tapahtui odottamaton virhe!");
+            }
         }
     }
 
@@ -486,15 +548,22 @@ public class Main extends Application {
         Paragraph kappale = (Paragraph) this.kappaleLista.get(kappaleNumero);
         Collection tyyliKursorinKohdalla = (Collection) kappale.getStyleAtPosition(kursoriKappaleessa);
         if (tyyliKursorinKohdalla.contains("sanastonsana") && !kappale.getText().isEmpty()) {
-            IndexRange sananIndeksit = kappale.getStyleRangeAtPosition(kursoriKappaleessa);
-            String poistettavaSana = kappale.substring(sananIndeksit.getStart(), sananIndeksit.getEnd());
-            this.virheenKorjaaja.poistaSanastostaSana(poistettavaSana);
-            kirjoitusAlue.setStyle(kappaleNumero, sananIndeksit.getStart(), sananIndeksit.getEnd(), Collections.singleton("alleviivattu"));
+            try {
+                IndexRange sananIndeksit = kappale.getStyleRangeAtPosition(kursoriKappaleessa);
+                String poistettavaSana = kappale.substring(sananIndeksit.getStart(), sananIndeksit.getEnd());
+                this.virheenKorjaaja.poistaSanastostaSana(poistettavaSana);
+                kirjoitusAlue.setStyle(kappaleNumero, sananIndeksit.getStart(), sananIndeksit.getEnd(), Collections.singleton("alleviivattu"));
+            } catch (VirheellinenKirjainPoikkeus ex) {
+                naytaInformaatioIlmoitus("Poistettavassa sanassa ei-tuettuja merkkejä!\nOhjelma tunnistaa vain\nsuomenkielen aakkoston!");
+            } catch (Exception ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                naytaVirheIlmoitus("Ohjelmassa tapahtui odottamaton virhe!");
+            }
         }
     }
 
     private void alustaKorjaajaUudelleen(Korjaaja valittuKorjaaja, EtaisyysFunktio valittuEtaisyysFunktio, int valittuToleranssi, int valittuMontaHaetaan, Sanasto valittuSanasto) {
-        Alert alustusKaynnissaIlmoitus = luoProsessiKeskenIlmoitus("Korjaajan alustus", "Korjaajaa alustetaan uudelleen!", "");
+        Alert alustusKaynnissaIlmoitus = luoProsessiKeskenIlmoitus("Korjaajan alustus", "Korjaajaa alustetaan uudelleen!", "", false);
 
         Task testiTehtava = new Task<Void>() {
 
@@ -509,6 +578,9 @@ public class Main extends Application {
             @Override
             public void handle(WorkerStateEvent event) {
                 alustusKaynnissaIlmoitus.close();
+                if (virheenKorjaaja.yritettiinLisataSanaVirheellisellaMerkilla()) {
+                    naytaInformaatioIlmoitus("Sanastoon yritettiin lisätä sana ei-tuetulla merkillä\nTällaisia sanoja ei lisätä korjaajaan!\nKorjaaja toimii vain suomenkielen aakkostolla!");
+                }
             }
 
         });
@@ -543,9 +615,9 @@ public class Main extends Application {
             }
             this.tausta.setAlignment(Pos.CENTER);
             if (ehdotuksia == 0) {
-                Text eiEhdotuksiaTeksti = new Text();
+                Button eiEhdotuksiaTeksti = new Button("Ei ehdotuksia");
                 eiEhdotuksiaTeksti.getStyleClass().add("eiehdotuksia");
-                this.tausta.getChildren().add(new Text("Ei ehdotuksia!"));
+                this.tausta.getChildren().add(eiEhdotuksiaTeksti);
             }
             getContent().add(this.tausta);
         }

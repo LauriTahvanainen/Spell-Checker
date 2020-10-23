@@ -1,5 +1,7 @@
 package kvk.tietorakenne;
 
+import kvk.poikkeukset.VirheellinenKirjainPoikkeus;
+
 /**
  * Toteuttaa Trie tietorakenteen suomen kielen sanastoa varten. Trien avulla
  * yksittäisestä sanasta saadaan nopeasti selville kuuluuko se suomen kielen
@@ -14,7 +16,7 @@ package kvk.tietorakenne;
  *
  * Lyhyesti: https://en.wikipedia.org/wiki/Trie
  *
- * Ei erityisen optimoitu versio.
+ * Solmulistassa käytetty hienoista optimointia.
  */
 public class Trie {
 
@@ -29,9 +31,10 @@ public class Trie {
      * muutu. Aikavaatimus O(m), missä m on lisättävän sanan pituus.
      *
      * @param sana
+     * @throws kvk.poikkeukset.VirheellinenKirjainPoikkeus
      * @throws java.lang.Exception
      */
-    public void lisaaSana(String sana) throws Exception {
+    public void lisaaSana(String sana) throws VirheellinenKirjainPoikkeus, Exception {
         TrieSolmu nykyinen = juuri;
         for (char kirjain : sana.toLowerCase().toCharArray()) {
             TrieSolmu lapsi = nykyinen.haeSolmuListasta(kirjain);
@@ -44,7 +47,15 @@ public class Trie {
         nykyinen.asetaOnSana(true);
     }
 
-    public void poistaSana(String sana) throws Exception {
+    /**
+     * Poistaa parametrina annetun sanan puusta. Poistaa samalla kaikki puun
+     * solmut jotka jäävät ilman lapsia.
+     *
+     * @param sana
+     * @throws VirheellinenKirjainPoikkeus
+     * @throws Exception
+     */
+    public void poistaSana(String sana) throws VirheellinenKirjainPoikkeus, Exception {
         TrieSolmu nykyinen = juuri;
         TrieSolmu[] kirjaimiaVastaavatSolmut = new TrieSolmu[sana.length()];
         int i = 0;
@@ -78,9 +89,10 @@ public class Trie {
      *
      * @param sana
      * @return true jos merkkijono löytyy Trie-puusta, muuten false
+     * @throws kvk.poikkeukset.VirheellinenKirjainPoikkeus
      * @throws java.lang.Exception
      */
-    public Boolean onkoSana(String sana) throws Exception {
+    public Boolean onkoSana(String sana) throws VirheellinenKirjainPoikkeus, Exception {
         TrieSolmu nykyinen = juuri;
         for (char kirjain : sana.toLowerCase().toCharArray()) {
             TrieSolmu lapsi = nykyinen.haeSolmuListasta(kirjain);

@@ -1,6 +1,6 @@
 package tietorakenne;
 
-import kvk.tietorakenne.Jarjestys;
+import kvk.enums.Jarjestys;
 import kvk.tietorakenne.JarjestyvaTaulukko;
 import kvk.tietorakenne.SanaEtaisyysPari;
 import org.junit.Before;

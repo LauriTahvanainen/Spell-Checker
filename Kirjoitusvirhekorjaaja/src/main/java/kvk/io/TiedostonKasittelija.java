@@ -4,13 +4,10 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.util.Properties;
 import java.util.Random;
@@ -18,8 +15,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import kvk.enums.EtaisyysFunktio;
+import kvk.enums.Korjaaja;
+import kvk.enums.Sanasto;
 import kvk.korjaaja.IKorjaaja;
-import kvk.korjaaja.TrieBK;
 
 /**
  * Hoitaa I/O toimenpiteet.
@@ -32,12 +31,26 @@ public class TiedostonKasittelija implements ITiedostonKasittelija {
         this.tiedostonValitsija = new FileChooser();
     }
 
+    /**
+     * Avaa tiedostohakemiston, josta käyttäjä voi valita tiedoston.
+     *
+     * @param ikkuna
+     * @return tiedosto
+     * @throws java.io.IOException
+     */
     @Override
     public File valitseTekstiTiedosto(Stage ikkuna) throws IOException {
         this.tiedostonValitsija.setTitle("Valitse tekstitiedosto");
         return this.tiedostonValitsija.showOpenDialog(ikkuna);
     }
 
+    /**
+     * Avaa tiedostohakemiston, josta käyttäjä voi valita tiedoston johon
+     * tallentaa.
+     *
+     * @param ikkuna
+     * @return tiedosto
+     */
     @Override
     public File valitseTallennusTiedosto(Stage ikkuna) {
         this.tiedostonValitsija.setTitle("Tallenna teksti tiedostoon");
@@ -49,16 +62,15 @@ public class TiedostonKasittelija implements ITiedostonKasittelija {
      *
      * @param teksti
      * @param tiedostoPolku
-     * @return true jos tekstin tallentaminen tiedostoon onnistui.
+     * @throws java.io.IOException
      */
     @Override
-    public boolean tallennaTeksti(String teksti, File tiedostoPolku) {
+    public void tallennaTeksti(String teksti, File tiedostoPolku) throws IOException {
         try (BufferedWriter puskuroituKirjoittaja = Files.newBufferedWriter(tiedostoPolku.toPath())) {
             puskuroituKirjoittaja.write(teksti);
-            return true;
         } catch (IOException e) {
-            System.out.println(e.getMessage());
-            return false;
+            Logger.getLogger(TiedostonKasittelija.class.getName()).log(Level.SEVERE, null, e);
+            throw e;
         }
     }
 
@@ -82,33 +94,33 @@ public class TiedostonKasittelija implements ITiedostonKasittelija {
             }
             return teksti;
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            Logger.getLogger(TiedostonKasittelija.class.getName()).log(Level.SEVERE, null, e);
             throw e;
         }
     }
 
     /**
-     * Lataa resursseista korjaajan käyttämän sanaston listana String objekteja.
-     * taytaSanastoTiedostosta
+     * Täyttää korjaajan resursseista luettavalla sanastolistalla.
      *
      * @param korjaaja
      * @param tiedostoNimi
-     * @return Resursseissa sijaitseva sanasto string listana.
      * @throws IOException
      */
     @Override
-    public boolean taytaSanastoTiedostosta(IKorjaaja korjaaja, String tiedostoNimi) throws IOException {
-        try (BufferedReader puskuroituLukija = new BufferedReader(new InputStreamReader(TiedostonKasittelija.class.getResourceAsStream(tiedostoNimi)))) {
+    public void taytaSanastoTiedostosta(IKorjaaja korjaaja, String tiedostoNimi) throws IOException, Exception {
+        try (BufferedReader puskuroituLukija = new BufferedReader(new InputStreamReader(new FileInputStream(tiedostoNimi)))) {
 
             String rivi;
 
             while ((rivi = puskuroituLukija.readLine()) != null) {
                 korjaaja.lisaaSanastoonSana(rivi);
             }
-            return true;
         } catch (IOException e) {
-            System.out.println("VIRHE LADATESSA SANASTOA");
-            throw e;
+            Logger.getLogger(TiedostonKasittelija.class.getName()).log(Level.SEVERE, null, e);
+            throw new IOException("Sanastotiedostoa ei löydetty!");
+        } catch (Exception ex) {
+            Logger.getLogger(TiedostonKasittelija.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
         }
     }
 
@@ -124,7 +136,7 @@ public class TiedostonKasittelija implements ITiedostonKasittelija {
     public String[] lataaSatunnainenOtosSanoja(int otosKoko, String tiedostoNimi) throws IOException {
         String[] otos = new String[otosKoko];
 
-        try (BufferedReader puskuroituLukija = new BufferedReader(new InputStreamReader(TiedostonKasittelija.class.getResourceAsStream(tiedostoNimi)))) {
+        try (BufferedReader puskuroituLukija = new BufferedReader(new InputStreamReader(new FileInputStream(tiedostoNimi)))) {
 
             String rivi;
             int indeksi = 0;
@@ -143,47 +155,65 @@ public class TiedostonKasittelija implements ITiedostonKasittelija {
             }
 
         } catch (IOException e) {
+            Logger.getLogger(TiedostonKasittelija.class.getName()).log(Level.WARNING, null, e);
             throw e;
         }
         return otos;
     }
 
+    /**
+     * Lataa käyttäjän asetukset. Jos asetuksia ei ole, niin palauttaa
+     * oletusasetukset.
+     *
+     * @return asetukset
+     */
     @Override
     public Properties lataaAsetukset() {
         Properties properties = new Properties();
         try {
             properties.load(new FileInputStream("./userConfig.properties"));
-        } catch (Exception e) {
-            properties.setProperty("korjaaja", "korjaaja");
-            properties.setProperty("sanasto", "LAAJA");
+        } catch (IOException e) {
+            properties.setProperty("korjaaja", Korjaaja.TRIE_BK.toString());
+            properties.setProperty("sanasto", Sanasto.LAAJA.toString());
             properties.setProperty("etaisyys", "2");
             properties.setProperty("montaHaetaan", "10");
-            properties.setProperty("etaisyysFunktio", "Levenshtein");
+            properties.setProperty("etaisyysFunktio", EtaisyysFunktio.LEVENSHTEIN.toString());
         }
         return properties;
     }
 
+    /**
+     * Tallentaa asetukset kansioon, jossa ohjelma suoritetaan.
+     *
+     * @param asetukset
+     */
     @Override
-    public void tallennaAsetukset(Properties asetukset) {
+    public void tallennaAsetukset(Properties asetukset) throws Exception {
         try {
             asetukset.store(new FileOutputStream("./userConfig.properties"), "");
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(TiedostonKasittelija.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(TiedostonKasittelija.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
         }
     }
 
+    /**
+     * Lisaa parametrina annetut sanat parametrina annettuun tiedostoon.
+     *
+     * @param sanat
+     * @param tiedostoNimi
+     * @throws Exception
+     */
     @Override
-    public boolean lisaaSanatTiedostoon(String[] sanat, String tiedostoNimi) {
-        try (BufferedWriter puskuroituKirjoittaja = new BufferedWriter(new FileWriter(this.getClass().getResource(tiedostoNimi).getPath(), true))) {
-            for (String sana: sanat) {
+    public void lisaaSanatTiedostoon(String[] sanat, String tiedostoNimi) throws Exception {
+        try (BufferedWriter puskuroituKirjoittaja = new BufferedWriter(new FileWriter(tiedostoNimi, true))) {
+            for (String sana : sanat) {
                 puskuroituKirjoittaja.write(sana);
                 puskuroituKirjoittaja.newLine();
             }
-            return true;
         } catch (Exception e) {
-            return false;
+            Logger.getLogger(TiedostonKasittelija.class.getName()).log(Level.SEVERE, null, e);
+            throw e;
         }
     }
 

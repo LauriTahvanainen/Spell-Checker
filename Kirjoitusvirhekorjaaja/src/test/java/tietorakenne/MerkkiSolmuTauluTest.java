@@ -67,10 +67,8 @@ public class MerkkiSolmuTauluTest {
     @Test
     public void Lisaa_Erikoismerkkeja_KasvattaaListaa() throws Exception {
         this.sut.lisaa('-', new TrieSolmu('-'));
-        this.sut.lisaa(' ', new TrieSolmu(' '));
-        this.sut.lisaa('è', new TrieSolmu('è'));
         this.sut.lisaa("'".charAt(0), new TrieSolmu("'".charAt(0)));
-        assertTrue(this.sut.listalleVarattuPituus() > 26 && this.sut.listalleVarattuPituus() < 54);
+        assertTrue(this.sut.listalleVarattuPituus() > 26 && this.sut.listalleVarattuPituus() < 42);
     }
 
     @Test

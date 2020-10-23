@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Properties;
 import javafx.stage.Stage;
 import kvk.korjaaja.IKorjaaja;
-import kvk.korjaaja.TrieBK;
 
 /**
  * Määrittelee tiedostonkäsittelijän.
@@ -16,16 +15,16 @@ public interface ITiedostonKasittelija {
 
     File valitseTekstiTiedosto(Stage ikkuna) throws IOException;
 
-    boolean tallennaTeksti(String teksti, File tiedostoPolku);
+    void tallennaTeksti(String teksti, File tiedostoPolku) throws IOException;
 
     String lataaTeksti(File tiedostoPolku) throws IOException;
 
-    boolean taytaSanastoTiedostosta(IKorjaaja korjaaja, String tiedostoNimi) throws IOException;
+    void taytaSanastoTiedostosta(IKorjaaja korjaaja, String tiedostoNimi) throws IOException, Exception;
 
     Properties lataaAsetukset();
 
-    void tallennaAsetukset(Properties asetukset);
+    void tallennaAsetukset(Properties asetukset) throws Exception;
     
-    boolean lisaaSanatTiedostoon(String[] sanat, String tiedostoNimi);
+    void lisaaSanatTiedostoon(String[] sanat, String tiedostoNimi) throws Exception;
 
 }

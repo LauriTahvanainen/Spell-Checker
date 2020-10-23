@@ -1,6 +1,6 @@
 package tietorakenne;
 
-import kvk.korjaaja.TrieBK;
+import kvk.korjaaja.TrieBKKorjaaja;
 import kvk.tietorakenne.BKSolmu;
 import kvk.tietorakenne.Lista;
 import kvk.tietorakenne.TrieSolmu;
@@ -23,7 +23,7 @@ public class ListaTest {
         Lista<TrieSolmu> lista2 = new Lista<>(20);
         Lista<Object> lista3 = new Lista<>(20);
         Lista<Integer> lista4 = new Lista<>(20);
-        Lista<TrieBK> lista5 = new Lista<>(20);
+        Lista<TrieBKKorjaaja> lista5 = new Lista<>(20);
     }
 
     @Test
@@ -103,6 +103,31 @@ public class ListaTest {
     @Test
     public void Haku_LiianSuurellaIndeksilla_PalauttaaNULL() {
         assertEquals(null, this.sut.hae(30));
+    }
+    
+    @Test
+    public void HaeListaMJonoTaulukkona_ListaJossaLopussaNullArvoja_PalauttaaVainEiNullArvojenPituudelta() {
+        this.sut.lisaaListaan("1");
+        this.sut.lisaaListaan("2");
+        this.sut.lisaaListaan("3");
+        this.sut.lisaaListaan("4");
+        
+        String[] lista = this.sut.haeListaMerkkijonoTaulukkona();
+        assertEquals(4, lista.length);
+    }
+    
+    @Test
+    public void HaeListaMJonoTaulukkona_HelppoTapaus_PalauttaaOikeanJarjestyksenListan() {
+        this.sut.lisaaListaan("1");
+        this.sut.lisaaListaan("2");
+        this.sut.lisaaListaan("3");
+        this.sut.lisaaListaan("4");
+        
+        String[] lista = this.sut.haeListaMerkkijonoTaulukkona();
+        assertEquals(lista[0], "1");
+        assertEquals(lista[1], "2");
+        assertEquals(lista[2], "3");
+        assertEquals(lista[3], "4");
     }
 
     private void lisaaAlkioita(int maara) {

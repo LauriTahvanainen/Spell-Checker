@@ -1,5 +1,7 @@
 package kvk.tietorakenne;
 
+import kvk.enums.Jarjestys;
+
 /**
  * Järjestyvä kiinteän kokoinen taulukko BK-puun hausta saamia tuloksia varten.
  * Toimii ikään kuin järjestettynä jonoja, johon mahtuu aina kerralla aina

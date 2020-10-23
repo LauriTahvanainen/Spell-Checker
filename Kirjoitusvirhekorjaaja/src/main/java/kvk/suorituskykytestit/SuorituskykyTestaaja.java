@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
+import javafx.concurrent.Task;
 import javafx.util.Pair;
 import kvk.algoritmi.EtaisyyslaskijaTehdas;
 import kvk.algoritmi.IMuokkausEtaisyyslaskija;
@@ -86,13 +87,13 @@ public class SuorituskykyTestaaja {
      * generoidaan.
      * @param iteraatioita
      * @param otoskoko
-     * @return taulukko jossa jokaista iteraatiota kohti yksi
-     * onnistumisprosentti.
+     * @param saie
+     * @return keskimääräinen korjaajan onnistumisprosentti
      * @throws IOException
      */
-    public static double korjausOnnistumisProsenttiTesti(IKorjaaja korjaaja, int maksVirheitaSanassa, int iteraatioita, int otoskoko) throws IOException {
+    public static double korjausOnnistumisProsenttiTesti(IKorjaaja korjaaja, int maksVirheitaSanassa, int iteraatioita, int otoskoko, Task<ArrayList<Pair>> saie) throws IOException {
         double tulokset = 0;
-        for (int i = 0; i < iteraatioita; i++) {
+        for (int i = 1; i <= iteraatioita; i++) {
             String[] otos = IO.lataaSatunnainenOtosSanoja(otoskoko, korjaaja.sanasto().tiedostoNimi);
             double oikeellisia = 0;
             for (String sana : otos) {
@@ -101,6 +102,9 @@ public class SuorituskykyTestaaja {
                 if (ehdotukset.contains(sana.toLowerCase())) {
                     oikeellisia += 1;
                 }
+                if (saie.isCancelled()) {
+                    return (tulokset / i) * 100;
+                }
             }
             tulokset += oikeellisia / otoskoko;
         }
@@ -108,8 +112,8 @@ public class SuorituskykyTestaaja {
     }
 
     /**
-     * Laskee listan keksimääräisiä aikoja, joiden verran parametrina annetulla
-     * korjaajalla menee korjata otoskoon määrittämä määrä virheellisiä sanoja.
+     * Laskee keskimääräisen ajan, jonka verran parametrina annetulla
+     * korjaajalla menee korjata satunnainen sana.
      *
      * @param korjaaja jota testataan
      * @param maksVirheitaSanassa maksimimäärä monta virhettä testiaineiston
@@ -117,16 +121,17 @@ public class SuorituskykyTestaaja {
      * @param iteraatioita monta iteraatiota suoritetaan. Määrittää
      * palautettavan taulukon pituuden.
      * @param otosKoko yhden testin korjattavien sanojen määrä.
-     * @return Korjaajan keskimäärisen korjausajan millisekunteina.
+     * @param saie
+     * @return Korjaajan keskimääräisen korjausajan millisekunteina.
      * @throws IOException
      */
-    public static double keskimaarainenKorjausAikaTesti(IKorjaaja korjaaja, int maksVirheitaSanassa, int iteraatioita, int otosKoko) throws IOException {
+    public static double keskimaarainenKorjausAikaTesti(IKorjaaja korjaaja, int maksVirheitaSanassa, int iteraatioita, int otosKoko, Task<ArrayList<Pair>> saie) throws IOException {
         long kumuloituvaTulos = 0;
         double kulunutAika;
         long aika;
         long kumuloituvaAika;
 
-        for (int i = 0; i < iteraatioita; i++) {
+        for (int i = 1; i <= iteraatioita; i++) {
             kumuloituvaAika = 0;
             String[] otos = IO.lataaSatunnainenOtosSanoja(otosKoko, korjaaja.sanasto().tiedostoNimi);
             for (String sana : otos) {
@@ -134,6 +139,9 @@ public class SuorituskykyTestaaja {
                 aika = System.nanoTime();
                 korjaaja.ehdotaKorjauksia(muokattuSana);
                 kumuloituvaAika += System.nanoTime() - aika;
+                if (saie.isCancelled()) {
+                    return (kumuloituvaTulos / i) / 1000000.0;
+                }
             }
             kumuloituvaTulos += kumuloituvaAika / otosKoko;
         }
@@ -142,33 +150,45 @@ public class SuorituskykyTestaaja {
 
     /**
      * Alustaa korjaajan annetulla sanastolla ja palauttaa alustamiseen kuluneen
-     * ajan sekunteina. Käyttää korjaajaa, (korjaaja:levenshtein:2:10). 5
-     * alustusiteraatiota.
+     * ajan sekunteina, ja käytetyn muistin. Käyttää korjaajaa,
+     * (korjaaja:levenshtein:2:10). 3 alustusiteraatiota.
      *
      * @param sanasto
-     * @return korjaajan keskimääräinen alustusaika
+     * @param joKaytettyMuisti
+     * @return korjaajan keskimääräinen alustusaika, ja keskimääräinen käytetty
+     * muisti
      * @throws java.lang.Exception
      */
-    public static Pair<Integer, Double> sanastonLatausAikaTesti(Sanasto sanasto) throws Exception {
+    public static Pair<Integer, Pair<Double, Long>> sanastonLatausAikaTesti(Sanasto sanasto, long joKaytettyMuisti) throws Exception {
         int iteraatioita = 3;
+        int mb = 1024 * 1024;
         long aika;
         long kumuloituvaAika = 0;
+        long kumuloituvaKaytettyMuisti = 0;
         int sanastonKoko = 0;
-        for (int i = 0; i < iteraatioita; i++) {
+        Runtime instanssi = Runtime.getRuntime();
+
+        for (int i = 1; i <= iteraatioita; i++) {
             aika = System.nanoTime();
             IKorjaaja korjaaja = KorjaajaTehdas.luoKorjaaja(IO, Korjaaja.TRIE_BK, EtaisyysFunktio.LEVENSHTEIN, 2, 10, sanasto);
             kumuloituvaAika += System.nanoTime() - aika;
+            kumuloituvaKaytettyMuisti += ((instanssi.totalMemory() - instanssi.freeMemory()) / mb) - joKaytettyMuisti;
             sanastonKoko = korjaaja.sanastonKoko();
         }
-        return new Pair(sanastonKoko,(kumuloituvaAika / iteraatioita) / 1000000000.0);
+        return new Pair(sanastonKoko, new Pair((kumuloituvaAika / iteraatioita) / 1000000000.0, kumuloituvaKaytettyMuisti / iteraatioita));
     }
 
     /**
      * Testaa annetun etäisyyslaskijan suoritusaikaa syötteen kasvaessa.
      *
-     * @return lista pareja, joissa sanojen pituus, ja etäisyyden laskemisen suoritusaika tämän pituisilla sanoilla.
+     * @param etaisyysFunktio
+     * @param maksSanojenPituus
+     * @param saie
+     * @return lista pareja, joissa sanojen pituus, ja etäisyyden laskemisen
+     * suoritusaika tämän pituisilla sanoilla.
+     * @throws java.lang.Exception
      */
-    public static ArrayList<Pair> etaisyysLaskijanSuoritusAika(EtaisyysFunktio etaisyysFunktio, int maksSanojenPituus) throws Exception {
+    public static ArrayList<Pair> etaisyysLaskijanSuoritusAika(EtaisyysFunktio etaisyysFunktio, int maksSanojenPituus, Task<ArrayList<Pair>> saie) throws Exception {
         IMuokkausEtaisyyslaskija laskija = EtaisyyslaskijaTehdas.luoLaskija(etaisyysFunktio);
         ArrayList<Pair> tulokset = new ArrayList<>();
         long t;
@@ -178,12 +198,16 @@ public class SuorituskykyTestaaja {
             i++;
         }
         while (i <= maksSanojenPituus) {
+            if (saie.isCancelled()) {
+                return tulokset;
+            }
             tulokset.add(new Pair(i, laskeEtaisyyslaskuKeskimSuoritusAika(laskija, i)));
             i += 200;
         }
         return tulokset;
+
     }
-    
+
     private static double laskeEtaisyyslaskuKeskimSuoritusAika(IMuokkausEtaisyyslaskija laskija, int merkkiJonojenPituus) {
         int iteraatioita = 5;
         long kumuloituvaArvo = 0;

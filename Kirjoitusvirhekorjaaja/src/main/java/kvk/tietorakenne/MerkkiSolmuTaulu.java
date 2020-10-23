@@ -1,5 +1,7 @@
 package kvk.tietorakenne;
 
+import kvk.poikkeukset.VirheellinenKirjainPoikkeus;
+
 /**
  * Taulukkoon pohjautuva rakenne Trie puun solmulistojen toteuttamiseksi.
  * Yrittää optimoida käytettyä muistia. Määrittää myös sallitut merkit.
@@ -13,7 +15,7 @@ package kvk.tietorakenne;
  * taulukon koko valitaan dynaamisesti vähentää tarvittavaa muistia. Esim jos
  * Trie-solmu tallentaa solmulistaansa vain merkille 'b' solmun, on tämän
  * rakenteen taulukon koko 2. Toisaalta jos Trie-Solmuun tallennetaan vain
- * '-merkki, niin taulukon kooksi tulee 54, ja tallennetaan turhaan 53
+ * '-merkki, niin taulukon kooksi tulee 41, ja tallennetaan turhaan 40
  * null-arvoa. Kuitenkin '-merkkisiä sanoja on todella vähän, joten tällaisia
  * taulukoita ei tule olemaan kovin montaa. Suurin osa taulukoista on kooltaan
  * maksimissaan aakkosten lukumäärä, todennäköisesti vielä pienempiä.
@@ -24,7 +26,7 @@ public class MerkkiSolmuTaulu {
     private TrieSolmu[] lista;
     private int varattuPituus;
     private int alkioita;
-    private static final int MAKSIMI_PITUUS = 53;
+    private static final int MAKSIMI_PITUUS = 41;
 
     public MerkkiSolmuTaulu() {
         this.varattuPituus = 0;
@@ -38,9 +40,9 @@ public class MerkkiSolmuTaulu {
      * @param merkki
      * @return Merkkiä vastaava TrieSolmu-instanssi, tai null, jos merkkiä
      * vastaavaa alkiota ei löydy.
-     * @throws Exception
+     * @throws kvk.poikkeukset.VirheellinenKirjainPoikkeus
      */
-    public TrieSolmu hae(char merkki) throws Exception {
+    public TrieSolmu hae(char merkki) throws VirheellinenKirjainPoikkeus {
         int indeksi = merkkiKokonaisluvuksi(merkki);
         if (indeksi >= this.varattuPituus && indeksi < MAKSIMI_PITUUS) {
             return null;
@@ -53,9 +55,10 @@ public class MerkkiSolmuTaulu {
      *
      * @param lapsiMerkki Avain
      * @param lapsiSolmu TrieSolmu-instanssi
+     * @throws kvk.poikkeukset.VirheellinenKirjainPoikkeus
      * @throws Exception jos yritetään ylikirjoittaa jonkun merkin päälle.
      */
-    public void lisaa(char lapsiMerkki, TrieSolmu lapsiSolmu) throws Exception {
+    public void lisaa(char lapsiMerkki, TrieSolmu lapsiSolmu) throws VirheellinenKirjainPoikkeus, Exception {
         lapsiMerkki = Character.toLowerCase(lapsiMerkki);
         int indeksi = merkkiKokonaisluvuksi(lapsiMerkki);
         if (indeksi >= this.varattuPituus) {
@@ -67,8 +70,14 @@ public class MerkkiSolmuTaulu {
         this.lista[indeksi] = lapsiSolmu;
         this.alkioita++;
     }
-    
-    public void asetaTyhjaksi(char lapsiMerkki) throws Exception {
+
+    /**
+     * Asettaa parametrina annetun indeksin tyhjaksi.
+     *
+     * @param lapsiMerkki
+     * @throws VirheellinenKirjainPoikkeus
+     */
+    public void asetaTyhjaksi(char lapsiMerkki) throws VirheellinenKirjainPoikkeus {
         lapsiMerkki = Character.toLowerCase(lapsiMerkki);
         int indeksi = merkkiKokonaisluvuksi(lapsiMerkki);
         if (indeksi >= this.varattuPituus) {
@@ -81,7 +90,7 @@ public class MerkkiSolmuTaulu {
     public int listalleVarattuPituus() {
         return this.lista.length;
     }
-    
+
     public int alkioitaListassa() {
         return this.alkioita;
     }
@@ -97,7 +106,7 @@ public class MerkkiSolmuTaulu {
         this.lista = uusiLista;
     }
 
-    private int merkkiKokonaisluvuksi(char merkki) throws Exception {
+    private int merkkiKokonaisluvuksi(char merkki) throws VirheellinenKirjainPoikkeus {
         int luku = (int) merkki - 97;
         if (luku >= 0 && luku < 26) {
             return luku;
@@ -117,47 +126,10 @@ public class MerkkiSolmuTaulu {
         if (merkki == '-') {
             return 39;
         }
-        if (merkki == ' ') {
+        if (merkki == "'".charAt(0)) {
             return 40;
         }
-        if (merkki == 'à') {
-            return 41;
-        }
-        if (merkki == 'ž') {
-            return 42;
-        }
-        if (merkki == 'é') {
-            return 43;
-        }
-        if (merkki == 'š') {
-            return 44;
-        }
-        if (merkki == 'â') {
-            return 45;
-        }
-        if (merkki == 'è') {
-            return 46;
-        }
-        if (merkki == 'î') {
-            return 47;
-        }
-        if (merkki == 'ê') {
-            return 48;
-        }
-        if (merkki == 'á') {
-            return 49;
-        }
-        if (merkki == 'ô') {
-            return 50;
-        }
-        if (merkki == 'û') {
-            return 51;
-        }
 
-        if (merkki == "'".charAt(0)) {
-            return 52;
-        }
-
-        throw new Exception("Virheellinen merkki annettu: " + "'" + +merkki + "'");
+        throw new VirheellinenKirjainPoikkeus("Virheellinen merkki annettu: " + "'" + merkki + "'");
     }
 }

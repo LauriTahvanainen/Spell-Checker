@@ -1,5 +1,7 @@
 package kvk.tietorakenne;
 
+import kvk.poikkeukset.VirheellinenKirjainPoikkeus;
+
 /**
  * Trie tietorakenteen yksi solmu. Solmussa solmua kuvaava merkki, hajautuslista
  * toisista solmuista joihin solmusta pääsee, sekä boolean arvo sille, onko
@@ -29,9 +31,9 @@ public class TrieSolmu {
      *
      * @param merkki
      * @return lapsisolmu, jos se on haetulla merkillä olemassa. Muuten null.
-     * @throws java.lang.Exception
+     * @throws kvk.poikkeukset.VirheellinenKirjainPoikkeus
      */
-    public TrieSolmu haeSolmuListasta(char merkki) throws Exception {
+    public TrieSolmu haeSolmuListasta(char merkki) throws VirheellinenKirjainPoikkeus {
         return this.solmuLista.hae(Character.toLowerCase(merkki));
     }
 
@@ -69,13 +71,14 @@ public class TrieSolmu {
      *
      * @param lapsiMerkki
      * @param lapsiSolmu
+     * @throws kvk.poikkeukset.VirheellinenKirjainPoikkeus
      * @throws java.lang.Exception
      */
-    public void lisaaLapsi(Character lapsiMerkki, TrieSolmu lapsiSolmu) throws Exception {
+    public void lisaaLapsi(Character lapsiMerkki, TrieSolmu lapsiSolmu) throws VirheellinenKirjainPoikkeus, Exception {
         this.solmuLista.lisaa(Character.toLowerCase(lapsiMerkki), lapsiSolmu);
     }
-    
-    public void asetaLapsiTyhjaksi(Character lapsiMerkki) throws Exception {
+
+    public void asetaLapsiTyhjaksi(Character lapsiMerkki) throws VirheellinenKirjainPoikkeus {
         this.solmuLista.asetaTyhjaksi(lapsiMerkki);
     }
 

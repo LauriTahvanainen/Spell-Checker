@@ -2,6 +2,7 @@ package kvk.korjaaja;
 
 import java.io.Serializable;
 import kvk.enums.Sanasto;
+import kvk.poikkeukset.VirheellinenKirjainPoikkeus;
 
 /**
  * Määrittää kirjoitusvirheen korjaajan.
@@ -14,9 +15,10 @@ public interface IKorjaaja extends Serializable {
      *
      * @param sana
      * @return true jos sana on virheellinen
+     * @throws kvk.poikkeukset.VirheellinenKirjainPoikkeus
      * @throws java.lang.Exception
      */
-    boolean onkoSanaVirheellinen(String sana) throws Exception;
+    boolean onkoSanaVirheellinen(String sana) throws VirheellinenKirjainPoikkeus, Exception;
 
     /**
      * Palauttaa korvaavia ehdotuksia parametrina annettuun sanaan.
@@ -26,18 +28,24 @@ public interface IKorjaaja extends Serializable {
      */
     String[] ehdotaKorjauksia(String sana);
 
-    boolean lisaaSanastoonSana(String lisattava);
+    void lisaaSanastoonSana(String lisattava) throws Exception;
 
-    boolean poistaSanastostaSana(String poistettava);
+    void poistaSanastostaSana(String poistettava) throws VirheellinenKirjainPoikkeus, Exception;
 
     void asetaMontaEhdotustaHaetaan(int montaHaetaan);
     
     void asetaEtaisyysToleranssi(int toleranssi);
 
-    void tallennaSanastoMuutokset();
+    void tallennaSanastoMuutokset() throws Exception;
     
     Sanasto sanasto();
     
     int sanastonKoko();
+    
+    /**
+     * Lippu sille, onko alustuksessa yritetty lisätä virheellisellä merkillä sanoja. Näin voidaan ilmoittaa käyttäjälle, että hänen sanastotiedostonsa kaikkia sanoja ei oteta sanastoon.
+     * @return
+     */
+    boolean yritettiinLisataSanaVirheellisellaMerkilla();
 
 }
