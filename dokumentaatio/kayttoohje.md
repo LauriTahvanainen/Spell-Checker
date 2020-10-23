@@ -15,7 +15,13 @@ Sanastotiedostojen pitää oikeassa kansiossa (sanastot) vakionimillään jotta 
 Checkstyle raportin saa generoitua komennolla 
 
 ```
-mvn checkstyle:checkstyle
+ mvn jxr:jxr checkstyle:checkstyle
+```
+
+Javadoc generoidaan komennolla
+
+```
+mvn javadoc:javadoc
 ```
 
 ## Käyttö
