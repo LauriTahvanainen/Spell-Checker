@@ -1,4 +1,5 @@
 ## Asentaminen ja avaaminen
+SanastoTiedostojen pitää oikeassa kansiossa vakionimillään toimiakseen.
 
 ## Käyttö
 HUOM. Ohjelma tukee vain suomenkielen aakkostoa. Muulla aakkostolla ohjelma ei toimi oikeellisesti!
