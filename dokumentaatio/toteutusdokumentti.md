@@ -178,6 +178,16 @@ Muita havaintoja mitä korjausten hakemisesta BK puun avulla voi suorituskykytes
 ## Muut tietorakenteet
 Muut tietorakenteet ovat lähinnä apurakenteita BK-puulle ja Trielle, joten niissä ei ole tässä yhteydessä juurikaan analysoimista. Voidaan olettaa, että ne yksinkertaisuutensa myötä toimivat riittävällä tehokkuudella verrattuna javan omiin toteutuksiin.
 
+# Sanastoista
+Sanastot on muodostettu seuraavien sanastojen avulla:
+
+[KOTIMAISTEN KIELTEN KESKUKSEN NYKYSUOMEN SANALISTA](http://kaino.kotus.fi/sanat/nykysuomi/): [Lisenssi]()
+
+[Kirjoitetun suomen kielen sanojen taajuuksia](http://kaino.kotus.fi/sanat/taajuuslista/parole.php): [Lisenssi]()
+
+[Ylen suomenkielinen uutisarkisto, lähdeaineisto 2011-2018](https://metashare.csc.fi/repository/browse/yle-finnish-news-archive-2011-2018-source/178ee7cc614c11e78c02005056be118ef9e611ae760143c98fa4cbac6c63be5d/): [Lisenssi](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/blob/master/lisenssit/YLE_LICENSE.txt)
+
+
 # Puutteita
 - BK solmun tapauksessa suorituskykytesti, joka mittaa monesa solmussa haun aikana käydään olisi hyödyllinen. Toisaalta puuhun ei haluta lisätä yhtään ylimäräistä laskentaa köyttötarkoituksesta johtuen. Voisi tietysti tehdä erillisen, testattavan BK-Puun.
 - Poikkeusten hallinta ei ole toteutettu kovin optimaalisesti
