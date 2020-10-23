@@ -2,7 +2,7 @@
 ## 2020, Periodi 1, Tietorakenteet ja Algoritmit aineopintojen harjoitustyö. 
 ## Ohjelma joka ehdottaa korjauksia virheellisesti kirjoitettuihin sanoihin.
 
-[Viimeisin julkaisu](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/releases/tag/v1.0)
+### [Viimeisin julkaisu](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/releases/tag/v1.0)
 
 # Dokumentaatio
 
