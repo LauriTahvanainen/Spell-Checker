@@ -62,11 +62,43 @@ int laskeEtaisyys(mjonoX, mjonoY) {
 ```
 Selvästi nähdään, että algoritmin pahin aikavaativuus ja tilavaativuus ovat O(|mjono1|x|mojono2|). Algoritmi varaa |mjono1|x|mojono2| kokoisen taulukon, ja käy sen kerran läpi, ja palauttaa viimeisen indeksis. Kaikki silmukan sisällä tehtävät operaatiot tapahtuvat vakioajassa. Tämä algortimi on erittäin käyttökelpoinen luonnollisen kielen sanoilla, vaikka kuten suorituskykytestistä näkee, suoritusaika alkaa kasvaa suuremmilla merkkijonoilla nopeasti.
 
+![](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/blob/master/dokumentaatio/levenshteinAikaVaativuus.png)
 
 
 # Tietorakenteet
-## Trie
+## Trie-puu
+Tietorakenne tarkistamaan nopeasti, kuuluuko sana puuhun. Juureksi valitaan tyhjä merkki. Yhtä solmua puussa vastaa yksi kirjain, johon on liitetty kirjainavaimella toisia solmuja. Puussa muodostuu siis suunnattuja polkuja kohti juuria, ja polut kuvaavat puun sisältämiä sanoja. Jokainen sana, joka lisätään puuhun lisätään niin, että sanan kirjaimen solmulistassa sanan seuraava kirjainta vastaavalla kohdalla on seuraavaa kirjainta esittävä solmu. Sanan viimeistä kirjainta esittävässä solmussa on lisäksi merkki siitä, että solmuun päättyvä polku on sana.
+
+Toteutettu optimoituja solmulistoja käyttäen, jotta tilavaativuus olisi mahdollisimman pieni. Solmulista on maksimissaan sallitun aakkoston kokoinen, jos solmulla ei ole yhtään lasta, on solmulistan koko 0. Jos solmulistaan lisätään vain avaimella "a", niin solmulistan koko on 1, toisaalta merkillä "'", solmulistan kooksi tulee 41, missä suurin osa on tyhjiä alkioita, mutta "'"-merkki on kovin harvinainen, joten tällaisia solmulistoja ei ole kovin montaa.
+
+Tarkistaminen
+```
+Boolean onkoSana(sana) {
+        TrieSolmu nykyinen = juuri;
+        for (i = 0; i < |sana|; i++) {
+            kirjain = sana[i];
+            TrieSolmu lapsi = nykyinen.haeSolmuListasta(kirjain);
+            if (lapsi == null) {
+                return false;
+            }
+            nykyinen = lapsi;
+        }
+        return nykyinen.onSana();
+}
+```
+Silmukka suoritetaan |sana| kertaa, ja sillä solmulistasta hakeminen on solmulistan ollessa taulukko, jonka indeksit vastaavat merkkien kokonaislukuarvoja, niin solmun hakeminen on käytännössä vakioaikainen operaatio. Muutkin silmukan operaatiot ovat vakioaikaisia, siis sanan puuhun kuulumisen tarkistamisen pahin aikavaativuus on O(|sana|).
+
+Lisääminen tapahtuu samalla mekanismilla sillä erotuksella, että solmulistaan lisätään aina uusi solmu, jos vastaan tullut solmu on tyhjä. Lisääminen solmulistaan on myös vakioaikainen operaatioi, ja siis lisäämisen aikavaativuus on O(|sana|). 
+
+Poistaminenkin voidaan tehdä haun kaltaisella operaatiolla ja se omaa myös saman O(|sana|) aikavaativuuden. Vaativuus on hieman suurempi, jos halutaan poistaa tyhjäksi jääneitä polkuja, mutta käytännössä tämä ei juuri kasvata aikavaativuutta.
+
+Pahimmassa tapauksessa, siis jos jokaisen solmun solmulistan koko olisi aakkoston koko, ja solmuilla ei olisi yhteisia polkuja ja Trie olisi täytetty täyteen x pituisilla sanoilla, Trien tilavaativuudeksi tulisi O(|aakkosto| x N ), missä N on solmujen määrä. Kuitenkin esimerkiksi se, että tällä solmulistatoteutuksella solmun, jolla ei ole lapsia, solmulistan koko on 0, tarkoittaa sitä, että pahimmassa tapauksessa pelkästään lehti solmujen tilavaativuus on |aakkosto|^|aakkosto| kertaa parempi kuin ei optimoidun Trien.
 
 ## BK-puu
 BK-puu toimii tietorakenteena, joka mahdollistaa nopeiden korjausehdotusten tuottamisen. Ohjelman käynnistyessä BK-puuhun ladataan koko sanasto, ottaen juureksi satunnainen sanaston sana. Puun solmujen tulee toteuttaa metriikka, jotta puu lopulta toimii tehokkaasti. Kahden solmun merkkijonojen välinen muokkausetäisyys on se, millä solmut tässä puun metrisessä avaruudessa erotetaan toisistaan. Jokaisella solmulla voi olla yhtä muokkausetäisyyttä kohden vain yksi lapsi. Itse muokkausetäisyysfunktio voi muuttua, kunhan metrisyys säilyy. 
 Puun tehokkuus perustuu siihen, että vaikka sanasto on iso, niin sillä puu muodostaa metrisen avaruuden, voidaan tiettyä merkkijonoa, tai haettavaa lähimpänä olevia merkkijonoja haettaessa karsia suurin osa puun haaroista pois kolmioepäyhtälön avulla.
+
+Jokaista sanaa kuvaa solmu, ja jokaisella solmulla on solmulista, jossa indeksissä i, on sana, joka on etäisyydellä i solmusta.
+Puu sisältää jokaisen sanaston sanan, ja sen tilavaativuus on siten O(|sanasto|).
+
+
