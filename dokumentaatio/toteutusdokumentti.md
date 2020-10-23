@@ -183,7 +183,7 @@ Sanastot on muodostettu seuraavien sanastojen avulla:
 
 [KOTIMAISTEN KIELTEN KESKUKSEN NYKYSUOMEN SANALISTA](http://kaino.kotus.fi/sanat/nykysuomi/): [Lisenssi](https://creativecommons.org/licenses/by/3.0/deed.fi)
 
-[Kirjoitetun suomen kielen sanojen taajuuksia](http://kaino.kotus.fi/sanat/taajuuslista/parole.php): [Lisenssi]()
+[Kirjoitetun suomen kielen sanojen taajuuksia](http://kaino.kotus.fi/sanat/taajuuslista/parole.php)
 
 [Ylen suomenkielinen uutisarkisto, lähdeaineisto 2011-2018](https://metashare.csc.fi/repository/browse/yle-finnish-news-archive-2011-2018-source/178ee7cc614c11e78c02005056be118ef9e611ae760143c98fa4cbac6c63be5d/): [Lisenssi](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/blob/master/lisenssit/YLE_LICENSE.txt)
 
