@@ -126,6 +126,8 @@ Lisäyksestä on suorituskykytesti, jossa mitataan korjaajan alustusaika. Täss�
 
 ![](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/blob/master/dokumentaatio/alustusAikaVaativuus.png)
 
+Projektissa yritettiin sanastojen kanssa ratkaisua, jossa korjaaja-objekti tallennettaisiin aina ohjelman sulkeutuessa muistiin, ja se luettaisiin käynnistyksen yhteydessä sieltä uudestaan. Näin tavoiteltiin nopeampaa alustusaikaa. Kuitenkin osoittautui, että on nopeampaa aina ladata sanasto tekstitiedostosta uudelleen, kuin tallentaa objekti muistiin.
+
 Poistaminen
 
 Rakenteesta ei varsinaisesti voi poistaa, tai se ei ainakaan ole kovin triviaalia, sanoja. Tämä siksi, että etäisyyksiä pitäisi tällöin laksea uudestaan, ja liikuttaa monia solmuja. Poistaminen tehdäänkin niin, että jokaisella solmulla on tila onPoistettu, ja se solmu haetaan ja tämä tila laitetaan päälle jos sana halutaan poistaa. Tämä toimii samassa ajassa kuin hakeminen, mutta rakenne tietysti lisää hieman tilavaativuutta.
