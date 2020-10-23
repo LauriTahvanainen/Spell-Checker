@@ -164,7 +164,7 @@ Lahimpien sanojen hakeminen
 ```
 Lähimpien sanojen hakualgoritmi käyttää hyväksi BK-puun metrisyyttä ja tämän myötä kolmioepäyhtälöä. Itse haku tapahtuu niin, että käydään läpi puun sanoja ja verrataan haettavaan sanaan. Jos verrattava sana on toleranssin sisällä, otetaan se ylös. Kolmioepäyhtälön avulla voidaan karsia läpikäytäviä solmuja. Siis pahimmassa tapauksesssa isolla toleranssilla käydään kuitenkin läpi kaikki solmut ja aikavaativuus on O(|sanasto| x k(s)), missä k(s) on keskimääräinen etäisyyslaskijan aikavaativuus. On vaikea arvioida keskimääräistä käytännön aikavaativuutta tarkkaan riippuen etäisyystoleranssista, mutta etäisyystoleranssilla 2, pitäisi haun käydä läpi sanastosta n 10%. Tälle prosenttimäärälle ei ole suorituskykytestiä, joka on puute. Toleranssin vaikutusta korjausehdotusten keskimääräiseen suoritusaikaan eri sanastoilla on tarkasteltu suorituskykytestillä:
 
-![](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/blob/master/dokumentaatio/toleranssiVaikutus.png)
+![](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/blob/master/dokumentaatio/toleranssiTesti.png)
 
 Se, miten monta sanaa haetaan, vaikuttaa myös suorituksen kestoon, sillä aina kun löydetään toleranssin sisällä oleva sana, pitää se lisätä järjestykseen johonkin tietorakenteeseen. Tässä työssä on toteutettu tämä ehdotusten tallentaminen itsestään järjestyvällä listalla, joka "tiputtaa" aina suurimpia arvoja pois. Tällöin aina kun löydetään uusi toleranssin sisällä oleva sana, ei sen lisäämiseksi palautettaviin tarvitse tehdä kuin niin monta vertailua kuin on määritelty, että ehdotuksia haetaan. Seuraavaa on tarkasteltu myös suorituskykytestillä:
 
@@ -186,6 +186,12 @@ Sanastot on muodostettu seuraavien sanastojen avulla:
 [Kirjoitetun suomen kielen sanojen taajuuksia](http://kaino.kotus.fi/sanat/taajuuslista/parole.php): [Lisenssi]()
 
 [Ylen suomenkielinen uutisarkisto, lähdeaineisto 2011-2018](https://metashare.csc.fi/repository/browse/yle-finnish-news-archive-2011-2018-source/178ee7cc614c11e78c02005056be118ef9e611ae760143c98fa4cbac6c63be5d/): [Lisenssi](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/blob/master/lisenssit/YLE_LICENSE.txt)
+
+- Keskikokoinen sanasto on luotu nykysuomen sanalistasta
+- Keskilaaja ja Laaja "Kirjoitetun suomen kielen sanojen taajuuksia" aineistosta
+- Loput on generoitu ylen uutisaineistosta
+
+Kokeilujen perusteella käyttökelpoisimmat sanastot ovat Keskilaaja ja Laaja.
 
 
 # Puutteita
