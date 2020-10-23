@@ -127,6 +127,70 @@ Lisäyksestä on suorituskykytesti, jossa mitataan korjaajan alustusaika. Täss�
 ![](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/blob/master/dokumentaatio/alustusAikaVaativuus.png)
 
 Poistaminen
+
 Rakenteesta ei varsinaisesti voi poistaa, tai se ei ainakaan ole kovin triviaalia, sanoja. Tämä siksi, että etäisyyksiä pitäisi tällöin laksea uudestaan, ja liikuttaa monia solmuja. Poistaminen tehdäänkin niin, että jokaisella solmulla on tila onPoistettu, ja se solmu haetaan ja tämä tila laitetaan päälle jos sana halutaan poistaa. Tämä toimii samassa ajassa kuin hakeminen, mutta rakenne tietysti lisää hieman tilavaativuutta.
 
+Lahimpien sanojen hakeminen
 
+```
+ String[] haeLahimmatSanat(String sana, int etaisyysToleranssi, int montaHaetaan) {
+        JarjestyvaTaulukko lahimmatSanat = new JarjestyvaTaulukko(montaHaetaan, Jarjestys.NOUSEVA);
+        Pino<BKSolmu> kandidaatit = new Pino<>();
+
+        kandidaatit.lisaa(this.juuri);
+
+        while (!kandidaatit.onTyhja()) {
+            BKSolmu verrattavaSolmu = kandidaatit.poista();
+            int etaisyysEtsittavaanSanaan = this.etaisyysLaskija.laskeEtaisyys(sana, verrattavaSolmu.sana);
+            if (etaisyysEtsittavaanSanaan <= etaisyysToleranssi && !verrattavaSolmu.onPoistettu) {
+                lahimmatSanat.lisaa(new SanaEtaisyysPari(verrattavaSolmu.sana, etaisyysEtsittavaanSanaan));
+            }
+            int rajausAlaRaja = etaisyysEtsittavaanSanaan - etaisyysToleranssi;
+            int rajausYlaRaja = etaisyysEtsittavaanSanaan + etaisyysToleranssi;
+            for (int i = rajausAlaRaja; i <= rajausYlaRaja; i++) {
+                if (i < 0) {
+                    continue;
+                }
+                BKSolmu uusiKandidaatti = verrattavaSolmu.lapsiEtaisyydella(i);
+                if (uusiKandidaatti != null) {
+                    kandidaatit.lisaa(uusiKandidaatti);
+                }
+            }
+        }
+
+        return lahimmatSanat.haeMerkkijonoTaulukkona();
+    }
+
+```
+Lähimpien sanojen hakualgoritmi käyttää hyväksi BK-puun metrisyyttä ja tämän myötä kolmioepäyhtälöä. Itse haku tapahtuu niin, että käydään läpi puun sanoja ja verrataan haettavaan sanaan. Jos verrattava sana on toleranssin sisällä, otetaan se ylös. Kolmioepäyhtälön avulla voidaan karsia läpikäytäviä solmuja. Siis pahimmassa tapauksesssa isolla toleranssilla käydään kuitenkin läpi kaikki solmut ja aikavaativuus on O(|sanasto| x k(s)), missä k(s) on keskimääräinen etäisyyslaskijan aikavaativuus. On vaikea arvioida keskimääräistä käytännön aikavaativuutta tarkkaan riippuen etäisyystoleranssista, mutta etäisyystoleranssilla 2, pitäisi haun käydä läpi sanastosta n 10%. Tälle prosenttimäärälle ei ole suorituskykytestiä, joka on puute. Toleranssin vaikutusta korjausehdotusten keskimääräiseen suoritusaikaan eri sanastoilla on tarkasteltu suorituskykytestillä:
+
+![](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/blob/master/dokumentaatio/toleranssiVaikutus.png)
+
+Se, miten monta sanaa haetaan, vaikuttaa myös suorituksen kestoon, sillä aina kun löydetään toleranssin sisällä oleva sana, pitää se lisätä järjestykseen johonkin tietorakenteeseen. Tässä työssä on toteutettu tämä ehdotusten tallentaminen itsestään järjestyvällä listalla, joka "tiputtaa" aina suurimpia arvoja pois. Tällöin aina kun löydetään uusi toleranssin sisällä oleva sana, ei sen lisäämiseksi palautettaviin tarvitse tehdä kuin niin monta vertailua kuin on määritelty, että ehdotuksia haetaan. Seuraavaa on tarkasteltu myös suorituskykytestillä:
+
+![](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/blob/master/dokumentaatio/montaHaetaanVaikutus.png)
+
+Muita havaintoja mitä korjausten hakemisesta BK puun avulla voi suorituskykytestien perusteella tehdä on:
+
+- Mitä suurempi sanasto, sitä enemmän lähimpien haku löytää sanoja. Tällöin korjausten oikeellisuus kärsii. Sanaston koolla on siis käytännön toiminnan kannalta joku kultaisen keskitien koko. 
+- Trie toimii hyvin yhdessä BK-puun kanssa, sillä se mahdollistaa itse sovelluksessa sen, että virheelliset tunnistetaan, ja itse ehdotukset lasketaan sanasta vasta kun käyttäjä haluaa. Tämän myötä voidaan käyttää suuriakin toleransseja käytännössä.
+
+## Muut tietorakenteet
+Muut tietorakenteet ovat lähinnä apurakenteita BK-puulle ja Trielle, joten niissä ei ole tässä yhteydessä juurikaan analysoimista. Voidaan olettaa, että ne yksinkertaisuutensa myötä toimivat riittävällä tehokkuudella verrattuna javan omiin toteutuksiin.
+
+# Puutteita
+- BK solmun tapauksessa suorituskykytesti, joka mittaa monesa solmussa haun aikana käydään olisi hyödyllinen. Toisaalta puuhun ei haluta lisätä yhtään ylimäräistä laskentaa köyttötarkoituksesta johtuen. Voisi tietysti tehdä erillisen, testattavan BK-Puun.
+- Poikkeusten hallinta ei ole toteutettu kovin optimaalisesti
+- Testien tuloksia voisi mahdollisesti päivittää dynaamisesti
+- Toinen etäisyysfunktio olisi ollut hienoa toteuttaa, mutta aika ei riittänyt. Toisaalta varsin iso osa ajasta "tuhlattiin" ui:n kanssa taistelemiseen.
+- Sanan poistaminen sanastosta ei tällä hetkellä onnistu pysyvästi. Suorituksen aikana sanan voi kyllä poistaa, mutta tämä ei tallennu varsinaiseen sanastoon, ja kun tämä sanasto ladataan uuteen korjaajaan uudestaan, ei sanan poistaminen ole rekisteröitynyt.  Tämän yhteydessä ongelmana on se, että 2m kokoisesta sanastosta pitäisi etsiä kaikki poistettavat sanat ja poistaa ne. Tähän keksittiin teorian tasolla ratkaisu. Pidetään poistettavat sanat aakkosjärjestyksessä, kuten myös varsinainen sanasto. Sitten kun poistettavat halutaan rekisteröidä sanastoon, käydään poistettavien lista läpi ylhäältä aakkosjärjestyksessä. Samaan aikaan käydään läpi ylhäältä aakkosjärjestyksessä sanastotiedstoa. Verrataan poistettavaa sanaa sanastosta saatuun sanaan ja jos täsmää, poistetaan rivi. Sitten otetaan seuraava sana poistettavista, ja sillä poistettavat ja sanasto on käyty läpi aakkosjärjestyksessä, niin tiedetään, että uusi käsiteltävä poistettava ei ole voinut tulla aikaisemmin, ja voidaan jatkaa sanaston lukua ja vertaamista. Näin saadaan siis poistettua poistettavat yhdellä sanastotiedoston luvulla. Tässä on kuitenkin väsäämistä, erityisesti kun pitää myös synkronoida sanastoon lisäämiset ja poistamiset tallennusta varten, joten sitä ei nyt alettu toteuttamaan.
+
+# Lähteet
+
+[Multivariate Algorithmics forNP-Hard String Problems](https://fpt.akt.tu-berlin.de/publications/fpt-strings-beatcs14.pdf)
+
+[A Guided Tour to Approximate String Matching, NAVARRO. G., 2001](http://users.csc.calpoly.edu/~dekhtyar/570-Fall2011/papers/navarro-approximate.pdf)
+
+R. Baeza-Yates and G. Navarro, "Fast approximate string matching in a dictionary," Proceedings. String Processing and Information Retrieval: A South American Symposium (Cat. No.98EX207), Santa Cruz de La Sierra, Bolivia, 1998, pp. 14-22, doi: 10.1109/SPIRE.1998.712978.
+
+Wikipedia
