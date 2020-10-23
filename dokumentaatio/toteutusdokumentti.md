@@ -95,10 +95,38 @@ Poistaminenkin voidaan tehdä haun kaltaisella operaatiolla ja se omaa myös sam
 Pahimmassa tapauksessa, siis jos jokaisen solmun solmulistan koko olisi aakkoston koko, ja solmuilla ei olisi yhteisia polkuja ja Trie olisi täytetty täyteen x pituisilla sanoilla, Trien tilavaativuudeksi tulisi O(|aakkosto| x N ), missä N on solmujen määrä. Kuitenkin esimerkiksi se, että tällä solmulistatoteutuksella solmun, jolla ei ole lapsia, solmulistan koko on 0, tarkoittaa sitä, että pahimmassa tapauksessa pelkästään lehti solmujen tilavaativuus on |aakkosto|^|aakkosto| kertaa parempi kuin ei optimoidun Trien.
 
 ## BK-puu
-BK-puu toimii tietorakenteena, joka mahdollistaa nopeiden korjausehdotusten tuottamisen. Ohjelman käynnistyessä BK-puuhun ladataan koko sanasto, ottaen juureksi satunnainen sanaston sana. Puun solmujen tulee toteuttaa metriikka, jotta puu lopulta toimii tehokkaasti. Kahden solmun merkkijonojen välinen muokkausetäisyys on se, millä solmut tässä puun metrisessä avaruudessa erotetaan toisistaan. Jokaisella solmulla voi olla yhtä muokkausetäisyyttä kohden vain yksi lapsi. Itse muokkausetäisyysfunktio voi muuttua, kunhan metrisyys säilyy. 
+BK-puu toimii tietorakenteena, joka mahdollistaa nopeiden korjausehdotusten tuottamisen. Ohjelman käynnistyessä BK-puuhun ladataan koko sanasto, ottaen juureksi satunnainen sanaston sana. Puun solmujen tulee toteuttaa metriikka, jotta puu lopulta toimii tehokkaasti. Kahden solmun merkkijonojen välinen muokkausetäisyys on se, millä solmut tässä puun metrisessä avaruudessa erotetaan toisistaan. Jokaisella solmulla voi olla yhtä muokkausetäisyyttä kohden vain yksi lapsi.
+
+Itse muokkausetäisyysfunktio voi muuttua, kunhan metrisyys säilyy. 
 Puun tehokkuus perustuu siihen, että vaikka sanasto on iso, niin sillä puu muodostaa metrisen avaruuden, voidaan tiettyä merkkijonoa, tai haettavaa lähimpänä olevia merkkijonoja haettaessa karsia suurin osa puun haaroista pois kolmioepäyhtälön avulla.
 
 Jokaista sanaa kuvaa solmu, ja jokaisella solmulla on solmulista, jossa indeksissä i, on sana, joka on etäisyydellä i solmusta.
 Puu sisältää jokaisen sanaston sanan, ja sen tilavaativuus on siten O(|sanasto|).
+
+Lisäys
+
+```
+void lisaaSana(String sana) {
+        BKSolmu nykyinenSolmu = this.juuri;
+        while (true) {
+            int etaisyysNykyiseenSolmuun = this.etaisyysLaskija.laskeEtaisyys(nykyinenSolmu.sana, sana);
+            BKSolmu nykyisenLapsiLisattavanSananEtaisyydella = nykyinenSolmu.lapsiEtaisyydella(etaisyysNykyiseenSolmuun);
+            if (nykyisenLapsiLisattavanSananEtaisyydella == null) {
+                nykyinenSolmu.lisaaLapsi(new BKSolmu(sana), etaisyysNykyiseenSolmuun);
+                break;
+            } else {
+                nykyinenSolmu = nykyisenLapsiLisattavanSananEtaisyydella;
+            }
+        }
+    }
+```
+Lisäyksen aikavaativuuteen vaikuttaa sanan pituus, käytetty etäisyysfunktio, puun tasapaino, sekä itse sana. Voidaan olettaa, että puu pysyy varsin tasapainoisena, ja sillä on joku keskimääräinen syvyys s. Tällöin pahimman tapauksen lisättävien sanojen pitää käydä läpi syvimmän polun verran solmuja ja laskea etäisyyksia. Pahimmassa tapauksessa siis lisäys tasapainotetussa puussa on O(p x e(k)), missä p on syvin polku, ja e(k) on etaisyysfunktion keskimääräinen aikavaativuus sanaston sanoilla. Luonnollisen kielen sanastolla puu pysyy kuitenkin hyvin tasapainossa ja matalana, ja lisäys on riittävän nopeaa. 
+
+Lisäyksestä on suorituskykytesti, jossa mitataan korjaajan alustusaika. Tässä on siis otettu huomioon myös Trien täyttämiseen vaadittava aika:
+
+![](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/blob/master/dokumentaatio/alustusAikaVaativuus.png)
+
+Poistaminen
+Rakenteesta ei varsinaisesti voi poistaa, tai se ei ainakaan ole kovin triviaalia, sanoja. Tämä siksi, että etäisyyksiä pitäisi tällöin laksea uudestaan, ja liikuttaa monia solmuja. Poistaminen tehdäänkin niin, että jokaisella solmulla on tila onPoistettu, ja se solmu haetaan ja tämä tila laitetaan päälle jos sana halutaan poistaa. Tämä toimii samassa ajassa kuin hakeminen, mutta rakenne tietysti lisää hieman tilavaativuutta.
 
 
