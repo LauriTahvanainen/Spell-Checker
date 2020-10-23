@@ -181,7 +181,7 @@ Muut tietorakenteet ovat lähinnä apurakenteita BK-puulle ja Trielle, joten nii
 # Sanastoista
 Sanastot on muodostettu seuraavien sanastojen avulla:
 
-[KOTIMAISTEN KIELTEN KESKUKSEN NYKYSUOMEN SANALISTA](http://kaino.kotus.fi/sanat/nykysuomi/): [Lisenssi]()
+[KOTIMAISTEN KIELTEN KESKUKSEN NYKYSUOMEN SANALISTA](http://kaino.kotus.fi/sanat/nykysuomi/): [Lisenssi](https://creativecommons.org/licenses/by/3.0/deed.fi)
 
 [Kirjoitetun suomen kielen sanojen taajuuksia](http://kaino.kotus.fi/sanat/taajuuslista/parole.php): [Lisenssi]()
 
