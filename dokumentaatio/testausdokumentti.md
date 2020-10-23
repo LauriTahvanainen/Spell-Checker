@@ -1,5 +1,16 @@
 # Testausdokumentti
 
+Testit voi ajaa komennolla
+```
+mvn test
+```
+
+Testikattavuusraportin voi generoida komennolla
+
+```
+mvn test jacoco:report
+```
+
 ## Projektin ajantasainen testikattavuus
 ![Testikattavuus](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/blob/master/dokumentaatio/testikattavuus1.png)
 ![Testikattavuus](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/blob/master/dokumentaatio/testikattavuus2.png)
