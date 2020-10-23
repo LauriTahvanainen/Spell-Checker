@@ -175,7 +175,7 @@ Huomataan, että kyseisillä sanastoilla sillä monta korjausta haetaan, ei ole 
 Muita havaintoja mitä korjausten hakemisesta BK puun avulla voi suorituskykytestien perusteella tehdä on:
 
 - Mitä suurempi sanasto, sitä enemmän lähimpien haku löytää sanoja. Tällöin korjausten oikeellisuus kärsii. Sanaston koolla on siis käytännön toiminnan kannalta joku kultaisen keskitien koko. 
-- Trie toimii hyvin yhdessä BK-puun kanssa, sillä se mahdollistaa itse sovelluksessa sen, että virheelliset tunnistetaan, ja itse ehdotukset lasketaan sanasta vasta kun käyttäjä haluaa. Tämän myötä voidaan käyttää suuriakin toleransseja käytännössä.
+- Trie toimii hyvin yhdessä BK-puun kanssa, sillä se mahdollistaa itse sovelluksessa sen, että virheelliset tunnistetaan, ja itse ehdotukset lasketaan sanasta vasta kun käyttäjä haluaa. Tämän myötä voidaan käyttää suuriakin toleransseja käytännössä, vaikka ehdotusten haku kestäisikin vaikka jopa 0.5 sekuntia,
 
 ## Muut tietorakenteet
 Muut tietorakenteet ovat lähinnä apurakenteita BK-puulle ja Trielle, joten niissä ei ole tässä yhteydessä juurikaan analysoimista. Voidaan olettaa, että ne yksinkertaisuutensa myötä toimivat riittävällä tehokkuudella verrattuna javan omiin toteutuksiin.
