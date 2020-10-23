@@ -30,7 +30,7 @@ Suorituskykytestit on toteutettu niin, että niitä voidaan suorittaa vaihtamall
 
 # Algoritmit
 ## Levenshtein-etäisyyden laskeminen
-Kahden sanan välisen muokkausetäisyyden laskeminen rajattomalla aakkostolla on NP-täydellinen ongelma. Kuitnekin rajallisella aakkostolla, ja käyttämällä esim. dynaamista ohjelmointia, saadaan erittäin käyttökelpoisia algoritmeja kyseiseen ongelmaan.
+Kahden sanan välisen muokkausetäisyyden laskeminen rajattomalla aakkostolla on NP-täydellinen ongelma. Kuitenkin rajallisella aakkostolla, ja käyttämällä esim. dynaamista ohjelmointia, saadaan erittäin käyttökelpoisia algoritmeja kyseiseen ongelmaan.
 Levenshtein-etäisyys lasketaan dynaamiseen ohjelmointiin perustuvalla algoritmilla.
 ```
 int laskeEtaisyys(mjonoX, mjonoY) {
@@ -92,7 +92,7 @@ Lisääminen tapahtuu samalla mekanismilla sillä erotuksella, että solmulistaa
 
 Poistaminenkin voidaan tehdä haun kaltaisella operaatiolla ja se omaa myös saman O(|sana|) aikavaativuuden. Vaativuus on hieman suurempi, jos halutaan poistaa tyhjäksi jääneitä polkuja, mutta käytännössä tämä ei juuri kasvata aikavaativuutta.
 
-Pahimmassa tapauksessa, siis jos jokaisen solmun solmulistan koko olisi aakkoston koko, ja solmuilla ei olisi yhteisia polkuja ja Trie olisi täytetty täyteen x pituisilla sanoilla, Trien tilavaativuudeksi tulisi O(|aakkosto| x N ), missä N on solmujen määrä. Kuitenkin esimerkiksi se, että tällä solmulistatoteutuksella solmun, jolla ei ole lapsia, solmulistan koko on 0, tarkoittaa sitä, että pahimmassa tapauksessa pelkästään lehti solmujen tilavaativuus on |aakkosto|^|aakkosto| kertaa parempi kuin ei optimoidun Trien.
+Pahimmassa tapauksessa, siis jos jokaisen solmun solmulistan koko olisi aakkoston koko, ja solmuilla ei olisi yhteisiä polkuja ja Trie olisi täytetty täyteen x pituisilla sanoilla, Trien tilavaativuudeksi tulisi O(|aakkosto| x N ), missä N on solmujen määrä. Kuitenkin esimerkiksi se, että tällä solmulistatoteutuksella solmun, jolla ei ole lapsia, solmulistan koko on 0, tarkoittaa sitä, että pahimmassa tapauksessa pelkästään lehti solmujen tilavaativuus on |aakkosto|^|aakkosto| kertaa parempi kuin ei optimoidun Trien.
 
 ## BK-puu
 BK-puu toimii tietorakenteena, joka mahdollistaa nopeiden korjausehdotusten tuottamisen. Ohjelman käynnistyessä BK-puuhun ladataan koko sanasto, ottaen juureksi satunnainen sanaston sana. Puun solmujen tulee toteuttaa metriikka, jotta puu lopulta toimii tehokkaasti. Kahden solmun merkkijonojen välinen muokkausetäisyys on se, millä solmut tässä puun metrisessä avaruudessa erotetaan toisistaan. Jokaisella solmulla voi olla yhtä muokkausetäisyyttä kohden vain yksi lapsi.
