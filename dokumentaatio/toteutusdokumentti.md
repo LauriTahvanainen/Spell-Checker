@@ -30,7 +30,39 @@ Suorituskykytestit on toteutettu niin, että niitä voidaan suorittaa vaihtamall
 
 # Algoritmit
 ## Levenshtein-etäisyyden laskeminen
-Levenshteinetäisyys lasketaan dynaamiseen ohjelmointiin perustuvalla algoritmilla.
+Kahden sanan välisen muokkausetäisyyden laskeminen rajattomalla aakkostolla on NP-täydellinen ongelma. Kuitnekin rajallisella aakkostolla, ja käyttämällä esim. dynaamista ohjelmointia, saadaan erittäin käyttökelpoisia algoritmeja kyseiseen ongelmaan.
+Levenshtein-etäisyys lasketaan dynaamiseen ohjelmointiin perustuvalla algoritmilla.
+```
+int laskeEtaisyys(mjonoX, mjonoY) {
+        etaisyysMatriisi = uusi int[mjonoX.length() + 1][mjonoY.length() + 1];
+        operaationHinta = 1;
+
+        for (x = 0; x <= |mjonoX|; x++) {
+            etaisyysMatriisi[x][0] = x;
+        }
+        for (int y = 0; y <= |mjonoY|; y++) {
+            etaisyysMatriisi[0][y] = y;
+        }
+
+        for (int y = 1; y <= |mjonoY|; y++) {
+            for (int x = 1; x <= |mjonoX|; x++) {
+                if (mjonoX[x - 1] == mjonoY[y - 1]) {
+                    etaisyysMatriisi[x][y] = etaisyysMatriisi[x - 1][y - 1];
+                } else {
+                    etaisyysMatriisi[x][y] = minimi(minimi(etaisyysMatriisi[x - 1][y],
+                            etaisyysMatriisi[x][y - 1]),
+                            etaisyysMatriisi[x - 1][y - 1]) + operaationHinta;
+                }
+
+            }
+        }
+
+        return etaisyysMatriisi[|mjonoX|][|mjonoY|];
+    }
+```
+Selvästi nähdään, että algoritmin pahin aikavaativuus ja tilavaativuus ovat O(|mjono1|x|mojono2|). Algoritmi varaa |mjono1|x|mojono2| kokoisen taulukon, ja käy sen kerran läpi, ja palauttaa viimeisen indeksis. Kaikki silmukan sisällä tehtävät operaatiot tapahtuvat vakioajassa. Tämä algortimi on erittäin käyttökelpoinen luonnollisen kielen sanoilla, vaikka kuten suorituskykytestistä näkee, suoritusaika alkaa kasvaa suuremmilla merkkijonoilla nopeasti.
+
+
 
 # Tietorakenteet
 ## Trie
