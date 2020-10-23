@@ -51,7 +51,9 @@ Erilaisten korjaajien suorituskykyä voi testata kahdella tavalla. Testaamalla k
 
 Kaikki korjaajan parametrit: etäisyysfunktio, monta haetaan, toleranssi, sanasto, ovat valittavissa testejä varten. Testit voidaan ajaa peräkkäin, ja näin viivakaavioon voi piirtää saman testin tulokset eri korjaajilla.
 
-Viivakaaviossa x akseli on sanaston koon suhteen. Sillä kombinaatioita eri testeihin on lukemattomasti, esitetään tässä vain muutaman testin tulokset:
+Viivakaaviossa x akseli on sanaston koon suhteen. Kuvassa korjaajien korjausprosenttitestejä eri parametreillä:
+![](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/blob/master/dokumentaatio/korjausProsenttiTesti.png)
+Huomataan, että mitä suurempia virheitä sanoissa on, ja mitä suurempi etäisyystoleranssi on, sitä huonompia korjausehdotuksista tulee. Tämä on ymmärrettävää. Erityisesti suurten sanastojen kanssa on vaara siihen, että sanastosta löytyy monia muita sanoja samalla korjausetäisyydellä, ja lopullisiin ehdotuksiin ei sitten päädy oikeaa ehdotusta. Näyttääisi, että ainakin tämän testin perusteella noin 1m sanasto toimii hyvin. Tätä samanetäisyyksien sanojen suurta määrää voi projektin mallissa kuitenkin helpottaa yksinkertaisesti hakemalla suuremman määrän ehdotuksia. Varsinkin kun huomattiin, että ehdotusten määrän lisääminen ei juurikaan nosta aikavaativuutta.
 
 ### Korjaajan alustusaika ja tilavaativuus
 Samankaltaiseen viivakaavioon piirretään korjaajan alustusaikaa valituilla sanastoilla kuvaavan testin tulokset. Samassa testinäkymässä voi myös tarkastella korjaajan muistivarausta, mutta tämän mittaaminen ei ole kovin tarkkaa javan muistihallinnan vuoksi.
