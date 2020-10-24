@@ -199,7 +199,7 @@ Kokeilujen perusteella käyttökelpoisimmat sanastot ovat Keskilaaja ja Laaja jo
 
 
 # Puutteita
-- BK solmun tapauksessa suorituskykytesti, joka mittaa monesa solmussa haun aikana käydään olisi hyödyllinen. Toisaalta puuhun ei haluta lisätä yhtään ylimäräistä laskentaa köyttötarkoituksesta johtuen. Voisi tietysti tehdä erillisen, testattavan BK-Puun.
+- BK solmun tapauksessa suorituskykytesti, joka mittaa monessa solmussa haun aikana käydään olisi hyödyllinen. Toisaalta puuhun ei haluta lisätä yhtään ylimäräistä laskentaa köyttötarkoituksesta johtuen. Voisi tietysti tehdä erillisen, testattavan BK-Puun.
 - Poikkeusten hallinta ei ole toteutettu kovin optimaalisesti
 - Testien tuloksia voisi mahdollisesti päivittää dynaamisesti
 - Toinen etäisyysfunktio olisi ollut hienoa toteuttaa, mutta aika ei riittänyt. Toisaalta varsin iso osa ajasta "tuhlattiin" ui:n kanssa taistelemiseen.
