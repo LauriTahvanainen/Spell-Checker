@@ -416,6 +416,14 @@ public class Main extends Application {
         }
     }
 
+    private void tarkistaVirheetKokoTekstista() {
+        if (this.kappaleLista.size() > 0) {
+            for (int i = 0; i < this.kappaleLista.size(); i++) {
+                tarkistaVirheetKappaleesta(i);
+            }
+        }
+    }
+
     private void tarkistaVirheetKappaleesta(int kappaleNumero) {
         Paragraph kappale = (Paragraph) kappaleLista.get(kappaleNumero);
         String kappaleMerkkijonona = kappale.getText();
@@ -487,9 +495,9 @@ public class Main extends Application {
             korvaava = Character.toUpperCase(korvaava.charAt(0)) + korvaava.substring(1);
         }
         this.kirjoitusAlue.replace(kappaleNumero,
-                                   korjattavanIndeksitKappaleessa.getStart(),
-                                   kappaleNumero, korjattavanIndeksitKappaleessa.getEnd(),
-                                   korvaava, Collections.singleton("sanastonsana"));
+                korjattavanIndeksitKappaleessa.getStart(),
+                kappaleNumero, korjattavanIndeksitKappaleessa.getEnd(),
+                korvaava, Collections.singleton("sanastonsana"));
         this.kirjoitusAlue.requestFocus();
     }
 
@@ -532,7 +540,7 @@ public class Main extends Application {
                 IndexRange sananIndeksit = kappale.getStyleRangeAtPosition(kursoriKappaleessa);
                 String lisattavaSana = kappale.substring(sananIndeksit.getStart(), sananIndeksit.getEnd());
                 this.virheenKorjaaja.lisaaSanastoonSana(lisattavaSana);
-                kirjoitusAlue.setStyle(kappaleNumero, sananIndeksit.getStart(), sananIndeksit.getEnd(), Collections.singleton("sanastonsana"));
+                tarkistaVirheetKokoTekstista();
             } catch (VirheellinenKirjainPoikkeus ex) {
                 naytaInformaatioIlmoitus("Lisättävässä sanassa ei-tuettuja merkkejä!\nOhjelma tunnistaa vain\nsuomenkielen aakkoston!");
             } catch (Exception ex) {
@@ -552,7 +560,7 @@ public class Main extends Application {
                 IndexRange sananIndeksit = kappale.getStyleRangeAtPosition(kursoriKappaleessa);
                 String poistettavaSana = kappale.substring(sananIndeksit.getStart(), sananIndeksit.getEnd());
                 this.virheenKorjaaja.poistaSanastostaSana(poistettavaSana);
-                kirjoitusAlue.setStyle(kappaleNumero, sananIndeksit.getStart(), sananIndeksit.getEnd(), Collections.singleton("alleviivattu"));
+                tarkistaVirheetKokoTekstista();
             } catch (VirheellinenKirjainPoikkeus ex) {
                 naytaInformaatioIlmoitus("Poistettavassa sanassa ei-tuettuja merkkejä!\nOhjelma tunnistaa vain\nsuomenkielen aakkoston!");
             } catch (Exception ex) {
@@ -581,6 +589,7 @@ public class Main extends Application {
                 if (virheenKorjaaja.yritettiinLisataSanaVirheellisellaMerkilla()) {
                     naytaInformaatioIlmoitus("Sanastoon yritettiin lisätä sana ei-tuetulla merkillä\nTällaisia sanoja ei lisätä korjaajaan!\nKorjaaja toimii vain suomenkielen aakkostolla!");
                 }
+                tarkistaVirheetKokoTekstista();
             }
 
         });
