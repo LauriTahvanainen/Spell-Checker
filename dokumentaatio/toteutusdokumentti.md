@@ -1,11 +1,11 @@
 # Ohjelman yleisrakenne
 ## Käyttöliittymä
-Käyttöliittymänä toimii yksinkertainen javafx:llä ja richTextfx-kirjastolla toteutettu tekstieditori. Itse korjaajan toiminnasta on tärkeää se käyttöliittymän ratkaisu, että jos kirjoitetussa sanassa on muita kuin suomenkielen aakkosia, niin sitä ei tarkisteta, ja se näyttää oikeelliselta. Sanaston latauksen, sekä sanan poisto ja lisäyksen yhteydessä ei tuetuista kirjaimista kuitenkin varoitetaan. Siispä ohjelma toimii oikein vain suomen kielen aakkostolla.
+Käyttöliittymänä toimii yksinkertainen javafx:llä ja richTextfx-kirjastolla toteutettu tekstieditori. Itse korjaajan toiminnasta on tärkeää se käyttöliittymän ratkaisu, että jos kirjoitetussa sanassa on muita kuin suomenkielen aakkosia, niin sitä ei tarkisteta, ja se näyttää sanastoon kuuluvalta sanalta. Sanaston latauksen, sekä sanan poiston ja lisäyksen yhteydessä ei-tuetuista kirjaimista kuitenkin varoitetaan. Siispä ohjelma toimii oikein vain suomen kielen aakkostolla.
 
 ## Toiminnallisuus
 Ohjelman arkkitehtuuri on suunnitelu niin, että uusia virheenkorjaajan malleja on helppo lisätä, kuten myös uusia sanastoja, sekä Trie-BK-korjaajamallin käyttämiä etäisyysfunktioita.
 
-Kuitenkin kurssin puitteissa kerettiin toteuttaamaan vain yksi korjaajan malli, joka käyttää Trie ja BK-puu tietorakenteita. Jatkossa käsitellään tätä yhtä mallia.
+Kuitenkin kurssin puitteissa ehdittiin toteuttaamaan vain yksi korjaajan malli, joka käyttää Trie ja BK-puu tietorakenteita. Jatkossa käsitellään tätä yhtä mallia.
 
 Tällä Trie-BK-puu korjausmallilla on muutama oleellinen komponentti, joita käyttäjä voi muuttaa. Nämä ovat: sanasto, etäisyysfunktio, toleranssi, sekä monta korjausehdotusta haetaan kerralla. Näitä muuttamalla myös korjaajan tila, sekä korjaukseen keskimäärin käytetty aika muuttuvat. Komponenteista tarkemmin myöhemmin.
 
@@ -195,7 +195,7 @@ Sanastot on muodostettu seuraavien sanastojen avulla:
 - Keskilaaja ja Laaja "Kirjoitetun suomen kielen sanojen taajuuksia" aineistosta
 - Loput on generoitu ylen uutisaineistosta
 
-Kokeilujen perusteella käyttökelpoisimmat sanastot ovat Keskilaaja ja Laaja.
+Kokeilujen perusteella käyttökelpoisimmat sanastot ovat Keskilaaja ja Laaja joihin lisätään omia käytettäviä sanoja. Isoin 4 miljoonan sanan sanasto toimii myös, mutta hienoisella viivellä, ja siinä on paljon myös esimerkiksi englannin kielistä sanastoa, mikä saattaa aiheuttaa törmäyksiä oikeasti suomen kielessä virheellisten sanojen kanssa.
 
 
 # Puutteita
@@ -205,6 +205,7 @@ Kokeilujen perusteella käyttökelpoisimmat sanastot ovat Keskilaaja ja Laaja.
 - Toinen etäisyysfunktio olisi ollut hienoa toteuttaa, mutta aika ei riittänyt. Toisaalta varsin iso osa ajasta "tuhlattiin" ui:n kanssa taistelemiseen.
 - Sanan poistaminen sanastosta ei tällä hetkellä onnistu pysyvästi. Suorituksen aikana sanan voi kyllä poistaa, mutta tämä ei tallennu varsinaiseen sanastoon, ja kun tämä sanasto ladataan uuteen korjaajaan uudestaan, ei sanan poistaminen ole rekisteröitynyt.  Tämän yhteydessä ongelmana on se, että 2m kokoisesta sanastosta pitäisi etsiä kaikki poistettavat sanat ja poistaa ne. Tähän keksittiin teorian tasolla ratkaisu. Pidetään poistettavat sanat aakkosjärjestyksessä, kuten myös varsinainen sanasto. Sitten kun poistettavat halutaan rekisteröidä sanastoon, käydään poistettavien lista läpi ylhäältä aakkosjärjestyksessä. Samaan aikaan käydään läpi ylhäältä aakkosjärjestyksessä sanastotiedstoa. Verrataan poistettavaa sanaa sanastosta saatuun sanaan ja jos täsmää, poistetaan rivi. Sitten otetaan seuraava sana poistettavista, ja sillä poistettavat ja sanasto on käyty läpi aakkosjärjestyksessä, niin tiedetään, että uusi käsiteltävä poistettava ei ole voinut tulla aikaisemmin, ja voidaan jatkaa sanaston lukua ja vertaamista. Näin saadaan siis poistettua poistettavat yhdellä sanastotiedoston luvulla. Tässä on kuitenkin väsäämistä, erityisesti kun pitää myös synkronoida sanastoon lisäämiset ja poistamiset tallennusta varten, joten sitä ei nyt alettu toteuttamaan.
 - lokituksen voisi tehdä tiedostoon
+- Oikolukiessa dokumentaatiota korjaajalla huomattiin, että välilyönnin puuttuminen voitaisiin mahdollisesti korjata korjaajalla. Nyt sitä ei kuitenkaan tehdä.
 
 # Lähteet
 
