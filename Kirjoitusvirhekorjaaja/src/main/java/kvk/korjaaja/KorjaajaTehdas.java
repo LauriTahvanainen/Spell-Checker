@@ -10,7 +10,6 @@ import kvk.io.ITiedostonKasittelija;
 
 /**
  * Luo erilaisia korjaajia.
- * @author coronatus
  */
 public class KorjaajaTehdas {
 
