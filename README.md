@@ -1,9 +1,8 @@
-# Kirjoitusvirhekorjaaja
 ## Spellchecker using Trie and BK-Tree
-## 2020, Periodi 1, Tietorakenteet ja Algoritmit aineopintojen harjoitustyö. 
+## A simple text editor that suggests fixes to misspelled words.
 ## Ohjelma joka ehdottaa korjauksia virheellisesti kirjoitettuihin sanoihin.
 
-### [Viimeisin julkaisu](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/releases/tag/v1.0)
+### [Latest Release](https://github.com/LauriTahvanainen/Kirjoitusvirhekorjaaja/releases/tag/v1.0)
 
 # Dokumentaatio
 
